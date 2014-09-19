@@ -84,10 +84,10 @@ function _parseOptions(options) {
         'servlet_base': 'servlet',
         'query_servlet_name': 'query',
         'explore_servlet_name': 'explore',
-        'results_per_page' : 25,
-        'inference' : false,
+        'results_per_page' : 50,
+        'inference' : true,
         'logging' : false,
-        'default_query' : "SELECT DISTINCT ?class \nwhere {[] a ?class}",
+        'default_query' : "SELECT DISTINCT ?class \nFROM <http://mor.nlm.nih.gov/mesh2014>\nWHERE {[] a ?class}",
         'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
