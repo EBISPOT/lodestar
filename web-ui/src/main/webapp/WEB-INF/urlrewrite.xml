@@ -85,5 +85,52 @@
         <to>/servlet/explore$1</to>
     </rule>
 
+    <!-- depict; which right now is a copy/hack of describe/explore -->
+
+    <!--
+      The first set of rules does the content-negotiation.  If the user gives us a URL without a
+      filename extension, then we will redirect him to the same URL, but with a filename extension
+      added.  The extension depends on the value of the "Accept" header.
+    -->
+    <rule>
+      <condition name="Accept" type="header">text/html</condition>
+      <from>/depict/([^.]*)$</from>
+      <to type="redirect" qsappend="false">$1.html</to>
+    </rule>
+
+    <rule>
+      <condition name="Accept" type="header">application/rdf+xml</condition>
+      <from>/depict/([^.]*)$</from>
+      <to type="redirect" qsappend="false">$1.rdf</to>
+    </rule>
+
+    <rule>
+      <condition name="Accept" type="header">application/json</condition>
+      <from>/depict/([^.]*)$</from>
+      <to type="redirect" qsappend="false">$1.json</to>
+    </rule>
+
+    <!--
+      Now handle the URLs that have extensions.  First, ".html" - it is special, because it's
+      handled by the static html page, which then uses JS to make a pretty display.
+    -->
+    <rule>
+      <from>/depict/(.*).html</from>
+      <to>/depict.html</to>
+    </rule>
+
+    <!--
+      Next, andy other URL that has an extension will get passed to the depict servlet for 
+      processing.
+    -->
+
+    <rule>
+      <from>/depict/(.*)$</from>
+      <to>/servlet/explore?uri=$1</to>
+    </rule>
+
+
+
+
 
 </urlrewrite>
