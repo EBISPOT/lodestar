@@ -120,13 +120,13 @@
     </rule>
 
     <!--
-      Next, andy other URL that has an extension will get passed to the depict servlet for 
+      Next, any other URL that has an extension will get passed to the depict servlet for 
       processing.
     -->
 
     <rule>
-      <from>/depict/(.*)$</from>
-      <to>/servlet/explore?uri=$1</to>
+      <from>/depict/(.*)\.(.*)$</from>
+      <to>/servlet/explore?id=$1&amp;format=$2</to>
     </rule>
 
 

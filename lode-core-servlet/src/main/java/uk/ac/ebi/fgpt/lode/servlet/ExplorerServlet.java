@@ -82,7 +82,10 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsXml (
             @RequestParam(value = "uri", required = true ) String uri,
-            HttpServletResponse response) throws IOException, LodeException {
+            HttpServletResponse response) throws IOException, LodeException 
+    {
+        log.info("In describeResourceAsXml");
+
         if (uri != null && uri.length() > 0) {
             String query = "DESCRIBE <" + URI.create(uri) + ">";
             response.setContentType("application/rdf+xml");
@@ -101,7 +104,10 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsN3 (
             @RequestParam(value = "uri", required = true ) String uri,
-            HttpServletResponse response) throws IOException, LodeException {
+            HttpServletResponse response) throws IOException, LodeException 
+    {
+        log.info("In describeResourceAsN3");
+
         if (uri != null && uri.length() > 0) {
             String query = "DESCRIBE <" + URI.create(uri) + ">";
             log.trace("querying for graph rdf+n3");
@@ -121,7 +127,10 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsJson (
             @RequestParam(value = "uri", required = true ) String uri,
-            HttpServletResponse response) throws IOException, LodeException {
+            HttpServletResponse response) throws IOException, LodeException 
+    {
+        log.info("In describeResourceAsJson");
+
         if (uri != null && uri.length() > 0) {
             String query = "DESCRIBE <" + URI.create(uri) + ">";
             log.trace("querying for graph rdf+n3");
@@ -137,11 +146,40 @@ public class ExplorerServlet {
         }
     }
 
+    // Proof-of-concept:
+
+    @RequestMapping (produces="text/plain")
+    public @ResponseBody
+    void describeResourceAsText (
+            @RequestParam(value = "id", required = true ) String id,
+            @RequestParam(value = "format", required = true ) String format,
+            HttpServletResponse response) 
+        throws IOException, LodeException 
+    {
+        log.info("In the new and fantastically improved describeResourceAsText");
+
+        if (id != null && id.length() > 0) {
+            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
+            response.setContentType("text/plain");
+            ServletOutputStream out = response.getOutputStream();
+            out.println("The format for this should be " + format);
+            getSparqlService().query(query, "JSON-LD", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty id parameter: " + id));
+        }
+    }
+
     public @ResponseBody
     void describeResource (
             @RequestParam(value = "uri", required = true ) String uri,
             @RequestParam(value = "format", required = false ) String format,
-            HttpServletResponse response) throws IOException, LodeException {
+            HttpServletResponse response) throws IOException, LodeException 
+    {
+        log.info("In describeResource");
+
+      /*
         if (uri != null && uri.length() > 0) {
             if (format.toLowerCase().equals("n3")) {
                 describeResourceAsN3(uri, response);
@@ -154,10 +192,14 @@ public class ExplorerServlet {
             }
         }
         else {
+      */
             handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+      /*
         }
+      */
     }
 
+/*
     @RequestMapping(value = "/resourceTypes", method = RequestMethod.GET)
     public @ResponseBody Collection<RelatedResourceDescription> getTypesWithLabelsAndDescription(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
@@ -282,6 +324,8 @@ public class ExplorerServlet {
             return Collections.emptyList();
         }
     }
+*/
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
