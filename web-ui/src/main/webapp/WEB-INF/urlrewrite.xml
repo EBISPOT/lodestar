@@ -20,31 +20,31 @@
 
     <!-- Testing -->
     <rule>
-      <from>^/foo$</from>
+      <from casesensitive="true">^/foo$</from>
       <to>/error2.html</to>
     </rule>
 
 
     <rule>
         <condition name="Accept" type="header">text/html</condition>
-        <from>^/sparql$</from>
-        <to>/query.html</to>
+        <from casesensitive="true">^/sparql$</from>
+        <to last='true'>/query.html</to>
     </rule>
 
     <rule>
         <condition name="Accept" type="header" operator="notequal">text/html</condition>
-        <from>^/sparql(.*)$</from>
+        <from casesensitive="true">^/sparql(.*)$</from>
         <to>/servlet/query$1</to>
     </rule>
 
     <rule>
       <condition name="Accept" type="header">text/html</condition>
-      <from>^/((D|Q|T|M)[^.]*)$</from>
+      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
       <to type="redirect" qsappend="false">$1.html</to>
     </rule>
 
     <rule>
-      <from>^/(D|Q|T|M).*\.html$</from>
+      <from casesensitive="true">^/(D|Q|T|M).*\.html$</from>
       <to>/explore.html</to>
     </rule>
 
@@ -61,12 +61,12 @@
 
     <rule>
       <condition name="Accept" type="header">application/rdf\+xml</condition>
-      <from>^/((D|Q|T|M)[^.]*)$</from>
+      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
       <to>/servlet/explore?id=$1&amp;format=rdf</to>
     </rule>
 
     <rule>
-      <from>^/((D|Q|T|M).*)\.rdf$</from>
+      <from casesensitive="true">^/((D|Q|T|M).*)\.rdf$</from>
       <to>/servlet/explore?id=$1&amp;format=rdf</to>
     </rule>
 
@@ -75,12 +75,12 @@
 
     <rule>
       <condition name="Accept" type="header">application/rdf\+n3</condition>
-      <from>^/((D|Q|T|M)[^.]*)$</from>
+      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
       <to>/servlet/explore?id=$1&amp;format=n3</to>
     </rule>
 
     <rule>
-      <from>^/((D|Q|T|M).*)\.n3$</from>
+      <from casesensitive="true">^/((D|Q|T|M).*)\.n3$</from>
       <to>/servlet/explore?id=$1&amp;format=n3</to>
     </rule>
 
@@ -88,13 +88,13 @@
 
     <rule>
       <condition name="Accept" type="header">application/rdf\+json</condition>
-      <from>^/((D|Q|T|M)[^.]*)$</from>
+      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
       <to>/servlet/explore?id=$1&amp;format=json</to>
     </rule>
 
     <rule>
-      <from>^/((D|Q|T|M).*)\.json$</from>
-      <to>/servlet/explore?id=$1&amp;format=rdf</to>
+      <from casesensitive="true">^/((D|Q|T|M).*)\.json$</from>
+      <to>/servlet/explore?id=$1&amp;format=json</to>
       <!--<to>/servlet/explore?id=$1&amp;format=json</to>-->
     </rule>
 
@@ -107,7 +107,7 @@
 <!--
     <rule>
       <condition type="method" operator='equal'>POST</condition>
-      <from>/sparql$</from>
+      <from casesensitive="true">/sparql$</from>
       <to last="true">/servlet/query$1</to>
     </rule>
 
@@ -116,7 +116,7 @@
     <rule>
         <condition name="Accept" type="header" next="or">text/html</condition>
         <condition name="user-agent">MSIE</condition>
-        <from>/describe$</from>
+        <from casesensitive="true">/describe$</from>
         <to>/explore.html</to>
     </rule>
 -->
@@ -125,13 +125,13 @@
 <!--
     <rule>
         <condition name="Accept" type="header">application/sparql.*</condition>
-        <from>/sparql(.*)$</from>
+        <from casesensitive="true">/sparql(.*)$</from>
         <to>/servlet/query$1</to>
     </rule>
 
     <rule>
         <condition name="Accept" type="header">text/*</condition>
-        <from>/sparql(.*)$</from>
+        <from casesensitive="true">/sparql(.*)$</from>
         <to>/servlet/query$1</to>
     </rule>
      -->
@@ -140,13 +140,13 @@
   <!-- explore service rewriting 
     <rule>
         <condition name="Accept" type="header" operator="notequal">text/html</condition>
-        <from>/describe$</from>
+        <from casesensitive="true">/describe$</from>
         <to>/servlet/explore$1</to>
     </rule>
 
     <rule>
         <condition name="Accept" type="header">application/rdf.*</condition>
-        <from>/describe(.*)$</from>
+        <from casesensitive="true">/describe(.*)$</from>
         <to>/servlet/explore$1</to>
     </rule>
   -->
@@ -163,13 +163,13 @@
 
     <rule>
       <condition name="Accept" type="header">application/rdf+xml</condition>
-      <from>/depict/([^.]*)$</from>
+      <from casesensitive="true">/depict/([^.]*)$</from>
       <to type="redirect" qsappend="false">$1.rdf</to>
     </rule>
 
     <rule>
       <condition name="Accept" type="header">application/json</condition>
-      <from>/depict/([^.]*)$</from>
+      <from casesensitive="true">/depict/([^.]*)$</from>
       <to type="redirect" qsappend="false">$1.json</to>
     </rule>
     -->
@@ -178,7 +178,7 @@
       Now handle the URLs that have extensions.  First, ".html" - it is special, because it's
       handled by the static html page, which then uses JS to make a pretty display.
     <rule>
-      <from>/depict/(.*).html</from>
+      <from casesensitive="true">/depict/(.*).html</from>
       <to>/depict.html</to>
     </rule>
     -->
@@ -187,7 +187,7 @@
       Next, any other URL that has an extension will get passed to the depict servlet for 
       processing.
     <rule>
-      <from>/depict/(.*)\.(.*)$</from>
+      <from casesensitive="true">/depict/(.*)\.(.*)$</from>
       <to>/servlet/explore?id=$1&amp;format=$2</to>
     </rule>
     -->

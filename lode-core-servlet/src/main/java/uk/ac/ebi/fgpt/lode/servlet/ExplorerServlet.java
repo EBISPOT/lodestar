@@ -95,7 +95,7 @@ public class ExplorerServlet {
             HttpServletResponse response) 
         throws IOException, LodeException 
     {
-        log.info("In describeResourceAsHTML");
+        log.info("In describeResourceAsHTML; id = '" + id + ", format = " + format);
         describeResource(id, format, response);
     }
 
@@ -108,7 +108,7 @@ public class ExplorerServlet {
             HttpServletResponse response) 
         throws IOException, LodeException 
     {
-        log.info("In describeResourceAsXml");
+        log.info("In describeResourceAsXml; id = '" + id + ", format = " + format);
         describeResource(id, format, response);
     }
 
@@ -120,20 +120,20 @@ public class ExplorerServlet {
             HttpServletResponse response) 
         throws IOException, LodeException 
     {
-        log.info("In describeResourceAsN3");
+        log.info("In describeResourceAsN3; id = '" + id + ", format = " + format);
         describeResource(id, format, response);
     }
-
 
 
     @RequestMapping (produces="application/rdf+json")
     public @ResponseBody
     void describeResourceAsJson (
             @RequestParam(value = "id", required = true ) String id,
+            @RequestParam(value = "format", required = true ) String format,
             HttpServletResponse response) 
         throws IOException, LodeException 
     {
-        log.info("In describeResourceAsJson");
+        log.info("In describeResourceAsJson; id = '" + id + ", format = " + format);
         describeResource(id, format, response);
     }
 

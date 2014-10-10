@@ -60,10 +60,6 @@
         <param-name>logLevel</param-name>
         <param-value>DEBUG</param-value>
       </init-param>
-      <init-param>
-        <param-name>confReloadCheckInterval</param-name>
-        <param-value>0</param-value>
-      </init-param>
     </filter>
 
     <filter-mapping>
