@@ -78,125 +78,96 @@ public class ExplorerServlet {
         return log;
     }
 
-    @RequestMapping (produces="application/rdf+xml")
+
+    /* 
+    * FIXME:  This is a work-around for now, so that URIs that have filename
+    * extensions will work from the browser.  Extensions, like ".rdf", are a 
+    * way to simulate content negotiation usually done with the accept header,
+    * "application/rdf+xml".  So, the `produces="text/html"` annotation here
+    * means that this will be invoked when accessed from a browser.  But, in
+    * fact, the content-type produced will depend the format string.
+    */
+    @RequestMapping (produces="text/html")
     public @ResponseBody
-    void describeResourceAsXml (
-            @RequestParam(value = "uri", required = true ) String uri,
-            HttpServletResponse response) throws IOException, LodeException 
-    {
-        log.info("In describeResourceAsXml");
-
-        if (uri != null && uri.length() > 0) {
-            String query = "DESCRIBE <" + URI.create(uri) + ">";
-            response.setContentType("application/rdf+xml");
-            ServletOutputStream out = response.getOutputStream();
-            out.println();
-            out.println();
-            getSparqlService().query(query, "RDF/XML", false, out);
-            out.close();
-        }
-        else {
-
-        }
-    }
-
-    @RequestMapping (produces="application/rdf+n3")
-    public @ResponseBody
-    void describeResourceAsN3 (
-            @RequestParam(value = "uri", required = true ) String uri,
-            HttpServletResponse response) throws IOException, LodeException 
-    {
-        log.info("In describeResourceAsN3");
-
-        if (uri != null && uri.length() > 0) {
-            String query = "DESCRIBE <" + URI.create(uri) + ">";
-            log.trace("querying for graph rdf+n3");
-            response.setContentType("application/rdf+n3");
-            ServletOutputStream out = response.getOutputStream();
-            out.println();
-            out.println();
-            getSparqlService().query(query, "N3", false, out);
-            out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
-        }
-    }
-
-    @RequestMapping (produces="application/rdf+json")
-    public @ResponseBody
-    void describeResourceAsJson (
-            @RequestParam(value = "uri", required = true ) String uri,
-            HttpServletResponse response) throws IOException, LodeException 
-    {
-        log.info("In describeResourceAsJson");
-
-        if (uri != null && uri.length() > 0) {
-            String query = "DESCRIBE <" + URI.create(uri) + ">";
-            log.trace("querying for graph rdf+n3");
-            response.setContentType("application/rdf+json");
-            ServletOutputStream out = response.getOutputStream();
-            out.println();
-            out.println();
-            getSparqlService().query(query, "JSON-LD", false, out);
-            out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
-        }
-    }
-
-    // Proof-of-concept:
-
-    @RequestMapping (produces="text/plain")
-    public @ResponseBody
-    void describeResourceAsText (
+    void describeResourceAsHTML (
             @RequestParam(value = "id", required = true ) String id,
             @RequestParam(value = "format", required = true ) String format,
             HttpServletResponse response) 
         throws IOException, LodeException 
     {
-        log.info("In the new and fantastically improved describeResourceAsText");
-
-        if (id != null && id.length() > 0) {
-            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
-            response.setContentType("text/plain");
-            ServletOutputStream out = response.getOutputStream();
-            out.println("The format for this should be " + format);
-            getSparqlService().query(query, "JSON-LD", false, out);
-            out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty id parameter: " + id));
-        }
+        log.info("In describeResourceAsHTML");
+        describeResource(id, format, response);
     }
+
+
+    @RequestMapping (produces="application/rdf+xml")
+    public @ResponseBody
+    void describeResourceAsXml (
+            @RequestParam(value = "id", required = true ) String id,
+            @RequestParam(value = "format", required = true ) String format,
+            HttpServletResponse response) 
+        throws IOException, LodeException 
+    {
+        log.info("In describeResourceAsXml");
+        describeResource(id, format, response);
+    }
+
+    @RequestMapping (produces="application/rdf+n3")
+    public @ResponseBody
+    void describeResourceAsN3 (
+            @RequestParam(value = "id", required = true ) String id,
+            @RequestParam(value = "format", required = true ) String format,
+            HttpServletResponse response) 
+        throws IOException, LodeException 
+    {
+        log.info("In describeResourceAsN3");
+        describeResource(id, format, response);
+    }
+
+
+
+    @RequestMapping (produces="application/rdf+json")
+    public @ResponseBody
+    void describeResourceAsJson (
+            @RequestParam(value = "id", required = true ) String id,
+            HttpServletResponse response) 
+        throws IOException, LodeException 
+    {
+        log.info("In describeResourceAsJson");
+        describeResource(id, format, response);
+    }
+
 
     public @ResponseBody
     void describeResource (
-            @RequestParam(value = "uri", required = true ) String uri,
-            @RequestParam(value = "format", required = false ) String format,
-            HttpServletResponse response) throws IOException, LodeException 
+            @RequestParam(value = "id", required = true ) String id,
+            @RequestParam(value = "format", required = true ) String format,
+            HttpServletResponse response) 
+        throws IOException, LodeException 
     {
         log.info("In describeResource");
 
-      /*
-        if (uri != null && uri.length() > 0) {
-            if (format.toLowerCase().equals("n3")) {
-                describeResourceAsN3(uri, response);
-            }
-            else if (format.toLowerCase().equals("json-ld")) {
-                describeResourceAsJson(uri, response);
-            }
-            else {
-                describeResourceAsXml(uri, response);
-            }
+        if (id != null && id.length() > 0) {
+            String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
+
+            response.setContentType(
+                format.equals("rdf") ? "application/rdf+xml" :
+                format.equals("n3")  ? "application/rdf+n3" :
+                                       "application/rdf+json"
+            );
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+
+            String format_spec = format.equals("rdf") ? "RDF/XML" :
+                                 format.equals("n3")  ? "N3" :
+                                                        "JSON-LD";
+            getSparqlService().query(query, format_spec, false, out);
+            out.close();
         }
         else {
-      */
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
-      /*
+            handleBadUriException(new Exception("Malformed or empty ID request: " + id));
         }
-      */
+
     }
 
 /*
