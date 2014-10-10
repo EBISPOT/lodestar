@@ -20,7 +20,9 @@ var lodeNamespacePrefixes = {
     dbpedia2: 'http://dbpedia.org/property/',
     dbpedia: 'http://dbpedia.org/',
     foaf: 'http://xmlns.com/foaf/0.1/',
-    skos: 'http://www.w3.org/2004/02/skos/core#'
+    skos: 'http://www.w3.org/2004/02/skos/core#',
 
+    meshv: 'http://id.nlm.nih.gov/mesh/vocab#',
+    mesh: 'http://id.nlm.nih.gov/mesh/'
 };
 
