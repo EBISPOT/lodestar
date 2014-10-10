@@ -1,27 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-    <title>SPARQL Explorer</title>
-    <link rel="stylesheet" type="text/css" href="css/lode-style.css" />
-    <link rel="stylesheet" type="text/css" href="codemirror/codemirror.css" />
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="codemirror/codemirror.js"></script>
-    <script type="text/javascript" src="codemirror/sparql.js"></script>
-    <script type="text/javascript" src="scripts/namespaces.js"></script>
-    <script type="text/javascript" src="scripts/queries.js"></script>
-    <script type="text/javascript" src="scripts/lode.js"></script>
-</head>
+<!DOCTYPE html>
+<html lang="en">
 
+  <head>
+    <meta charset="utf-8" />
 
-<div class="grid_24">
-    <h1>Welcome to Lodestar</h1>
-    <p>Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based web app that can wrap any existing SPARQL endpoint to provide a set of additional SPARQL and Linked Data services. Lodestar was developed to provide a consistent set of SPARQL and Linked Data services across the European Bioinformatics Institute (EBI).</p>
-    <p>The Lodestar SPARQL endpoint should be available <a href="./sparql">here</a></p>
-    <p>For more information see <a href="http://www.ebi.ac.uk/fgpt/sw/lodestar">http://www.ebi.ac.uk/fgpt/sw/lodestar</a></p>
+    <title>Linked Data</title>
 
-</div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
 
-</body>
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script data-require="jquery" data-semver="2.1.1" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+      <div class="header"></div>
+      <div class="container-fluid">
+      <div id="meshTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="home">
+          <h1>Medical Subject Headings (MeSH) RDF Linked Data (beta)</h1>
+          <h2><a href="./sparql">SPARQL Endpoint</a></h2>
+          <p>The SPARQL endpoint provides an interface for querying the MeSH RDF data directly. There are sample queries to get you started. </p>
+          <h2><a href="download.html">Download</a></h2>
+          <p>Download the MeSH RDF data here</p>
+          <!--<h2><a href="api.html">API</a></h2>
+          <p>If we end up with an API by the beta release date, we can to link to documentation here. If we don't have an API, this link will go away.</p>-->
+          <h2><a href="documentation.html">MeSH RDF Documentation</a></h2>
+          <p>Learn how to use MeSH RDF here.</p>
+          <hr />
+          <h3><a href="about.html">About This Project</a></h3>
+          <!--<h3><a href="http://www.nlm.nih.gov/pubs/factsheets/mesh.html">MeSH Fact Sheet</a></h3>-->
+          <h3><a href="http://www.nlm.nih.gov/mesh/introduction.html" target = "_blank">Introduction to MeSH</a></h3>
+          <h3><a href="http://www.w3.org/RDF/" target = "_blank">What is RDF?</a></h3>
+          <h3><a href="http://www.w3.org/standards/semanticweb/" target = "_blank">What is the Semantic Web?</a></h3>
+          <div class="footer"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(function() {
+        $(".header").load("header.html");
+        $(".footer").load("footer.html");
+      });
+    </script>
+  </body>
 
 </html>
+
