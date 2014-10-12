@@ -26,15 +26,6 @@
       </repository>
     </repositories>
 
-    <repositories>
-      <repository>
-        <id>maloneyc</id>
-        <name>Chris Maloney's repo hosted at NCBI</name>
-        <url>http://www.ncbi.nlm.nih.gov/staff/maloneyc/maven-repository</url>
-      </repository>
-    </repositories>
-
-
     <build>
         <plugins>
             <plugin>
