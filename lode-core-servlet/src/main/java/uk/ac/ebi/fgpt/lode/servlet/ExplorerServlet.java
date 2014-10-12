@@ -79,223 +79,42 @@ public class ExplorerServlet {
     }
 
 
-    /* 
-    * FIXME:  This is a work-around for now, so that URIs that have filename
-    * extensions will work from the browser.  Extensions, like ".rdf", are a 
-    * way to simulate content negotiation usually done with the accept header,
-    * "application/rdf+xml".  So, the `produces="text/html"` annotation here
-    * means that this will be invoked when accessed from a browser.  But, in
-    * fact, the content-type produced will depend the format string.
-    */
-    @RequestMapping (produces="text/html")
-    public @ResponseBody
-    void describeResourceAsHTML (
-            @RequestParam(value = "id", required = true ) String id,
-            @RequestParam(value = "format", required = true ) String format,
-            HttpServletResponse response) 
-        throws IOException, LodeException 
-    {
-        log.info("In describeResourceAsHTML; id = '" + id + ", format = " + format);
-        describeResource(id, format, response);
-    }
 
-
-    @RequestMapping (produces="application/rdf+xml")
-    public @ResponseBody
-    void describeResourceAsXml (
-            @RequestParam(value = "id", required = true ) String id,
-            @RequestParam(value = "format", required = true ) String format,
-            HttpServletResponse response) 
-        throws IOException, LodeException 
-    {
-        log.info("In describeResourceAsXml; id = '" + id + ", format = " + format);
-        describeResource(id, format, response);
-    }
-
-    @RequestMapping (produces="application/rdf+n3")
-    public @ResponseBody
-    void describeResourceAsN3 (
-            @RequestParam(value = "id", required = true ) String id,
-            @RequestParam(value = "format", required = true ) String format,
-            HttpServletResponse response) 
-        throws IOException, LodeException 
-    {
-        log.info("In describeResourceAsN3; id = '" + id + ", format = " + format);
-        describeResource(id, format, response);
-    }
-
-
-    @RequestMapping (produces="application/rdf+json")
-    public @ResponseBody
-    void describeResourceAsJson (
-            @RequestParam(value = "id", required = true ) String id,
-            @RequestParam(value = "format", required = true ) String format,
-            HttpServletResponse response) 
-        throws IOException, LodeException 
-    {
-        log.info("In describeResourceAsJson; id = '" + id + ", format = " + format);
-        describeResource(id, format, response);
-    }
-
-
+    @RequestMapping
     public @ResponseBody
     void describeResource (
             @RequestParam(value = "id", required = true ) String id,
-            @RequestParam(value = "format", required = true ) String format,
+            @RequestParam(value = "format", required = false ) String format,
+            @RequestHeader(value = "X-Forwarded-Host", required = false) String forwarded_host,
             HttpServletResponse response) 
         throws IOException, LodeException 
     {
-        log.info("In describeResource");
+        log.info("In describeResource; id = '" + id + "', format = '" + format + 
+                 "', forwarded_host = " + forwarded_host);
 
         if (id != null && id.length() > 0) {
             String query = "DESCRIBE <http://id.nlm.nih.gov/mesh/" + id + ">";
 
-            response.setContentType(
-                format.equals("rdf") ? "application/rdf+xml" :
-                format.equals("n3")  ? "application/rdf+n3" :
-                                       "application/rdf+json"
-            );
-            ServletOutputStream out = response.getOutputStream();
-            out.println();
+            String out_content_type = 
+                format.equals("rdf") || format.equals("xml") ? "application/rdf+xml" :
+                format.equals("n3")                          ? "application/rdf+n3" :
+                format.equals("json")                        ? "application/rdf+json" :
+                                                               "text/plain";
+            response.setContentType(out_content_type);
 
-            String format_spec = format.equals("rdf") ? "RDF/XML" :
-                                 format.equals("n3")  ? "N3" :
-                                                        "JSON-LD";
+            ServletOutputStream out = response.getOutputStream();
+            String format_spec = 
+                format.equals("rdf") || format.equals("xml") ? "RDF/XML" :
+                format.equals("n3")                          ? "N3" :
+                format.equals("json")                        ? "JSON-LD" :
+                                                               "JSON-LD" ;
             getSparqlService().query(query, format_spec, false, out);
             out.close();
         }
         else {
             handleBadUriException(new Exception("Malformed or empty ID request: " + id));
         }
-
     }
-
-/*
-    @RequestMapping(value = "/resourceTypes", method = RequestMethod.GET)
-    public @ResponseBody Collection<RelatedResourceDescription> getTypesWithLabelsAndDescription(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-
-        if (uri != null && uri.length() > 0) {
-            return getService().getTypes(
-                    URI.create(uri),
-                    getConfiguration().getIgnoreTypes(),
-                    getConfiguration().ignoreBlankNodes()
-                    );
-        }
-        else {
-            return Collections.emptyList();
-        }
-    }
-
-    @RequestMapping(value = "/resourceAllTypes", method = RequestMethod.GET)
-    public @ResponseBody Collection<RelatedResourceDescription> getAllTypesWithLabelsAndDescription(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-
-        if (uri != null && uri.length() > 0) {
-            return getService().getAllTypes(
-                    URI.create(uri),
-                    getConfiguration().getIgnoreTypes(),
-                    getConfiguration().ignoreBlankNodes()
-                    );
-        }
-        else {
-            return Collections.emptyList();
-        }
-    }
-
-    @RequestMapping(value = "/relatedToObjects", method = RequestMethod.GET)
-    public @ResponseBody Collection<RelatedResourceDescription> getRelatedToObjects(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-        if (uri != null && uri.length() > 0) {
-            // get the relationships to ignore
-            Set<URI> ignoreProps = getConfiguration().getIgnoreRelationships();
-            ignoreProps.addAll(getConfiguration().getTopRelationships());
-
-            return getService().getRelatedToObjects(
-                    URI.create(uri),
-                    ignoreProps,
-                    getConfiguration().getIgnoreTypes(),
-                    getConfiguration().ignoreBlankNodes());
-        }
-        else {
-            return Collections.emptyList();
-        }
-    }
-
-    @RequestMapping(value = "/resourceShortDescription", method = RequestMethod.GET)
-    public @ResponseBody ShortResourceDescription getShortResourceDescritption(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-
-        getLog().trace("Getting short description for: " + uri);
-
-        if (uri != null && uri.length() > 0) {
-            return getService().getShortResourceDescription(
-                    URI.create(uri),
-                    getConfiguration().getLabelRelations(),
-                    getConfiguration().getDescriptionRelations()
-            );
-        }
-        else {
-            return new ShortResourceDescription(uri, uri, null, null);
-        }
-    }
-
-    @RequestMapping(value = "/resourceDepictions", method = RequestMethod.GET)
-    public @ResponseBody
-    Collection<DepictionBean> getShortResourceDepiction(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-
-        getLog().trace("Getting image urls for: " + uri);
-        Set<DepictionBean> dps= new HashSet<DepictionBean>();
-        if (uri != null && uri.length() > 0) {
-
-            for (String u :  getService().getResourceDepiction(
-                    URI.create(uri),
-                    getConfiguration().getDepictRelation())) {
-                dps.add(new DepictionBean(u));
-            }
-            return dps;
-        }
-        else {
-            return Collections.emptySet();
-        }
-    }
-
-    @RequestMapping(value = "/resourceTopObjects", method = RequestMethod.GET)
-    public @ResponseBody Collection<RelatedResourceDescription> getTopRelatedResourceByProperty(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-
-        getLog().trace("Getting top objects for: " + uri);
-
-        if (uri != null && uri.length() > 0) {
-            Set<URI> toprelations = new LinkedHashSet<URI>(getConfiguration().getTopRelationships());
-            return getService().getRelatedResourceByProperty(
-                    URI.create(uri),
-                    toprelations,
-                           getConfiguration().getIgnoreTypes(),
-                            getConfiguration().ignoreBlankNodes());
-        }
-        else {
-            return Collections.emptyList();
-        }
-    }
-
-
-    @RequestMapping("/relatedFromSubjects")
-    public @ResponseBody Collection<RelatedResourceDescription> getRelatedFromSubjects(
-            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-        if (uri != null && uri.length() > 0) {
-            return getService().getRelatedFromSubjects(
-                    URI.create(uri),
-                    new HashSet<URI>(),
-                    getConfiguration().getIgnoreTypes(),
-                    getConfiguration().ignoreBlankNodes());
-        }
-        else {
-            return Collections.emptyList();
-        }
-    }
-*/
 
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

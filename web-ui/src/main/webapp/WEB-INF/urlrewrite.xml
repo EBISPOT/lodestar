@@ -3,105 +3,66 @@
         "http://tuckey.org/res/dtds/urlrewrite2.6.dtd">
 
 <!--
-
-    Configuration file for UrlRewriteFilter
-    http://tuckey.org/urlrewrite/
-
+  Configuration file for UrlRewriteFilter
+  http://tuckey.org/urlrewrite/
 -->
+
 <urlrewrite>
 
-    <!--
-      Note:  "from" patterns, by default, match anywhere in the URL.  So, for example, if you write
-        <from>/sparql</from>
-      then that would match "/scripts/sparql.js".
-      So, in general, always anchor your "from" patterns with "^/" and "$".
-    -->
+  <!--
+    Note:  "from" patterns, by default, match anywhere in the URL.  So, for example, if you write
+      <from>/sparql</from>
+    then that would match "/scripts/sparql.js".
+    So, in general, always anchor your "from" patterns with "^/" and "$".
+  -->
 
-
-    <!-- Testing -->
-    <rule>
-      <from casesensitive="true">^/foo$</from>
-      <to>/error2.html</to>
-    </rule>
-
-
-    <rule>
-        <condition name="Accept" type="header">text/html</condition>
-        <from casesensitive="true">^/sparql$</from>
-        <to last='true'>/query.html</to>
-    </rule>
-
-    <rule>
-        <condition name="Accept" type="header" operator="notequal">text/html</condition>
-        <from casesensitive="true">^/sparql(.*)$</from>
-        <to>/servlet/query$1</to>
-    </rule>
-
-    <rule>
-      <condition name="Accept" type="header">text/html</condition>
-      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
-      <to type="redirect" qsappend="false">$1.html</to>
-    </rule>
-
-    <rule>
-      <from casesensitive="true">^/(D|Q|T|M).*\.html$</from>
-      <to>/explore.html</to>
-    </rule>
-
-
-    <!--
-      FIXME:  the following sets should probably be combined into just two rules, the
-      first that matchies a URI with not dot and an accept header not equal to "text/html";
-      and the second that matches any URI with a dot.
-      Note that there's a lot of redundant places where content-types are mapped to 
-      extensions - both here and in ExporeServlet.java.  Could be DRY'ed.
-      But for now, we'll be explicit here about what accept headers and format extensions
-      we'll allow.
-    -->
-
-    <rule>
-      <condition name="Accept" type="header">application/rdf\+xml</condition>
-      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
-      <to>/servlet/explore?id=$1&amp;format=rdf</to>
-    </rule>
-
-    <rule>
-      <from casesensitive="true">^/((D|Q|T|M).*)\.rdf$</from>
-      <to>/servlet/explore?id=$1&amp;format=rdf</to>
-    </rule>
+  <!-- for testing
+  <rule>
+    <from casesensitive="true">^/foo$</from>
+    <to>/servlet/explore</to>
+  </rule>
+-->
 
 
 
+  <rule>
+    <condition name="Accept" type="header">text/html</condition>
+    <from casesensitive="true">^/sparql$</from>
+    <to last='true'>/query.html</to>
+  </rule>
 
-    <rule>
-      <condition name="Accept" type="header">application/rdf\+n3</condition>
-      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
-      <to>/servlet/explore?id=$1&amp;format=n3</to>
-    </rule>
+  <rule>
+    <condition name="Accept" type="header" operator="notequal">text/html</condition>
+    <from casesensitive="true">^/sparql(.*)$</from>
+    <to>/servlet/query$1</to>
+  </rule>
 
-    <rule>
-      <from casesensitive="true">^/((D|Q|T|M).*)\.n3$</from>
-      <to>/servlet/explore?id=$1&amp;format=n3</to>
-    </rule>
+  <!--
+    FIXME: I can't figure out how to do this with 303 instread of 302.  It might be
+    better to do in the servlet.
+  -->
+  <rule>
+    <condition name="Accept" type="header">text/html</condition>
+    <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
+    <to type="redirect" qsappend="false">$1.html</to>
+  </rule>
 
+  <rule>
+    <from casesensitive="true">^/(D|Q|T|M).*\.html$</from>
+    <to>/explore.html</to>
+  </rule>
 
+  <rule>
+    <condition name="Accept" type="header" operator="notequal">text/html</condition>
+    <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
+    <to>/servlet/explore?id=$1</to>
+  </rule>
 
-    <rule>
-      <condition name="Accept" type="header">application/rdf\+json</condition>
-      <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
-      <to>/servlet/explore?id=$1&amp;format=json</to>
-    </rule>
+  <rule>
+    <from casesensitive="true">^/((D|Q|T|M).*)\.(.*)$</from>
+    <to>/servlet/explore?id=$1&amp;format=$3</to>
+  </rule>
 
-    <rule>
-      <from casesensitive="true">^/((D|Q|T|M).*)\.json$</from>
-      <to>/servlet/explore?id=$1&amp;format=json</to>
-      <!--<to>/servlet/explore?id=$1&amp;format=json</to>-->
-    </rule>
-
-
-
-
-<!-- done up to here -->
 
 
 <!--
