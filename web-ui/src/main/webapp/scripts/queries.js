@@ -16,7 +16,7 @@ var exampleQueries = [
         shortname : "Query 1",
         description: "Retrieve the associated concepts and terms for descriptor D015242",
         query: 	"SELECT distinct ?dlabel ?concept ?conlabel ?term ?termlabel ?rn\n" +
-				"FROM <http://mor.nlm.nih.gov/mesh2014>\n" +
+				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				"WHERE {\n" +
 				"  mesh:D015242 rdfs:label ?dlabel .\n" +
 				"  mesh:D015242 meshv:concept ?concept .\n" +
@@ -31,7 +31,7 @@ var exampleQueries = [
         shortname : "Query 2",
         description: "Retrieve all of the descriptors and concepts, where concept labels start with levo but descriptor labels do not start with levo ",
         query:	"SELECT distinct ?desc ?desclabel ?concept ?conlabel\n" +
-				"FROM <http://mor.nlm.nih.gov/mesh2014>\n" +
+				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				"WHERE {\n" +
 				"  ?desc rdfs:label ?desclabel .\n" +
 				"  ?desc rdf:type meshv:Descriptor .\n" +
@@ -46,7 +46,7 @@ var exampleQueries = [
         shortname : "Query 3",
         description: "Get the number of concepts associated with each given descriptor",
         query:	"SELECT ?descriptor (count(?concept) as ?conceptcount)\n" +
-				"FROM <http://mor.nlm.nih.gov/mesh2014>\n" +
+				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				"WHERE {\n" +
 				"  ?descriptor rdf:type meshv:Descriptor .\n" +
 				"  ?descriptor meshv:concept ?concept .\n" +
@@ -60,7 +60,7 @@ var exampleQueries = [
         shortname : "Query 4",
         description: "Get the number of concepts associated with each given SCR ",
         query:	"SELECT ?scr (count(?concept) as ?conceptcount)\n" +
-				"FROM <http://mor.nlm.nih.gov/mesh2014>\n" +
+				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 				"WHERE {\n" +
 				"  ?scr rdf:type meshv:SupplementaryConceptRecord .\n" +
 				"  ?scr meshv:concept ?concept .\n" +
