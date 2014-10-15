@@ -26,7 +26,12 @@ Documentation and stable release at http://www.ebi.ac.uk/fgpt/sw/lodestar.
 Release Notes
 =============
 
-**1.2**  21st August 2013
+**1.3**  15th October August 2014
+* Fixed potential race condition in explorer when using a small number of connection pools
+* Javascript fix to support next/prev links preserving inference option
+* Added no JNDI implementation for virtuoso connection pooling
+
+**1.2**  21st August 2014
 * Updated to Jena 2.12
 * Exposed JSON-LD support from Jena in UI 
 * Moved virtuoso to separate module, only builds in "virtuoso" profile
