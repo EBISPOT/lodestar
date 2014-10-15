@@ -18,6 +18,7 @@
         <org.slf4j.version>1.6.4</org.slf4j.version>
     </properties>
 
+  <!--
     <repositories>
       <repository>
         <id>maloneyc</id>
@@ -25,6 +26,7 @@
         <url>http://www.ncbi.nlm.nih.gov/staff/maloneyc/maven-repository</url>
       </repository>
     </repositories>
+  -->
 
     <build>
         <plugins>
