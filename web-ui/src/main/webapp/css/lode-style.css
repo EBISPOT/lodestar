@@ -51,7 +51,7 @@ span.pagmes {
 }
 
 #app-details {
-    text-align:center;font-size:smaller;color: #d3d3d3;
+    text-align:left;font-size:smaller;color: #d3d3d3;
 }
 
 #lodestar-sparql-form {
