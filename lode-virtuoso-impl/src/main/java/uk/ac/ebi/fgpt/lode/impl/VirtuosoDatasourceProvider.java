@@ -15,44 +15,38 @@ package uk.ac.ebi.fgpt.lode.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.ebi.fgpt.lode.utils.DatasourceProvider;
-import virtuoso.jdbc4.VirtuosoConnectionPoolDataSource;
 import virtuoso.jdbc4.VirtuosoDataSource;
-
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
 /**
  * @author Simon Jupp
- * @date 19/07/2013
- * Functional Genomics Group EMBL-EBI
+ * @date 19/07/2013 Functional Genomics Group EMBL-EBI
  */
 public class VirtuosoDatasourceProvider implements DatasourceProvider {
-
-
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private VirtuosoDataSource virtuosoSource = null;
 
-    public VirtuosoDatasourceProvider(){
-
-        // Get the DataSource
+    public VirtuosoDatasourceProvider() {
+        // Get the DataSource using JNDI
         if (virtuosoSource == null) {
             try {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
                 virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/virtuoso");
 
-            } catch (NamingException e) {
+            }
+            catch (NamingException e) {
                 throw new IllegalStateException("Virtuoso JNDI datasource not configured: " + e.getMessage());
             }
         }
     }
 
-    public VirtuosoDatasourceProvider(String endpointUrl, int port){
+    public VirtuosoDatasourceProvider(String endpointUrl, int port) {
 
         // Get the DataSource
         if (virtuosoSource == null) {
@@ -62,7 +56,8 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
 
                 virtuosoSource.setServerName(endpointUrl);
                 virtuosoSource.setPortNumber(port);
-            } catch (NamingException e) {
+            }
+            catch (NamingException e) {
                 throw new IllegalStateException("Virtuoso JNDI datasource not configured: " + e.getMessage());
             }
         }
@@ -71,5 +66,4 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
     public DataSource getDataSource() throws SQLException {
         return virtuosoSource;
     }
-
 }
