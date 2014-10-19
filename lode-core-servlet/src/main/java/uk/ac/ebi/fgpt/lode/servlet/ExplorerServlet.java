@@ -117,6 +117,131 @@ public class ExplorerServlet {
     }
 
 
+    @RequestMapping(value = "/resourceTypes", method = RequestMethod.GET)
+    public @ResponseBody Collection<RelatedResourceDescription> getTypesWithLabelsAndDescription(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+
+        if (uri != null && uri.length() > 0) {
+            return getService().getTypes(
+                    URI.create(uri),
+                    getConfiguration().getIgnoreTypes(),
+                    getConfiguration().ignoreBlankNodes()
+                    );
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
+    @RequestMapping(value = "/resourceAllTypes", method = RequestMethod.GET)
+    public @ResponseBody Collection<RelatedResourceDescription> getAllTypesWithLabelsAndDescription(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+
+        if (uri != null && uri.length() > 0) {
+            return getService().getAllTypes(
+                    URI.create(uri),
+                    getConfiguration().getIgnoreTypes(),
+                    getConfiguration().ignoreBlankNodes()
+                    );
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
+    @RequestMapping(value = "/relatedToObjects", method = RequestMethod.GET)
+    public @ResponseBody Collection<RelatedResourceDescription> getRelatedToObjects(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+        if (uri != null && uri.length() > 0) {
+            // get the relationships to ignore
+            Set<URI> ignoreProps = getConfiguration().getIgnoreRelationships();
+            ignoreProps.addAll(getConfiguration().getTopRelationships());
+
+            return getService().getRelatedToObjects(
+                    URI.create(uri),
+                    ignoreProps,
+                    getConfiguration().getIgnoreTypes(),
+                    getConfiguration().ignoreBlankNodes());
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
+    @RequestMapping(value = "/resourceShortDescription", method = RequestMethod.GET)
+    public @ResponseBody ShortResourceDescription getShortResourceDescritption(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+
+        getLog().trace("Getting short description for: " + uri);
+
+        if (uri != null && uri.length() > 0) {
+            return getService().getShortResourceDescription(
+                    URI.create(uri),
+                    getConfiguration().getLabelRelations(),
+                    getConfiguration().getDescriptionRelations()
+            );
+        }
+        else {
+            return new ShortResourceDescription(uri, uri, null, null);
+        }
+    }
+
+    @RequestMapping(value = "/resourceDepictions", method = RequestMethod.GET)
+    public @ResponseBody
+    Collection<DepictionBean> getShortResourceDepiction(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+
+        getLog().trace("Getting image urls for: " + uri);
+        Set<DepictionBean> dps= new HashSet<DepictionBean>();
+        if (uri != null && uri.length() > 0) {
+
+            for (String u :  getService().getResourceDepiction(
+                    URI.create(uri),
+                    getConfiguration().getDepictRelation())) {
+                dps.add(new DepictionBean(u));
+            }
+            return dps;
+        }
+        else {
+            return Collections.emptySet();
+        }
+    }
+
+    @RequestMapping(value = "/resourceTopObjects", method = RequestMethod.GET)
+    public @ResponseBody Collection<RelatedResourceDescription> getTopRelatedResourceByProperty(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+
+        getLog().trace("Getting top objects for: " + uri);
+
+        if (uri != null && uri.length() > 0) {
+            Set<URI> toprelations = new LinkedHashSet<URI>(getConfiguration().getTopRelationships());
+            return getService().getRelatedResourceByProperty(
+                    URI.create(uri),
+                    toprelations,
+                           getConfiguration().getIgnoreTypes(),
+                            getConfiguration().ignoreBlankNodes());
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
+    @RequestMapping("/relatedFromSubjects")
+    public @ResponseBody Collection<RelatedResourceDescription> getRelatedFromSubjects(
+            @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
+        if (uri != null && uri.length() > 0) {
+            return getService().getRelatedFromSubjects(
+                    URI.create(uri),
+                    new HashSet<URI>(),
+                    getConfiguration().getIgnoreTypes(),
+                    getConfiguration().ignoreBlankNodes());
+        }
+        else {
+            return Collections.emptyList();
+        }
+    }
+
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(Exception.class)
     public @ResponseBody String handleBadUriException(Exception e)  {

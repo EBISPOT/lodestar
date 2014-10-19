@@ -29,6 +29,7 @@ var lodestarRdfsInference;
 var lodestarDefaultResourceImg;
 
 var loadstarNamespaces = {};
+var lodestarDefaultUriBase;
 var tableid = "loadstar-results-table";
 
 var lodestarNextUrl;
@@ -93,9 +94,12 @@ function _parseOptions(options) {
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-            owl: 'http://www.w3.org/2002/07/owl#'},
+            owl: 'http://www.w3.org/2002/07/owl#',
+            mesh: 'http://id.nlm.nih.gov/mesh/'
+        },
         'example_queries' : [],
-        'default_resource_image_url': 'images/rdf_flyer.gif'
+        'default_resource_image_url': 'images/rdf_flyer.gif',
+        'default_id_prefix': 'mesh'
     }, options);
 
     loadestarQueryService = _options.servlet_base + "/" + _options.query_servlet_name;
@@ -107,6 +111,7 @@ function _parseOptions(options) {
     lodestarVoidQuery = _options.void_query;
     loadstarNamespaces = _options.namespaces;
     lodestarDefaultResourceImg =  _options.default_resource_image_url;
+    lodestarDefaultUriBase = loadstarNamespaces[_options.default_id_prefix];
 
     if (lodestarIslogging) {
         $('#lode-log').show();
@@ -938,14 +943,11 @@ function createTableHeader (names) {
 
 
 function renderResourceTypes(element) {
+    var identifier = getIdentifier(document.location.href);
 
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-        var query = _getPrefixes() + uri;
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+        //var query = _getPrefixes() + uri;
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -955,7 +957,7 @@ function renderResourceTypes(element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceTypes?" + queryString,
+            url: loadstarExploreService + "/resourceTypes?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
@@ -1062,13 +1064,29 @@ function renderAllResourceTypes(element, exclude) {
     }
 }
 
-function renderDepiction (element) {
-    var match = document.location.href.match(/\?(.*)/);
+/**
+ * This returns an RDF URI based on the self-url of this page.  If there is a
+ * query string parameter `uri`, then use that.  Otherwise, we'll assume the URL
+ * is of the form http://<domain>/<script-url>/<id>.<ext>, and we'll create a URI
+ * of the form http://id.nlm.nih.gov/mesh/<id>.  If neither matches, then return null.
+ */
+function getIdentifier(href) {
+    var match = href.match(/\?(.*)/);
     var queryString = match ? match[1] : '';
-    if (queryString.match(/uri=/)) {
+    if (queryString.match(/uri=([^&])/)) {
+        return match[1];
+    }
+    match = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
+    return match ? lodestarDefaultUriBase + match[1] : null;
+}
+
+function renderDepiction (element) {
+    var identifier = getIdentifier(document.location.href);
+
+    if (identifier) {
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceDepictions?" + queryString,
+            url: loadstarExploreService + "/resourceDepictions?uri=" + identifier,
             success: function (data){
 
                 var imgurl = lodestarDefaultResourceImg;
@@ -1089,12 +1107,10 @@ function renderDepiction (element) {
     }
 }
 function renderShortDescription (element) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
+    var identifier = getIdentifier(document.location.href);
 
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -1104,7 +1120,7 @@ function renderShortDescription (element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceShortDescription?" + queryString,
+            url: loadstarExploreService + "/resourceShortDescription?uri=" + identifier,
             success: function (data){
                 loading.empty();
                 var div = element;
@@ -1125,7 +1141,8 @@ function renderShortDescription (element) {
 
                 }
                 if (data.datasetUri) {
-                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='describe?uri=" + encodeURIComponent("http://rdfs.org/ns/void#inDataset") + "'>Dataset</a>");
+                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='describe?uri=" + 
+                        encodeURIComponent("http://rdfs.org/ns/void#inDataset") + "'>Dataset</a>");
                     p.append(propertyP);
                     p.append(" : ");
 
@@ -1150,17 +1167,15 @@ function renderShortDescription (element) {
 }
 
 function renderTopRelatedObjects(p) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
+    var identifier = getIdentifier(document.location.href);
 
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-        var query = _getPrefixes() + uri;
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+        //var query = _getPrefixes() + uri;
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceTopObjects?" + queryString,
+            url: loadstarExploreService + "/resourceTopObjects?uri=" + identifier,
             success: function (data){
 
 //                var p = $("<p></p>");
@@ -1201,13 +1216,10 @@ function renderTopRelatedObjects(p) {
 }
 
 function renderRelatedToObjects(element) {
+    var identifier = getIdentifier(document.location.href);
 
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -1217,7 +1229,7 @@ function renderRelatedToObjects(element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/relatedToObjects?" + queryString,
+            url: loadstarExploreService + "/relatedToObjects?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
@@ -1310,13 +1322,10 @@ function renderRelatedToObjects(element) {
 }
 
 function renderRelatedFromSubjects(element) {
+    var identifier = getIdentifier(document.location.href);
 
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -1326,7 +1335,7 @@ function renderRelatedFromSubjects(element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/relatedFromSubjects?" + queryString,
+            url: loadstarExploreService + "/relatedFromSubjects?uri=" + identifier,
             success: function (data){
 
                 loading.empty();

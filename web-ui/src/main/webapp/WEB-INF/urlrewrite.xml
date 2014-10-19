@@ -43,23 +43,23 @@
   -->
   <rule>
     <condition name="Accept" type="header">text/html</condition>
-    <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
+    <from casesensitive="true">^/([DQTMC][^.]*)$</from>
     <to type="redirect" qsappend="false">$1.html</to>
   </rule>
 
   <rule>
-    <from casesensitive="true">^/(D|Q|T|M).*\.html$</from>
+    <from casesensitive="true">^/[DQTMC].*\.html$</from>
     <to>/explore.html</to>
   </rule>
 
   <rule>
     <condition name="Accept" type="header" operator="notequal">text/html</condition>
-    <from casesensitive="true">^/((D|Q|T|M)[^.]*)$</from>
+    <from casesensitive="true">^/([DQTMC][^.]*)$</from>
     <to>/servlet/explore?id=$1</to>
   </rule>
 
   <rule>
-    <from casesensitive="true">^/((D|Q|T|M).*)\.(.*)$</from>
+    <from casesensitive="true">^/([DQTMC].*)\.(.*)$</from>
     <to>/servlet/explore?id=$1&amp;format=$3</to>
   </rule>
 
