@@ -24,7 +24,12 @@
     <script type="text/javascript" src="scripts/lode.js"></script>
   </head>
 
-  <body onload="$('#sparql-content').sparql({namespaces : lodeNamespacePrefixes, inference: true});">
+  <body onload="$('#sparql-content').sparql({
+    namespaces : lodeNamespacePrefixes, 
+    example_queries: exampleQueries, 
+    default_query: exampleQueries[0].query,
+    inference: true});">
+
     <div class="header"></div>
     <div class="container-fluid">
       <div id="meshTabContent" class="tab-content">

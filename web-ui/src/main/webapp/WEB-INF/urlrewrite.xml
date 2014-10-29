@@ -56,7 +56,7 @@
     <rule>
         <condition name="Accept" type="header" >text/html</condition>
         <from casesensitive="true">^/([DQTMC\d]+)$</from>
-        <to type="redirect">http://iddev.nlm.nih.gov/gang/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
+        <to type="redirect">http://iddev.nlm.nih.gov/mesh/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
     </rule>
 
 
@@ -64,7 +64,7 @@
         <condition name="Accept" type="header" next="or">text/html</condition>
         <condition name="user-agent">MSIE</condition>
         <from casesensitive="true">^/([DQTMC\d]+)$</from>
-        <to type="redirect">http://iddev.nlm.nih.gov/gang/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
+        <to type="redirect">http://iddev.nlm.nih.gov/mesh/describe?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
     </rule>
 
 
@@ -103,13 +103,13 @@
     <rule>
         <condition name="Accept" type="header" operator="notequal">text/html</condition>
         <from casesensitive="true">^/([DQTMC\d]+)$</from>
-        <to type="redirect">http://iddev.nlm.nih.gov/gang/servlet/explore?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
+        <to type="redirect">http://iddev.nlm.nih.gov/mesh/servlet/explore?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
     </rule>
                                                                         
     <rule>
         <condition name="Accept" type="header">application/rdf.*</condition>
         <from casesensitive="true">^/([DQTMC\d]+)$</from>
-        <to type="redirect">http://iddev.nlm.nih.gov/gang/servlet/explore?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
+        <to type="redirect">http://iddev.nlm.nih.gov/mesh/servlet/explore?uri=http%3A%2F%2Fid.nlm.nih.gov%2Fmesh%2F$1</to>
     </rule>
 
 
