@@ -3,87 +3,158 @@
         "http://tuckey.org/res/dtds/urlrewrite2.6.dtd">
 
 <!--
-
-    Configuration file for UrlRewriteFilter
-    http://tuckey.org/urlrewrite/
-
+  Configuration file for UrlRewriteFilter
+  http://tuckey.org/urlrewrite/
 -->
+
 <urlrewrite>
 
+  <!--
+    Note:  "from" patterns, by default, match anywhere in the URL.  So, for example, if you write
+      <from>/sparql</from>
+    then that would match "/scripts/sparql.js".
+    So, in general, always anchor your "from" patterns with "^/" and "$".
+  -->
 
+  <!-- for testing
+  <rule>
+    <from casesensitive="true">^/foo$</from>
+    <to>/servlet/explore</to>
+  </rule>
+-->
+
+
+
+  <rule>
+    <condition name="Accept" type="header">text/html</condition>
+    <from casesensitive="true">^/sparql$</from>
+    <to last='true'>/query.html</to>
+  </rule>
+
+  <rule>
+    <condition name="Accept" type="header" operator="notequal">text/html</condition>
+    <from casesensitive="true">^/sparql(.*)$</from>
+    <to>/servlet/query$1</to>
+  </rule>
+
+  <!--
+    FIXME: I can't figure out how to do this with 303 instread of 302.  It might be
+    better to do in the servlet.
+  -->
+  <rule>
+    <condition name="Accept" type="header">text/html</condition>
+    <from casesensitive="true">^/([DQTMC][^.]*)$</from>
+    <to type="redirect" qsappend="false">$1.html</to>
+  </rule>
+
+  <rule>
+    <from casesensitive="true">^/[DQTMC].*\.html$</from>
+    <to>/explore.html</to>
+  </rule>
+
+  <rule>
+    <condition name="Accept" type="header" operator="notequal">text/html</condition>
+    <from casesensitive="true">^/([DQTMC][^.]*)$</from>
+    <to>/servlet/explore?id=$1</to>
+  </rule>
+
+  <rule>
+    <from casesensitive="true">^/([DQTMC].*)\.(.*)$</from>
+    <to>/servlet/explore?id=$1&amp;format=$3</to>
+  </rule>
+
+
+
+<!--
     <rule>
-            <condition type="method" operator='equal'>POST</condition>
-            <from>/sparql$</from>
-            <to last="true">/servlet/query$1</to>
+      <condition type="method" operator='equal'>POST</condition>
+      <from casesensitive="true">/sparql$</from>
+      <to last="true">/servlet/query$1</to>
     </rule>
+
 
 
     <rule>
         <condition name="Accept" type="header" next="or">text/html</condition>
         <condition name="user-agent">MSIE</condition>
-        <from>/sparql$</from>
-        <to>/query.html</to>
-    </rule>
-
-
-    <rule>
-        <condition name="Accept" type="header" >text/html</condition>
-        <from>/sparql$</from>
-        <to>/query.html</to>
-    </rule>
-
-    <rule>
-        <condition name="Accept" type="header" operator="notequal">text/html</condition>
-        <from>/sparql$</from>
-        <to>/servlet/query$1</to>
-    </rule>
-
-
-    <rule>
-        <condition name="Accept" type="header" >text/html</condition>
-        <from>/describe$</from>
+        <from casesensitive="true">/describe$</from>
         <to>/explore.html</to>
     </rule>
+-->
 
 
-    <rule>
-        <condition name="Accept" type="header" next="or">text/html</condition>
-        <condition name="user-agent">MSIE</condition>
-        <from>/describe$</from>
-        <to>/explore.html</to>
-    </rule>
-
-    <!-- sparql service rewriting -->
-    <rule>
-        <condition name="Accept" type="header">application/rdf.*</condition>
-        <from>/sparql(.*)$</from>
-        <to>/servlet/query$1</to>
-    </rule>
-
+<!--
     <rule>
         <condition name="Accept" type="header">application/sparql.*</condition>
-        <from>/sparql(.*)$</from>
+        <from casesensitive="true">/sparql(.*)$</from>
         <to>/servlet/query$1</to>
     </rule>
 
     <rule>
         <condition name="Accept" type="header">text/*</condition>
-        <from>/sparql(.*)$</from>
+        <from casesensitive="true">/sparql(.*)$</from>
         <to>/servlet/query$1</to>
     </rule>
+     -->
 
-    <!-- explore service rewriting -->
+
+  <!-- explore service rewriting 
     <rule>
         <condition name="Accept" type="header" operator="notequal">text/html</condition>
-        <from>/describe$</from>
+        <from casesensitive="true">/describe$</from>
         <to>/servlet/explore$1</to>
     </rule>
 
     <rule>
         <condition name="Accept" type="header">application/rdf.*</condition>
-        <from>/describe(.*)$</from>
+        <from casesensitive="true">/describe(.*)$</from>
         <to>/servlet/explore$1</to>
     </rule>
+  -->
+
+
+
+
+    <!-- depict; which right now is a copy/hack of describe/explore -->
+
+    <!--
+      The first set of rules does the content-negotiation.  If the user gives us a URL without a
+      filename extension, then we will redirect him to the same URL, but with a filename extension
+      added.  The extension depends on the value of the "Accept" header.
+
+    <rule>
+      <condition name="Accept" type="header">application/rdf+xml</condition>
+      <from casesensitive="true">/depict/([^.]*)$</from>
+      <to type="redirect" qsappend="false">$1.rdf</to>
+    </rule>
+
+    <rule>
+      <condition name="Accept" type="header">application/json</condition>
+      <from casesensitive="true">/depict/([^.]*)$</from>
+      <to type="redirect" qsappend="false">$1.json</to>
+    </rule>
+    -->
+
+    <!--
+      Now handle the URLs that have extensions.  First, ".html" - it is special, because it's
+      handled by the static html page, which then uses JS to make a pretty display.
+    <rule>
+      <from casesensitive="true">/depict/(.*).html</from>
+      <to>/depict.html</to>
+    </rule>
+    -->
+
+    <!--
+      Next, any other URL that has an extension will get passed to the depict servlet for 
+      processing.
+    <rule>
+      <from casesensitive="true">/depict/(.*)\.(.*)$</from>
+      <to>/servlet/explore?id=$1&amp;format=$2</to>
+    </rule>
+    -->
+
+
+
 
 
 </urlrewrite>

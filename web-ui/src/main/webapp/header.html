@@ -1,0 +1,205 @@
+    <link data-require="bootstrap-css" data-semver="3.2.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+    <link data-require="font-awesome@*" data-semver="4.2.0" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.css" />
+    <link href="css/style.css" rel="stylesheet" />
+
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script data-require="jquery" data-semver="2.1.1" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script data-require="bootstrap" data-semver="3.2.0" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.js"></script>
+  </head>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9">
+          <div class="logo-container">
+            <a href="http://www.nlm.nih.gov">
+              <img height="90" src="http://www.nlm.nih.gov/images/NIH2x.png" />
+            </a>
+            <a href="http://www.nlm.nih.gov">
+              <img height="90" src="http://www.nlm.nih.gov/images/NLM2x.png" />
+            </a>
+              <img height="90" src="http://www.nlm.nih.gov/images/NLM_Starburst2x.png" />
+          </div>
+        </div>
+        <div class="col-md-3">
+          <br/>
+          <form role="form" method="get" action="http://vsearch.nlm.nih.gov/vivisimo/cgi-bin/query-meta" target="_self" name="searchForm" id="searchForm">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-search"></i>
+                </div>
+                <label for="search" class="hidden">Search</label>
+                <input class="form-control input-sm" type="text" placeholder="Search" name="query" id="search" />
+                <input type="hidden" name="v:project" value="nlm-main-website" >
+              </div>
+            </div>
+          </form>
+          <a href="http://apps.nlm.nih.gov/mainweb/siebel/nlm/index.cfm" class="white-strong mr50">Contact NLM</a>
+          <a href="http://www.addthis.com/bookmark.php?v=300&amp;title=National%20Library%20of%20Medicine"><img src="http://www.nlm.nih.gov/images/addthis.png"/></a>
+          <a href="http://www.nlm.nih.gov/listserv/rss_podcasts.html"><img src="http://www.nlm.nih.gov/images/rss-social.png"/></a>
+          <a href="http://twitter.com/nlm_news"><img src="http://www.nlm.nih.gov/images/twitter-social.png"/></a>
+          <a href="http://www.facebook.com/nationallibraryofmedicine"><img src="http://www.nlm.nih.gov/images/facebook-social.png"/></a>
+        </div>
+      </div>
+      <div>
+        <ul id="meshTab" class="nav nav-tabs">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <strong>Databases</strong>
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="http://www.ncbi.nlm.nih.gov/pubmed/">PubMed/MEDLINE</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/mesh/MBrowser.html">MeSH</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/research/umls/">UMLS</a>
+              </li>
+              <li>
+                <a href="http://clinicaltrials.gov/">ClinicalTrials.gov</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/medlineplus/">MedlinePlus</a>
+              </li>
+              <li>
+                <a href="http://toxnet.nlm.nih.gov/">TOXNET</a>
+              </li>
+              <li>
+                <a href="http://ihm.nlm.nih.gov/luna/servlet/view/all">Images from the History of Medicine</a>
+              </li>
+              <li>
+                <a href="http://collections.nlm.nih.gov/">Digital Collections</a>
+              </li>
+              <li>
+                <a href="http://locatorplus.gov">LocatorPlus</a>
+              </li>
+              <li>
+                <a href="http://wwwcf2.nlm.nih.gov/nlm_eresources/eresources/search_database.cfm">All NLM Databases &amp; APIs</a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <strong>Find, Read, Learn</strong>
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="http://www.ncbi.nlm.nih.gov/pubmed/">Search biomedical literature</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/medical-terms.html">Find medical terminologies</a>
+              </li>
+              <li>
+                <a href="http://locatorplus.gov/">Search NLM collections</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/medlineplus/healthtopics.html">Read about diseases</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/learn-about-drugs.html">Learn about drugs</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/hmd/explore-history.html">Explore history</a>
+              </li>
+              <li>
+                <a href="http://clinicaltrials.gov/">Find a clinical trial</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/medlineplus/mplusdictionary.html">Use a medical dictionary</a>
+              </li>
+              <li>
+                <a href="http://www.ncbi.nlm.nih.gov/pmc/">Find free full-text articles</a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <strong>Explore NLM</strong>
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="http://www.nlm.nih.gov/about/index.html">About NLM</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/hinfo.html">Health Information</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/libserv.html">Library Catalog &amp; Services</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/hmd/index.html">History of Medicine</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/onlineexhibitions.html">Online Exhibitions &amp; Digital Projects</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/portals/publishers.html">Information for Publishers</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/about/visitor.html">Visit the Library</a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <strong>Research at NLM</strong>
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="http://www.ncbi.nlm.nih.gov/genome/guide/human/resources.shtml">Human Genome Resources</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/biomedical.html">Biomedical Research &amp; Informatics</a>
+              </li>
+              <li>
+                <a href="http://sis.nlm.nih.gov/enviro.html">Environmental Health &amp; Toxicology</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/hsrph.html">Health Services Research &amp; Public Health</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/healthit.html">Health Information Technology</a>
+              </li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <strong>NLM for You</strong>
+              <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="http://www.nlm.nih.gov/grants.html">Grants &amp; Funding</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/healthit/meaningful_use.html">Meaningful Use Tools</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/training.html">Training &amp; Outreach</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/network.html">Network of Medical Libraries</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/regional-activities.html">Regional Activities</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/careers/careers.html">Careers @ NLM</a>
+              </li>
+              <li>
+                <a href="http://www.nlm.nih.gov/mobile/index.html">Mobile Gallery</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
