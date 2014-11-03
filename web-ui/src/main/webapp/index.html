@@ -12,6 +12,19 @@
     <![endif]-->
     <script data-require="jquery" data-semver="2.1.1" 
       src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!--
+      Bootstrap CSS.  Question [from klortho]: do we need both of these, or is one a
+      minified version of the other?
+      Note these have to be loaded before codemirror, otherwise codemirror gets 
+      confused when placing the cursor.
+    -->
+
+    <link data-require="bootstrap-css" data-semver="3.2.0" rel="stylesheet" 
+        href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link data-require="bootstrap@*" data-semver="3.2.0" rel="stylesheet" 
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+
   </head>
 
   <body>
