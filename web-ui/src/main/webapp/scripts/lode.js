@@ -590,7 +590,7 @@ function renderGraphQuery (graph, tableid) {
                         shortForm = resource;
                     }
 
-                    var internalHref = "./describe?uri=" +encodeURIComponent(resource);
+                    //var internalHref = "./describe?uri=" +encodeURIComponent(resource);
 
                     var linkSpan  = $('<span/>');
                     var img = $('<img />');
@@ -606,7 +606,7 @@ function renderGraphQuery (graph, tableid) {
 
 
                     var a = $('<a />');
-                    a.attr('href',internalHref);
+                    a.attr('href', resource);
                     a.text(shortForm);
                     linkSpan.append(a);
 //                    linkSpan.append('&nbsp;');
@@ -785,15 +785,15 @@ function _formatURI (node, varName) {
 
 function _hrefBuilder(uri, label, internal) {
 
-    var internalHref = "./describe?uri=" +encodeURIComponent(uri);
+    //var internalHref = "./describe?uri=" +encodeURIComponent(uri);
     var className = 'graph-link';
 
     var linkSpan  = $('<span/>');
 
     var a = $('<a />');
     if (internal) {
-        a.attr('href',internalHref);
-        a.attr('title',uri);
+        a.attr('href', uri);
+        a.attr('title', uri);
 
     }
     else {
@@ -1245,7 +1245,8 @@ function renderRelatedToObjects(element) {
                         var propertyLabel = data[x].propertyLabel;
                         var propertyUri = data[x].propertyUri;
 
-                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='" + 
+                                          propertyUri + "'>"+  propertyLabel +"</a>");
 
                         div.append(propertyP);
 
@@ -1274,10 +1275,11 @@ function renderRelatedToObjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='" + uri + 
+                                                "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='" + uri + "'>"+  label +"</a></li>");
                                 }
                             }
                         }
@@ -1297,7 +1299,7 @@ function renderRelatedToObjects(element) {
                                 typelist.append("\""+  typeLabel +"\"");
                             }
                             else {
-                                typelist.append("<a href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
+                                typelist.append("<a href='" + typeUri + "'>"+  typeLabel +"</a>");
                             }
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
@@ -1366,7 +1368,8 @@ function renderRelatedFromSubjects(element) {
                             var typeUri = data[x].relatedObjectTypes[y].uri;
                             var typeLabel = data[x].relatedObjectTypes[y].label;
                             var typeDesc = data[x].relatedObjectTypes[y].description;
-                            typelist.append("<a title='"+ typeUri + "' href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
+                            typelist.append("<a title='"+ typeUri + "' href='" + typeUri + 
+                                            "'>"+  typeLabel +"</a>");
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
                             }
@@ -1376,7 +1379,8 @@ function renderRelatedFromSubjects(element) {
                         }
 
                         div.append(typelist);
-                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='" + propertyUri + 
+                                          "'>"+  propertyLabel +"</a>");
                         div.append(propertyP)
 
                         var list = $('<ul></ul>');
@@ -1404,10 +1408,10 @@ function renderRelatedFromSubjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='" + uri + "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='" + uri + "'>"+  label +"</a></li>");
                                 }
                             }
                         }
