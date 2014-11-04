@@ -64,7 +64,6 @@ var sparqlQueryTextArea;
     };
 
     $.fn.sparql = function(options) {
-        console.info("In sparql - doin that sparql thang!");
         var $this = $(this);
         $this.append(lodestarDiv);
         _parseOptions(options);
@@ -590,7 +589,7 @@ function renderGraphQuery (graph, tableid) {
                         shortForm = resource;
                     }
 
-                    //var internalHref = "./describe?uri=" +encodeURIComponent(resource);
+                    var internalHref = "./describe?uri=" +encodeURIComponent(resource);
 
                     var linkSpan  = $('<span/>');
                     var img = $('<img />');
@@ -606,7 +605,7 @@ function renderGraphQuery (graph, tableid) {
 
 
                     var a = $('<a />');
-                    a.attr('href', resource);
+                    a.attr('href',internalHref);
                     a.text(shortForm);
                     linkSpan.append(a);
 //                    linkSpan.append('&nbsp;');
@@ -661,62 +660,62 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     else {
         try {
 
-	    if (_json.results) {
-		if (_json.results.bindings) {
-		    var _results = _json.results.bindings;
+      if (_json.results) {
+    if (_json.results.bindings) {
+        var _results = _json.results.bindings;
 
-		    if (_results.length ==0) {
-			alert("No results for query")
-		    }
-		    else {
-			var _variables = _json.head.vars;
+        if (_results.length ==0) {
+      alert("No results for query")
+        }
+        else {
+      var _variables = _json.head.vars;
 
-			var header = createTableHeader(_variables);
+      var header = createTableHeader(_variables);
 
-			$("#" + tableid).append(header);
+      $("#" + tableid).append(header);
 
-			displayPagination();
+      displayPagination();
 
-			for (var i = 0; i < _results.length; i++) {
-			    var row =$('<tr />');
-			    var binding = _results[i];
-			    for (var j = 0 ; j < _variables.length; j++) {
-				var varName = _variables[j];
-				var formattedNode = _formatNode(binding[varName], varName);
-				var cell = $('<td />');
-				cell.append (formattedNode);
-				row.append(cell);
-			    }
-			    $("#" + tableid).append(row);
-			}
-		    }
-		}
-		else {
-		    displayError("No result bindings");
-		}
-	    }
-	    else if (_json.boolean != undefined)  {
-		var header = createTableHeader(["boolean"]);
-		$("#" + tableid).append(header);
-		var row =$('<tr />');
-		var cell = $('<td />');
-		if (_json.boolean) {
-		    cell.append ("True");
-		}
-		else {
-		    cell.append ("False");
-		}
-		row.append(cell);
-		$("#" + tableid).append(row);
-	    }
-	    else {
-		alert("no results!")
-	    }
+      for (var i = 0; i < _results.length; i++) {
+          var row =$('<tr />');
+          var binding = _results[i];
+          for (var j = 0 ; j < _variables.length; j++) {
+        var varName = _variables[j];
+        var formattedNode = _formatNode(binding[varName], varName);
+        var cell = $('<td />');
+        cell.append (formattedNode);
+        row.append(cell);
+          }
+          $("#" + tableid).append(row);
+      }
+        }
+    }
+    else {
+        displayError("No result bindings");
+    }
+      }
+      else if (_json.boolean != undefined)  {
+    var header = createTableHeader(["boolean"]);
+    $("#" + tableid).append(header);
+    var row =$('<tr />');
+    var cell = $('<td />');
+    if (_json.boolean) {
+        cell.append ("True");
+    }
+    else {
+        cell.append ("False");
+    }
+    row.append(cell);
+    $("#" + tableid).append(row);
+      }
+      else {
+    alert("no results!")
+      }
 
-	}
-	catch (err) {
-	    displayError("Problem rendering results: "+ err.message);
-	}
+  }
+  catch (err) {
+      displayError("Problem rendering results: "+ err.message);
+  }
 
     }
 
@@ -760,7 +759,6 @@ function _formatURI (node, varName) {
         href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");
         a.attr('href', href);
         a.text(text);
-
     }
 
     else if (node.value.match(/^(https?|ftp|mailto|irc|gopher|news):/)) {
@@ -785,15 +783,15 @@ function _formatURI (node, varName) {
 
 function _hrefBuilder(uri, label, internal) {
 
-    //var internalHref = "./describe?uri=" +encodeURIComponent(uri);
+    var internalHref = "./describe?uri=" +encodeURIComponent(uri);
     var className = 'graph-link';
 
     var linkSpan  = $('<span/>');
 
     var a = $('<a />');
     if (internal) {
-        a.attr('href', uri);
-        a.attr('title', uri);
+        a.attr('href',internalHref);
+        a.attr('title',uri);
 
     }
     else {
@@ -1072,12 +1070,15 @@ function renderAllResourceTypes(element, exclude) {
  */
 function getIdentifier(href) {
     var match = href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-    if (queryString.match(/uri=([^&])/)) {
-        return match[1];
+    if (match) {
+        var queryString = match[1];
+        var uriMatch = queryString.match(/uri=([^&]+)/)
+        if (uriMatch) {
+            return uriMatch[1];
+        }
     }
-    match = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
-    return match ? lodestarDefaultUriBase + match[1] : null;
+    var formMatch = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
+    return formMatch ? lodestarDefaultUriBase + formMatch[1] : null;
 }
 
 function renderDepiction (element) {
@@ -1245,8 +1246,7 @@ function renderRelatedToObjects(element) {
                         var propertyLabel = data[x].propertyLabel;
                         var propertyUri = data[x].propertyUri;
 
-                        var propertyP = $("<a style='font-weight: bold;' href='" + 
-                                          propertyUri + "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
 
                         div.append(propertyP);
 
@@ -1275,11 +1275,10 @@ function renderRelatedToObjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='" + uri + 
-                                                "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='" + uri + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                             }
                         }
@@ -1299,7 +1298,7 @@ function renderRelatedToObjects(element) {
                                 typelist.append("\""+  typeLabel +"\"");
                             }
                             else {
-                                typelist.append("<a href='" + typeUri + "'>"+  typeLabel +"</a>");
+                                typelist.append("<a href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
                             }
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
@@ -1368,8 +1367,7 @@ function renderRelatedFromSubjects(element) {
                             var typeUri = data[x].relatedObjectTypes[y].uri;
                             var typeLabel = data[x].relatedObjectTypes[y].label;
                             var typeDesc = data[x].relatedObjectTypes[y].description;
-                            typelist.append("<a title='"+ typeUri + "' href='" + typeUri + 
-                                            "'>"+  typeLabel +"</a>");
+                            typelist.append("<a title='"+ typeUri + "' href='describe?uri=" + encodeURIComponent(typeUri) + "'>"+  typeLabel +"</a>");
                             if (data[x].relatedObjectTypes.length > y+1) {
                                 typelist.append(", ")
                             }
@@ -1379,8 +1377,7 @@ function renderRelatedFromSubjects(element) {
                         }
 
                         div.append(typelist);
-                        var propertyP = $("<a style='font-weight: bold;' href='" + propertyUri + 
-                                          "'>"+  propertyLabel +"</a>");
+                        var propertyP = $("<a style='font-weight: bold;' href='describe?uri=" + encodeURIComponent(propertyUri) + "'>"+  propertyLabel +"</a>");
                         div.append(propertyP)
 
                         var list = $('<ul></ul>');
@@ -1408,10 +1405,10 @@ function renderRelatedFromSubjects(element) {
                             }
                             else {
                                 if (maxReached) {
-                                    list.append("<li style='display:none'><a href='" + uri + "'>"+  label +"</a></li>");
+                                    list.append("<li style='display:none'><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                                 else {
-                                    list.append("<li><a href='" + uri + "'>"+  label +"</a></li>");
+                                    list.append("<li><a href='describe?uri=" + encodeURIComponent(uri) + "'>"+  label +"</a></li>");
                                 }
                             }
                         }

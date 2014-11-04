@@ -3,7 +3,7 @@
         "http://tuckey.org/res/dtds/urlrewrite2.6.dtd">
 
 <!--
-  Configuration file for UrlRewriteFilter
+  Configuration file for UrlRewriteFilter.
   http://tuckey.org/urlrewrite/
 -->
 
@@ -24,6 +24,16 @@
 -->
 
 
+  <!--
+    If the user entered a sparql query with the `format` parameter, and that is not "HTML",
+    then direct it to the query servlet.
+  -->
+  <rule>
+    <condition type='query-string'>format=</condition>
+    <condition name="format" type="parameter" operator="notequal">HTML</condition>
+    <from casesensitive="true">^/sparql(.*)$</from>
+    <to>/servlet/query$1</to>
+  </rule>
 
   <rule>
     <condition name="Accept" type="header">text/html</condition>
@@ -71,15 +81,6 @@
       <from casesensitive="true">/sparql$</from>
       <to last="true">/servlet/query$1</to>
     </rule>
-
-
-
-    <rule>
-        <condition name="Accept" type="header" next="or">text/html</condition>
-        <condition name="user-agent">MSIE</condition>
-        <from casesensitive="true">/describe$</from>
-        <to>/explore.html</to>
-    </rule>
 -->
 
 
@@ -95,16 +96,25 @@
         <from casesensitive="true">/sparql(.*)$</from>
         <to>/servlet/query$1</to>
     </rule>
-     -->
+-->
+
+  <!-- explore service rewriting -->
 
 
-  <!-- explore service rewriting 
-    <rule>
-        <condition name="Accept" type="header" operator="notequal">text/html</condition>
-        <from casesensitive="true">/describe$</from>
-        <to>/servlet/explore$1</to>
-    </rule>
+  <rule>
+    <condition name="Accept" type="header">text/html</condition>
+    <from casesensitive="true">/describe$</from>
+    <to>/explore.html</to>
+  </rule>
 
+
+  <rule>
+    <condition name="Accept" type="header" operator="notequal">text/html</condition>
+    <from casesensitive="true">/describe(.*)$</from>
+    <to>/servlet/explore$1</to>
+  </rule>
+
+<!--
     <rule>
         <condition name="Accept" type="header">application/rdf.*</condition>
         <from casesensitive="true">/describe(.*)$</from>
@@ -145,7 +155,7 @@
     -->
 
     <!--
-      Next, any other URL that has an extension will get passed to the depict servlet for 
+      Next, any other URL that has an extension will get passed to the depict servlet for
       processing.
     <rule>
       <from casesensitive="true">/depict/(.*)\.(.*)$</from>
