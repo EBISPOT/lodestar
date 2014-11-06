@@ -64,7 +64,6 @@ var sparqlQueryTextArea;
     };
 
     $.fn.sparql = function(options) {
-        console.info("In sparql - doin that sparql thang!");
         var $this = $(this);
         $this.append(lodestarDiv);
         _parseOptions(options);
@@ -661,62 +660,62 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     else {
         try {
 
-	    if (_json.results) {
-		if (_json.results.bindings) {
-		    var _results = _json.results.bindings;
+      if (_json.results) {
+    if (_json.results.bindings) {
+        var _results = _json.results.bindings;
 
-		    if (_results.length ==0) {
-			alert("No results for query")
-		    }
-		    else {
-			var _variables = _json.head.vars;
+        if (_results.length ==0) {
+      alert("No results for query")
+        }
+        else {
+      var _variables = _json.head.vars;
 
-			var header = createTableHeader(_variables);
+      var header = createTableHeader(_variables);
 
-			$("#" + tableid).append(header);
+      $("#" + tableid).append(header);
 
-			displayPagination();
+      displayPagination();
 
-			for (var i = 0; i < _results.length; i++) {
-			    var row =$('<tr />');
-			    var binding = _results[i];
-			    for (var j = 0 ; j < _variables.length; j++) {
-				var varName = _variables[j];
-				var formattedNode = _formatNode(binding[varName], varName);
-				var cell = $('<td />');
-				cell.append (formattedNode);
-				row.append(cell);
-			    }
-			    $("#" + tableid).append(row);
-			}
-		    }
-		}
-		else {
-		    displayError("No result bindings");
-		}
-	    }
-	    else if (_json.boolean != undefined)  {
-		var header = createTableHeader(["boolean"]);
-		$("#" + tableid).append(header);
-		var row =$('<tr />');
-		var cell = $('<td />');
-		if (_json.boolean) {
-		    cell.append ("True");
-		}
-		else {
-		    cell.append ("False");
-		}
-		row.append(cell);
-		$("#" + tableid).append(row);
-	    }
-	    else {
-		alert("no results!")
-	    }
+      for (var i = 0; i < _results.length; i++) {
+          var row =$('<tr />');
+          var binding = _results[i];
+          for (var j = 0 ; j < _variables.length; j++) {
+        var varName = _variables[j];
+        var formattedNode = _formatNode(binding[varName], varName);
+        var cell = $('<td />');
+        cell.append (formattedNode);
+        row.append(cell);
+          }
+          $("#" + tableid).append(row);
+      }
+        }
+    }
+    else {
+        displayError("No result bindings");
+    }
+      }
+      else if (_json.boolean != undefined)  {
+    var header = createTableHeader(["boolean"]);
+    $("#" + tableid).append(header);
+    var row =$('<tr />');
+    var cell = $('<td />');
+    if (_json.boolean) {
+        cell.append ("True");
+    }
+    else {
+        cell.append ("False");
+    }
+    row.append(cell);
+    $("#" + tableid).append(row);
+      }
+      else {
+    alert("no results!")
+      }
 
-	}
-	catch (err) {
-	    displayError("Problem rendering results: "+ err.message);
-	}
+  }
+  catch (err) {
+      displayError("Problem rendering results: "+ err.message);
+  }
 
     }
 
@@ -760,7 +759,6 @@ function _formatURI (node, varName) {
         href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");
         a.attr('href', href);
         a.text(text);
-
     }
 
     else if (node.value.match(/^(https?|ftp|mailto|irc|gopher|news):/)) {
@@ -1072,12 +1070,15 @@ function renderAllResourceTypes(element, exclude) {
  */
 function getIdentifier(href) {
     var match = href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-    if (queryString.match(/uri=([^&])/)) {
-        return match[1];
+    if (match) {
+        var queryString = match[1];
+        var uriMatch = queryString.match(/uri=([^&]+)/)
+        if (uriMatch) {
+            return uriMatch[1];
+        }
     }
-    match = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
-    return match ? lodestarDefaultUriBase + match[1] : null;
+    var formMatch = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
+    return formMatch ? lodestarDefaultUriBase + formMatch[1] : null;
 }
 
 function renderDepiction (element) {
