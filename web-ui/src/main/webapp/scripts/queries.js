@@ -13,61 +13,53 @@
 var exampleQueries = [
 
     {
-        shortname : "Query 1",
-        description: "Retrieve the associated concepts and terms for descriptor D015242",
-        query: 	"SELECT distinct ?dlabel ?concept ?conlabel ?term ?termlabel ?rn\n" +
-				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
-				"WHERE {\n" +
-				"  mesh:D015242 rdfs:label ?dlabel .\n" +
-				"  mesh:D015242 meshv:concept ?concept .\n" +
-				"  ?concept rdfs:label ?conlabel .\n" +
-				"  ?concept meshv:preferredTerm ?term .\n" +
-				"  ?term rdfs:label ?termlabel .\n" +
-				"  ?concept meshv:registryNumber ?rn .\n" +
-				"} \n"
+        shortname : "MeSH Linked Data Predicates",
+        description: "Retrieve the list of distinct predicates in MeSH RDF.",
+        query: 	"SELECT DISTINCT ?p\n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +
+		"  ?s ?p ?o .\n" +
+		"} \n"+
+		"ORDER BY ?p \n"
     },
 	
-	{
-        shortname : "Query 2",
-        description: "Retrieve all of the descriptors and concepts, where concept labels start with levo but descriptor labels do not start with levo ",
-        query:	"SELECT distinct ?desc ?desclabel ?concept ?conlabel\n" +
-				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
-				"WHERE {\n" +
-				"  ?desc rdfs:label ?desclabel .\n" +
-				"  ?desc rdf:type meshv:Descriptor .\n" +
-				"  ?desc meshv:concept ?concept .\n" +
-				"  ?concept rdfs:label ?conlabel .\n" +
-				"  filter regex(?conlabel, \"levo\", \"i\")\n" +
-				"  filter (!regex(?desclabel, \"levo\", \"i\"))\n" +
-				"} \n"
+    {
+        shortname : "Ofloxacin Pharmacological Actions",
+        description: "The Pharmacological Actions of Oflaxacin and their labels.",
+        query:	"SELECT * \n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +    		
+		"  mesh:D015242 meshv:pharmacologicalAction ?pa .\n" +
+		"  ?pa rdfs:label ?paLabel .\n" +
+		"} \n"
+    },
+
+    {
+        shortname : "Allowable Qualifiers",
+        description: "Any MeSH descriptor that has an allowable qualifier of 'drug effects'.",
+        query:	"SELECT distinct ?d ?dLabel \n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +
+		"  ?d meshv:allowableQualifier ?q .\n" +
+		"  ?q rdfs:label 'adverse effects' . \n" +
+		"  ?d rdfs:label ?dLabel . \n" +
+		"} \n" +
+		"ORDER BY ?dLabel \n"
     },
 	
-	{
-        shortname : "Query 3",
-        description: "Get the number of concepts associated with each given descriptor",
-        query:	"SELECT ?descriptor (count(?concept) as ?conceptcount)\n" +
-				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
-				"WHERE {\n" +
-				"  ?descriptor rdf:type meshv:Descriptor .\n" +
-				"  ?descriptor meshv:concept ?concept .\n" +
-				"  ?concept rdf:type meshv:Concept .\n" +
-				"} \n" +
-				"GROUP BY ?descriptor\n" +
-				"ORDER BY desc(?conceptcount) \n"
-    },
-	
-	{
-        shortname : "Query 4",
-        description: "Get the number of concepts associated with each given SCR ",
-        query:	"SELECT ?scr (count(?concept) as ?conceptcount)\n" +
-				"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
-				"WHERE {\n" +
-				"  ?scr rdf:type meshv:SupplementaryConceptRecord .\n" +
-				"  ?scr meshv:concept ?concept .\n" +
-				"  ?concept rdf:type meshv:Concept .\n" +
-				"} \n" +
-				"GROUP BY ?scr\n" +
-				"ORDER BY desc(?conceptcount) \n"
+    {
+        shortname : "String search on 'infection'",
+        description: "Any MeSH term ('D' or 'M') that has 'infection' as part of its name.",
+        query:	"SELECT ?d ?dName ?c ?cName \n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +
+		"  ?d a meshv:Descriptor .\n" +
+		"  ?d meshv:concept ?c .\n" +
+		"  ?d rdfs:label ?dName .\n" +
+		"  ?c rdfs:label ?cName\n" +
+		"  FILTER(REGEX(?dName,'infection','i') || REGEX(?cName,'infection','i')) \n"+
+		"} \n" +
+		"ORDER BY ?d \n"
     }
 
 ];
