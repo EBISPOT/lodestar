@@ -70,7 +70,7 @@
 
   <rule>
     <from casesensitive="true">^/([DQTMC].*)\.(.*)$</from>
-    <to>/servlet/explore?id=$1&amp;format=$3</to>
+    <to>/servlet/explore?id=$1&amp;format=$2</to>
   </rule>
 
 
