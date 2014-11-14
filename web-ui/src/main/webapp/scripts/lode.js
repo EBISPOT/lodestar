@@ -29,6 +29,7 @@ var lodestarRdfsInference;
 var lodestarDefaultResourceImg;
 
 var loadstarNamespaces = {};
+var lodestarDefaultUriBase;
 var tableid = "loadstar-results-table";
 
 var lodestarNextUrl;
@@ -84,17 +85,20 @@ function _parseOptions(options) {
         'servlet_base': 'servlet',
         'query_servlet_name': 'query',
         'explore_servlet_name': 'explore',
-        'results_per_page' : 25,
-        'inference' : false,
+        'results_per_page' : 50,
+        'inference' : true,
         'logging' : false,
-        'default_query' : "SELECT DISTINCT ?class \nwhere {[] a ?class}",
+        'default_query' : "SELECT DISTINCT ?class \nFROM <http://id.nlm.nih.gov/mesh2014>\nWHERE {[] a ?class}",
         'void_query' : "SELECT DISTINCT ?s ?p ?o \nwhere {?s a <http://rdfs.org/ns/void#Dataset>\n OPTIONAL {?s ?p ?o} }",
         'namespaces' : {
             rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
             rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-            owl: 'http://www.w3.org/2002/07/owl#'},
+            owl: 'http://www.w3.org/2002/07/owl#',
+            mesh: 'http://id.nlm.nih.gov/mesh/'
+        },
         'example_queries' : [],
-        'default_resource_image_url': 'images/rdf_flyer.gif'
+        'default_resource_image_url': 'images/rdf_flyer.gif',
+        'default_id_prefix': 'mesh'
     }, options);
 
     loadestarQueryService = _options.servlet_base + "/" + _options.query_servlet_name;
@@ -106,6 +110,7 @@ function _parseOptions(options) {
     lodestarVoidQuery = _options.void_query;
     loadstarNamespaces = _options.namespaces;
     lodestarDefaultResourceImg =  _options.default_resource_image_url;
+    lodestarDefaultUriBase = loadstarNamespaces[_options.default_id_prefix];
 
     if (lodestarIslogging) {
         $('#lode-log').show();
@@ -279,7 +284,9 @@ function _buildExplorerPage(element) {
 function _buildSparqlPage(element) {
 
 
-    var sparqlForm = $("<form id='lodestar-sparql-form' class='ui-widget ui-corner-all' name='lode-star-sparql form' action='#lodestart-sparql-results' method='GET'></form>");
+    var sparqlForm = $(
+       "<form id='lodestar-sparql-form' class='ui-widget ui-corner-all'"+
+       " name='lode-star-sparql form' action='#lodestart-sparql-results' method='GET'></form>");
     var fieldSet= $("<fieldset></fieldset>");
     fieldSet.append($("<legend>Enter SPARQL Query</legend>"));
     sparqlForm.append(fieldSet);
@@ -340,10 +347,11 @@ function _buildSparqlPage(element) {
     )
 
 
-    section1.append(
-        $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query' />&nbsp;")
-                    .append("<input type='button' class='submit  ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
-
+    section1.append($("<p></p>")
+            .append("<input type='button' class='submit ui-button ui-widget ui-corner-all' " +
+                    "style='display: inline;'  onclick='submitQuery()' value='Submit Query' />&nbsp;")
+            .append("<input type='button' class='submit  ui-button ui-widget ui-corner-all' " +
+                    "style='display: inline;' onclick='reloadPage()' value='Reset' />")
     );
 
     section1.append("<div id='query-executing-spinner'>" +
@@ -365,11 +373,11 @@ function _buildSparqlPage(element) {
     resultsSection.append ("<div id='pagination' class='pagination-banner'></div>");
 
     resultsSection.append ("<div style='padding: 5px; width:99%;overflow: scroll;'>" +
-        "<table id='loadstar-results-table'></tabel>" +
+        "<table id='loadstar-results-table' class='table table-bordered table-hover'></tabel>" +
         "</div>");
 
+    console.info("calling element.append(resultsSection);");
     element.append(resultsSection);
-
 }
 
 function initSparql() {
@@ -492,16 +500,20 @@ function querySparql () {
                 };
             }
             else if (rendering.match(/^XML/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs;
+                location.href = loadestarQueryService + "?query=" + 
+                  encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs;
             }
             else if (rendering.match(/JSON$/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
+                location.href = loadestarQueryService + "?query=" + 
+                  encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/CSV/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
+                location.href = loadestarQueryService + "?query=" + 
+                  encodeURIComponent(querytext) + "&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/TSV/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
+                location.href = loadestarQueryService + "?query=" + 
+                  encodeURIComponent(querytext) + "&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else  {
                 displayError("You can only render SELECT queries in either HTML, XML, CSV, TSV or JSON format")
@@ -529,9 +541,11 @@ function querySparql () {
 
 function setNextPrevUrl (queryString, limit, offset, rdfs) {
 
-    lodestarNextUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&inference=" + rdfs + "&offset=" + (parseInt(offset) + parseInt(lodestarResultsPerPage));
+    lodestarNextUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + 
+                      "&inference=" + rdfs + "&offset=" + (parseInt(offset) + parseInt(lodestarResultsPerPage));
     if (offset >= lodestarResultsPerPage) {
-        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&inference=" + rdfs + "&offset=" + (parseInt(offset) - parseInt(lodestarResultsPerPage));
+        loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + 
+                          "&inference=" + rdfs + "&offset=" + (parseInt(offset) - parseInt(lodestarResultsPerPage));
     }
     else {
         loadstarPrevUrl = "query=" + encodeURIComponent(queryString) + "&limit=" + limit + "&inference=" + rdfs + "&offset=0";
@@ -646,62 +660,62 @@ function renderSparqlResultJsonAsTable (json, tableid) {
     else {
         try {
 
-                if (_json.results) {
-                    if (_json.results.bindings) {
-                        var _results = _json.results.bindings;
+      if (_json.results) {
+    if (_json.results.bindings) {
+        var _results = _json.results.bindings;
 
-                        if (_results.length ==0) {
-                            alert("No results for query")
-                        }
-                        else {
-                            var _variables = _json.head.vars;
+        if (_results.length ==0) {
+      alert("No results for query")
+        }
+        else {
+      var _variables = _json.head.vars;
 
-                            var header = createTableHeader(_variables);
+      var header = createTableHeader(_variables);
 
-                            $("#" + tableid).append(header);
+      $("#" + tableid).append(header);
 
-                            displayPagination();
+      displayPagination();
 
-                            for (var i = 0; i < _results.length; i++) {
-                                var row =$('<tr />');
-                                var binding = _results[i];
-                                for (var j = 0 ; j < _variables.length; j++) {
-                                    var varName = _variables[j];
-                                    var formattedNode = _formatNode(binding[varName], varName);
-                                    var cell = $('<td />');
-                                    cell.append (formattedNode);
-                                    row.append(cell);
-                                }
-                                $("#" + tableid).append(row);
-                            }
-                        }
-                    }
-                    else {
-                        displayError("No result bindings");
-                    }
-                }
-                else if (_json.boolean != undefined)  {
-                    var header = createTableHeader(["boolean"]);
-                    $("#" + tableid).append(header);
-                    var row =$('<tr />');
-                    var cell = $('<td />');
-                    if (_json.boolean) {
-                        cell.append ("True");
-                    }
-                    else {
-                        cell.append ("False");
-                    }
-                    row.append(cell);
-                    $("#" + tableid).append(row);
-                }
-                else {
-                    alert("no results!")
-                }
+      for (var i = 0; i < _results.length; i++) {
+          var row =$('<tr />');
+          var binding = _results[i];
+          for (var j = 0 ; j < _variables.length; j++) {
+        var varName = _variables[j];
+        var formattedNode = _formatNode(binding[varName], varName);
+        var cell = $('<td />');
+        cell.append (formattedNode);
+        row.append(cell);
+          }
+          $("#" + tableid).append(row);
+      }
+        }
+    }
+    else {
+        displayError("No result bindings");
+    }
+      }
+      else if (_json.boolean != undefined)  {
+    var header = createTableHeader(["boolean"]);
+    $("#" + tableid).append(header);
+    var row =$('<tr />');
+    var cell = $('<td />');
+    if (_json.boolean) {
+        cell.append ("True");
+    }
+    else {
+        cell.append ("False");
+    }
+    row.append(cell);
+    $("#" + tableid).append(row);
+      }
+      else {
+    alert("no results!")
+      }
 
-            }
-            catch (err) {
-                displayError("Problem rendering results: "+ err.message);
-            }
+  }
+  catch (err) {
+      displayError("Problem rendering results: "+ err.message);
+  }
 
     }
 
@@ -727,23 +741,27 @@ function _formatNode (node, varName) {
     return '???';
 }
 
+// The `node` input here is json sparql query results, and might look something like this:
+//     { type="uri", value="http://id.nlm.nih.gov/mesh/vocab#TopicalDescriptor"}
+
 function _formatURI (node, varName) {
-
-    var internalHref = "./describe?uri=" +encodeURIComponent(node.value);
-
     var title = node.value;
     var className = 'graph-link';
     var shortForm =  _toQName(node.value);
-    if (!shortForm) {
-        shortForm = "<" + node.value + ">";
-    }
+    var text = shortForm ? shortForm : "<" + node.value + ">";
 
     // handle external link
-    var xref = node.value;
-//
-    match = node.value.match(/^(https?|ftp|mailto|irc|gopher|news):/);
-    if (match) {
-        var linkSpan  = $('<span/>');
+    var linkSpan  = $('<span/>');
+    var a = $('<a />');
+    a.attr('class', className);
+
+    if (node.value.match(/^http:\/\/id.nlm.nih.gov\//)) {
+        href = node.value.replace(/http:\/\/id.nlm.nih.gov/, "");
+        a.attr('href', href);
+        a.text(text);
+    }
+
+    else if (node.value.match(/^(https?|ftp|mailto|irc|gopher|news):/)) {
         var img = $('<img />');
         img.attr('src', 'images/external_link.png');
         img.attr('alt', '^');
@@ -756,20 +774,11 @@ function _formatURI (node, varName) {
         ea.append(img);
 
         var a = $('<a />');
-        a.attr('href',internalHref);
-        a.attr('class',className);
-        a.text(shortForm);
-
-        linkSpan.append(a);
-//        linkSpan.append('&nbsp;');
-//        linkSpan.append(ea);
-
-        return linkSpan;
-
+        a.attr('href', node.value);
+        a.text(text);
     }
-
-    return xref;
-
+    linkSpan.append(a);
+    return linkSpan;
 }
 
 function _hrefBuilder(uri, label, internal) {
@@ -922,24 +931,22 @@ var _numericXSDTypes = ['long', 'decimal', 'float', 'double', 'int',
 
 
 function createTableHeader (names) {
-    var htmlString = "";
+    var htmlString = "<thead>";
     for (var i = 0 ; i < names.length; i++) {
         log(names[i]);
         htmlString +="<th>" + names[i] + "</th>";
     }
+    htmlString += "</thead>";
     return htmlString;
 }
 
 
 function renderResourceTypes(element) {
+    var identifier = getIdentifier(document.location.href);
 
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-        var query = _getPrefixes() + uri;
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+        //var query = _getPrefixes() + uri;
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -949,7 +956,7 @@ function renderResourceTypes(element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceTypes?" + queryString,
+            url: loadstarExploreService + "/resourceTypes?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
@@ -1056,13 +1063,32 @@ function renderAllResourceTypes(element, exclude) {
     }
 }
 
+/**
+ * This returns an RDF URI based on the self-url of this page.  If there is a
+ * query string parameter `uri`, then use that.  Otherwise, we'll assume the URL
+ * is of the form http://<domain>/<script-url>/<id>.<ext>, and we'll create a URI
+ * of the form http://id.nlm.nih.gov/mesh/<id>.  If neither matches, then return null.
+ */
+function getIdentifier(href) {
+    var match = href.match(/\?(.*)/);
+    if (match) {
+        var queryString = match[1];
+        var uriMatch = queryString.match(/uri=([^&]+)/)
+        if (uriMatch) {
+            return uriMatch[1];
+        }
+    }
+    var formMatch = href.match(/http:\/\/[^\/]+\/[^\/]+\/([^\.]+)/);
+    return formMatch ? lodestarDefaultUriBase + formMatch[1] : null;
+}
+
 function renderDepiction (element) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-    if (queryString.match(/uri=/)) {
+    var identifier = getIdentifier(document.location.href);
+
+    if (identifier) {
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceDepictions?" + queryString,
+            url: loadstarExploreService + "/resourceDepictions?uri=" + identifier,
             success: function (data){
 
                 var imgurl = lodestarDefaultResourceImg;
@@ -1083,12 +1109,10 @@ function renderDepiction (element) {
     }
 }
 function renderShortDescription (element) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
+    var identifier = getIdentifier(document.location.href);
 
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -1098,7 +1122,7 @@ function renderShortDescription (element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceShortDescription?" + queryString,
+            url: loadstarExploreService + "/resourceShortDescription?uri=" + identifier,
             success: function (data){
                 loading.empty();
                 var div = element;
@@ -1119,7 +1143,8 @@ function renderShortDescription (element) {
 
                 }
                 if (data.datasetUri) {
-                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='describe?uri=" + encodeURIComponent("http://rdfs.org/ns/void#inDataset") + "'>Dataset</a>");
+                    var propertyP = $("<a style='font-weight: bold;' title='http://rdfs.org/ns/void#inDataset' href='describe?uri=" + 
+                        encodeURIComponent("http://rdfs.org/ns/void#inDataset") + "'>Dataset</a>");
                     p.append(propertyP);
                     p.append(" : ");
 
@@ -1144,17 +1169,15 @@ function renderShortDescription (element) {
 }
 
 function renderTopRelatedObjects(p) {
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
+    var identifier = getIdentifier(document.location.href);
 
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
-        var query = _getPrefixes() + uri;
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+        //var query = _getPrefixes() + uri;
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/resourceTopObjects?" + queryString,
+            url: loadstarExploreService + "/resourceTopObjects?uri=" + identifier,
             success: function (data){
 
 //                var p = $("<p></p>");
@@ -1195,13 +1218,10 @@ function renderTopRelatedObjects(p) {
 }
 
 function renderRelatedToObjects(element) {
+    var identifier = getIdentifier(document.location.href);
 
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -1211,7 +1231,7 @@ function renderRelatedToObjects(element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/relatedToObjects?" + queryString,
+            url: loadstarExploreService + "/relatedToObjects?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
@@ -1304,13 +1324,10 @@ function renderRelatedToObjects(element) {
 }
 
 function renderRelatedFromSubjects(element) {
+    var identifier = getIdentifier(document.location.href);
 
-    var match = document.location.href.match(/\?(.*)/);
-    var queryString = match ? match[1] : '';
-
-    var uri;
-    if (queryString.match(/uri=/)) {
-        uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
+    if (identifier) {
+        //uri = this._betterUnescape(queryString.match(/uri=([^&]*)/)[1]);
 
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
@@ -1320,7 +1337,7 @@ function renderRelatedFromSubjects(element) {
 
         $.ajax ( {
             type: 'GET',
-            url: loadstarExploreService + "/relatedFromSubjects?" + queryString,
+            url: loadstarExploreService + "/relatedFromSubjects?uri=" + identifier,
             success: function (data){
 
                 loading.empty();
