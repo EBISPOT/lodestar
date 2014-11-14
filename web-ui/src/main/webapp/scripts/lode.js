@@ -373,7 +373,7 @@ function _buildSparqlPage(element) {
     resultsSection.append ("<div id='pagination' class='pagination-banner'></div>");
 
     resultsSection.append ("<div style='padding: 5px; width:99%;overflow: scroll;'>" +
-        "<table id='loadstar-results-table'></tabel>" +
+        "<table id='loadstar-results-table' class='table table-bordered table-hover'></tabel>" +
         "</div>");
 
     console.info("calling element.append(resultsSection);");
@@ -931,11 +931,12 @@ var _numericXSDTypes = ['long', 'decimal', 'float', 'double', 'int',
 
 
 function createTableHeader (names) {
-    var htmlString = "";
+    var htmlString = "<thead>";
     for (var i = 0 ; i < names.length; i++) {
         log(names[i]);
         htmlString +="<th>" + names[i] + "</th>";
     }
+    htmlString += "</thead>";
     return htmlString;
 }
 

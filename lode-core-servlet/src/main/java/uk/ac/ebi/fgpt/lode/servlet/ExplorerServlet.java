@@ -99,6 +99,8 @@ public class ExplorerServlet {
                 format.equals("rdf") || format.equals("xml") ? "application/rdf+xml" :
                 format.equals("n3")                          ? "application/rdf+n3" :
                 format.equals("json")                        ? "application/rdf+json" :
+		format.equals("ttl")                         ? "application/x-turtle" :
+		format.equals("ntriples")                    ? "text/plain" :
                                                                "text/plain";
             response.setContentType(out_content_type);
 
@@ -107,7 +109,9 @@ public class ExplorerServlet {
                 format.equals("rdf") || format.equals("xml") ? "RDF/XML" :
                 format.equals("n3")                          ? "N3" :
                 format.equals("json")                        ? "JSON-LD" :
-                                                               "JSON-LD" ;
+		format.equals("ttl")                         ? "TURTLE"  : 
+		format.equals("ntriples")                    ? "N-TRIPLES" :
+                                                               "N-TRIPLES" ;
             getSparqlService().query(query, format_spec, false, out);
             out.close();
         }

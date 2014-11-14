@@ -49,7 +49,7 @@ var exampleQueries = [
 	
     {
         shortname : "String search on 'infection'",
-        description: "Any MeSH term ('D' or 'M') that has 'infection' as part of its name.",
+        description: "Any MeSH term ('D' or 'M') that has 'infection' as part of its name. (inference required)",
         query:	"SELECT ?d ?dName ?c ?cName \n" +
 		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
 		"WHERE {\n" +
