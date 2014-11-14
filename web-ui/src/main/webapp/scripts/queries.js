@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (c) 2013 EMBL - European Bioinformatics Institute
  * Licensed under the Apache License, Version 2.0 (the
@@ -15,19 +13,53 @@
 var exampleQueries = [
 
     {
-        shortname : "Query 1",
-        description: "People who were born in Berlin before 1900",
-        query: "PREFIX : <http://dbpedia.org/resource/>\n" +
-            "PREFIX dbo: <http://dbpedia.org/ontology/>\n\n" +
-            "SELECT ?name ?birth ?death ?person WHERE {\n" +
-            "?person dbo:birthPlace :Berlin .\n" +
-            "?person dbo:birthDate ?birth .\n" +
-            "?person foaf:name ?name .\n" +
-            "?person dbo:deathDate ?death .\n" +
-            "FILTER (?birth < \"1900-01-01\"^^xsd:date) . \n" +
-            "}   \n" +
-            "ORDER BY ?name"
+        shortname : "MeSH Linked Data Predicates",
+        description: "Retrieve the list of distinct predicates in MeSH RDF.",
+        query: 	"SELECT DISTINCT ?p\n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +
+		"  ?s ?p ?o .\n" +
+		"} \n"+
+		"ORDER BY ?p \n"
+    },
+	
+    {
+        shortname : "Ofloxacin Pharmacological Actions",
+        description: "The Pharmacological Actions of Oflaxacin and their labels.",
+        query:	"SELECT * \n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +    		
+		"  mesh:D015242 meshv:pharmacologicalAction ?pa .\n" +
+		"  ?pa rdfs:label ?paLabel .\n" +
+		"} \n"
+    },
+
+    {
+        shortname : "Allowable Qualifiers",
+        description: "Any MeSH descriptor that has an allowable qualifier of 'drug effects'.",
+        query:	"SELECT distinct ?d ?dLabel \n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +
+		"  ?d meshv:allowableQualifier ?q .\n" +
+		"  ?q rdfs:label 'adverse effects' . \n" +
+		"  ?d rdfs:label ?dLabel . \n" +
+		"} \n" +
+		"ORDER BY ?dLabel \n"
+    },
+	
+    {
+        shortname : "String search on 'infection'",
+        description: "Any MeSH term ('D' or 'M') that has 'infection' as part of its name. (inference required)",
+        query:	"SELECT ?d ?dName ?c ?cName \n" +
+		"FROM <http://id.nlm.nih.gov/mesh2014>\n" +
+		"WHERE {\n" +
+		"  ?d a meshv:Descriptor .\n" +
+		"  ?d meshv:concept ?c .\n" +
+		"  ?d rdfs:label ?dName .\n" +
+		"  ?c rdfs:label ?cName\n" +
+		"  FILTER(REGEX(?dName,'infection','i') || REGEX(?cName,'infection','i')) \n"+
+		"} \n" +
+		"ORDER BY ?d \n"
     }
 
-]
-
+];

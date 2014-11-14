@@ -51,23 +51,23 @@
         <filter-name>cors</filter-name>
         <url-pattern>/*</url-pattern>
       </filter-mapping>
-    <!-- tukey URL rewrite filters -->
+
+    <!-- Tuckey URL rewrite filters -->
     <filter>
-           <filter-name>UrlRewriteFilter</filter-name>
-           <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+      <filter-name>UrlRewriteFilter</filter-name>
+      <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+      <init-param>
+        <param-name>logLevel</param-name>
+        <param-value>DEBUG</param-value>
+      </init-param>
+    </filter>
 
-           <init-param>
-               <param-name>logLevel</param-name>
-               <param-value>INFO</param-value>
-           </init-param>
-
-       </filter>
-       <filter-mapping>
-           <filter-name>UrlRewriteFilter</filter-name>
-           <url-pattern>/*</url-pattern>
-           <dispatcher>REQUEST</dispatcher>
-           <dispatcher>FORWARD</dispatcher>
-       </filter-mapping>
+    <filter-mapping>
+      <filter-name>UrlRewriteFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+      <dispatcher>REQUEST</dispatcher>
+      <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
 
 
     <resource-ref>
