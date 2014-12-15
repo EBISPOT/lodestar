@@ -449,7 +449,7 @@ function querySparql () {
 
     sparqlQueryTextArea.setValue(querytext);
 
-    var exp = /^\s*(?:PREFIX\s+\w*:\s?<[^>]*>\s*)*(\w+)\s*.*/i;
+    var exp = /^\s*(?:PREFIX\s+[^:]*:\s?<[^>]*>\s*)*(\w+)\s*.*/i;
     var match = exp.exec(querytext);
     var successFunc;
     var requestHeader;
