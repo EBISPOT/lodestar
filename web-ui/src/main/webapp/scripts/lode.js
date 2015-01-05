@@ -279,7 +279,7 @@ function _buildExplorerPage(element) {
 function _buildSparqlPage(element) {
 
 
-    var sparqlForm = $("<form id='lodestar-sparql-form' class='ui-widget ui-corner-all' name='lode-star-sparql form' action='#lodestart-sparql-results' method='GET'></form>");
+    var sparqlForm = $("<form id='lodestar-sparql-form' class='ui-widget ui-corner-all' name='lode-star-sparql form' action='#loadstar-results-section' method='GET'></form>");
     var fieldSet= $("<fieldset></fieldset>");
     fieldSet.append($("<legend>Enter SPARQL Query</legend>"));
     sparqlForm.append(fieldSet);

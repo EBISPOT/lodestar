@@ -35,7 +35,7 @@
     <rule>
         <condition name="Accept" type="header" operator="notequal">text/html</condition>
         <from>/sparql$</from>
-        <to>/servlet/query$1</to>
+        <to>/servlet/query</to>
     </rule>
 
 
