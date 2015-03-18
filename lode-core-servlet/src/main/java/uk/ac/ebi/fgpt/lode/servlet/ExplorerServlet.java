@@ -97,19 +97,39 @@ public class ExplorerServlet {
         }
     }
 
-    @RequestMapping (produces="application/rdf+n3")
+    @RequestMapping (produces="text/n3")
     public @ResponseBody
     void describeResourceAsN3 (
             @RequestParam(value = "uri", required = true ) String uri,
             HttpServletResponse response) throws IOException, LodeException {
         if (uri != null && uri.length() > 0) {
             String query = "DESCRIBE <" + URI.create(uri) + ">";
-            log.trace("querying for graph rdf+n3");
-            response.setContentType("application/rdf+n3");
+            log.trace("querying for graph n3");
+            response.setContentType("text/n3");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
             getSparqlService().query(query, "N3", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+        }
+    }
+
+    @RequestMapping (produces="text/turtle")
+    public @ResponseBody
+    void describeResourceAsTurtle (
+            @RequestParam(value = "uri", required = true ) String uri,
+            HttpServletResponse response) throws IOException, LodeException {
+        if (uri != null && uri.length() > 0) {
+            String query = "DESCRIBE <" + URI.create(uri) + ">";
+            log.trace("querying for graph turtle");
+            response.setContentType("text/turtle");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "TURTLE", false, out);
             out.close();
         }
         else {
