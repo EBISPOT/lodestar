@@ -6,6 +6,7 @@
     <version>1.3</version>
     <modules>
         <module>lode-core-api</module>
+        <module>lode-virtuoso-impl</module>
         <module>web-ui</module>
         <module>lode-core-servlet</module>
     </modules>
