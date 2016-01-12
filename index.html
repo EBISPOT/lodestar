@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Lodestar by EBISPOT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Lodestar</h1>
+      <h2 class="project-tagline">Linked Data explorer and SPARQL endpoint</h2>
+      <a href="https://github.com/EBISPOT/lodestar" class="btn">View on GitHub</a>
+      <a href="https://github.com/EBISPOT/lodestar/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/EBISPOT/lodestar/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="lodestar" class="anchor" href="#lodestar" aria-hidden="true"><span class="octicon octicon-link"></span></a>Lodestar</h1>
+
+<p>Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based web app that can wrap any existing SPARQL endpoint to provide a set of additional SPARQL and Linked Data services. Lodestar was developed to provide a consistent set of SPARQL and Linked Data services across the European Bioinformatics Institute (EBI). Some of the service provided by Lodestar:</p>
+
+<ul>
+<li>Javascript based SPARQL endpoint with configurable example queries and paginated results table</li>
+<li>Read only SPARQL endpoint for protection from write operations</li>
+<li>A single SPARQL endpoint that provides a UI, the service and a SPARQL 1.1 service description</li>
+<li>SPARQL syntax highlighting provided by CodeMirror</li>
+<li>Works with any SPARQL endpoint (Includes Virtuoso JDBC connection option)</li>
+<li>Linked data browser for navigating data from a SPARQL endpoint</li>
+<li>Configurable resource description/linked data pages:
+
+<ul>
+<li>Renders resources by label where possible</li>
+<li>Grouping of related resource by type</li>
+<li>Set top facts to display, such as labels and descriptions</li>
+<li>Configurable limits for how many related resources to render in the browser</li>
+</ul>
+</li>
+<li>Renders depictions of resources</li>
+<li>Handles content negotiation for both SPARQL queries and linked data pages</li>
+<li>CORS enabled for cross domain scripting</li>
+<li>Basic REST API for accessing data in simplified JSON format</li>
+</ul>
+
+<p>To see a demonstration of the Lodestar linked data browser please see the <a href="http://www.ebi.ac.uk/rdf/services/atlas/sparql">Expression Atlas RDF website</a>. Lodestar has been primarily developed as an internal tool for EBI services deploying RDF, however, the application should be sufficiently generic that others can use it. I can't guarantee any support for the software at this time, but please feel free to use it or adapt for your own purposes and let me know how you get on.</p>
+
+<p>Documentation and stable release at <a href="http://www.ebi.ac.uk/fgpt/sw/lodestar">http://www.ebi.ac.uk/fgpt/sw/lodestar</a>.</p>
+
+<h2>
+<a id="release-notes" class="anchor" href="#release-notes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Release Notes</h2>
+
+<p><strong>1.3</strong>  15th October 2014</p>
+
+<ul>
+<li>Fixed potential race condition in explorer when using a small number of connection pools</li>
+<li>Javascript fix to support next/prev links preserving inference option</li>
+<li>IE 11 rendering issue fixed</li>
+<li>Added no JNDI implementation for virtuoso connection pooling</li>
+</ul>
+
+<p><strong>1.2</strong>  21st August 2014</p>
+
+<ul>
+<li>Updated to Jena 2.12</li>
+<li>Exposed JSON-LD support from Jena in UI </li>
+<li>Moved virtuoso to separate module, only builds in "virtuoso" profile</li>
+<li>Removed dependencies on virtuoso inferencing rules</li>
+<li>SPARQL endpoint now support application/sparql-query POST requests </li>
+<li>Fixed some browser rendering bugs </li>
+</ul>
+
+<p><strong>1.1</strong> 27th November 2013  </p>
+
+<ul>
+<li>Updated to Jena 2.11</li>
+<li>Fixed query limit bug (RDF-10)</li>
+<li>Added config for query timeouts (RDF-15)</li>
+<li>Configurable hide RDFS button (RDF-7)</li>
+<li>Added servlet status monitor</li>
+<li>javascript cleanup</li>
+</ul>
+
+<p><strong>1.0.2</strong> 29th August 2013  </p>
+
+<ul>
+<li>Updated to Jena 2.10</li>
+<li>VirtJena JDBC 4 (includes support for SPARQL bind queries). Requires virtuoso 6.1.7.2</li>
+<li>Added CSV and TSV sparql results export</li>
+<li>Fixed sparql results offset caching from previous query</li>
+<li>Fixed virtuoso describe query not returning all triples from all graphs</li>
+</ul>
+
+<p><strong>1.0.1</strong> 5th August 2013</p>
+
+<ul>
+<li>First release</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/EBISPOT/lodestar">Lodestar</a> is maintained by <a href="https://github.com/EBISPOT">EBISPOT</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
