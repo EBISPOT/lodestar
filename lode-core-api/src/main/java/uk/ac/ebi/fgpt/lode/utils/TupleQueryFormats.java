@@ -8,20 +8,26 @@ package uk.ac.ebi.fgpt.lode.utils;
 public enum TupleQueryFormats{
 
 
-    XML ("XML"),
-    CSV ("CSV"),
-    TSV ("TSV"),
-    JSON ("JSON");
+    XML ("XML", "application/sparql-results+xml"),
+    CSV ("CSV", "text/csv"),
+    TSV ("TSV", "text/tab-separated-values"),
+    JSON ("JSON", "application/sparql-results+json");
 
 
     private final String format;
+    private final String mimetype;
 
-    private TupleQueryFormats(String format) {
+    private TupleQueryFormats(String format, String mimetype) {
         this.format = format;
+	this.mimetype = mimetype;
     }
 
     @Override
     public String toString() {
         return format;
+    }
+
+    public String toMimeType() {
+	return mimetype;
     }
 }
