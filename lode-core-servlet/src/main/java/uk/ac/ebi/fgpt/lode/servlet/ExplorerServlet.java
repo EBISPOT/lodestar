@@ -15,6 +15,7 @@ package uk.ac.ebi.fgpt.lode.servlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,9 @@ public class ExplorerServlet {
     private ExploreService service;
     private SparqlService sparqlService;
 
+    @Value("${lode.explorer.service.baseuri}")
+    private URI baseUri;
+
     public SparqlService getSparqlService() {
         return sparqlService;
     }
@@ -74,8 +78,28 @@ public class ExplorerServlet {
         this.configuration = configuration;
     }
 
+    public URI getBaseUri() {
+        return this.baseUri;
+    }
+
+    public void setBaseUri(URI baseUri) {
+        this.baseUri = baseUri;
+    }
+
     protected Logger getLog() {
         return log;
+    }
+
+    protected URI resolveUri(String reluri) {
+        if (reluri == null || reluri.length() == 0) {
+            return null;
+        }
+        else if (baseUri != null) {
+            return baseUri.resolve(reluri);
+        }
+        else {
+            return URI.create(reluri);
+        }
     }
 
     @RequestMapping (produces="application/rdf+xml")
@@ -83,9 +107,10 @@ public class ExplorerServlet {
     void describeResourceAsXml (
             @RequestParam(value = "uri", required = true ) String uri,
             HttpServletResponse response) throws IOException, LodeException {
-        if (uri != null && uri.length() > 0) {
-            String query = "DESCRIBE <" + URI.create(uri) + ">";
-            response.setContentType("application/rdf+xml");
+        URI absuri = this.resolveUri(uri);
+        if (absuri != null) {
+            String query = "DESCRIBE <" + absuri + ">";
+            response.setContentType("application/rdf+xml; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -93,7 +118,7 @@ public class ExplorerServlet {
             out.close();
         }
         else {
-
+            handleBadUriException(new Exception("Malformed or empty ID request: " + uri));
         }
     }
 
@@ -102,10 +127,11 @@ public class ExplorerServlet {
     void describeResourceAsN3 (
             @RequestParam(value = "uri", required = true ) String uri,
             HttpServletResponse response) throws IOException, LodeException {
-        if (uri != null && uri.length() > 0) {
-            String query = "DESCRIBE <" + URI.create(uri) + ">";
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
+            String query = "DESCRIBE <" + absuri + ">";
             log.trace("querying for graph n3");
-            response.setContentType("text/n3");
+            response.setContentType("text/n3; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -122,10 +148,11 @@ public class ExplorerServlet {
     void describeResourceAsTurtle (
             @RequestParam(value = "uri", required = true ) String uri,
             HttpServletResponse response) throws IOException, LodeException {
-        if (uri != null && uri.length() > 0) {
-            String query = "DESCRIBE <" + URI.create(uri) + ">";
+        URI absuri = this.resolveUri(uri);
+        if (absuri != null) {
+            String query = "DESCRIBE <" + absuri + ">";
             log.trace("querying for graph turtle");
-            response.setContentType("text/turtle");
+            response.setContentType("text/turtle; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -142,10 +169,11 @@ public class ExplorerServlet {
     void describeResourceAsJson (
             @RequestParam(value = "uri", required = true ) String uri,
             HttpServletResponse response) throws IOException, LodeException {
-        if (uri != null && uri.length() > 0) {
-            String query = "DESCRIBE <" + URI.create(uri) + ">";
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
+            String query = "DESCRIBE <" + absuri + ">";
             log.trace("querying for graph rdf+n3");
-            response.setContentType("application/rdf+json");
+            response.setContentType("application/rdf+json; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
@@ -182,9 +210,10 @@ public class ExplorerServlet {
     public @ResponseBody Collection<RelatedResourceDescription> getTypesWithLabelsAndDescription(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
 
-        if (uri != null && uri.length() > 0) {
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
             return getService().getTypes(
-                    URI.create(uri),
+                    absuri,
                     getConfiguration().getIgnoreTypes(),
                     getConfiguration().ignoreBlankNodes()
                     );
@@ -198,9 +227,10 @@ public class ExplorerServlet {
     public @ResponseBody Collection<RelatedResourceDescription> getAllTypesWithLabelsAndDescription(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
 
-        if (uri != null && uri.length() > 0) {
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
             return getService().getAllTypes(
-                    URI.create(uri),
+                    absuri,
                     getConfiguration().getIgnoreTypes(),
                     getConfiguration().ignoreBlankNodes()
                     );
@@ -213,13 +243,15 @@ public class ExplorerServlet {
     @RequestMapping(value = "/relatedToObjects", method = RequestMethod.GET)
     public @ResponseBody Collection<RelatedResourceDescription> getRelatedToObjects(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-        if (uri != null && uri.length() > 0) {
+
+         URI absuri = resolveUri(uri);
+         if (absuri != null) {
             // get the relationships to ignore
             Set<URI> ignoreProps = getConfiguration().getIgnoreRelationships();
             ignoreProps.addAll(getConfiguration().getTopRelationships());
 
             return getService().getRelatedToObjects(
-                    URI.create(uri),
+                    absuri,
                     ignoreProps,
                     getConfiguration().getIgnoreTypes(),
                     getConfiguration().ignoreBlankNodes());
@@ -235,9 +267,10 @@ public class ExplorerServlet {
 
         getLog().trace("Getting short description for: " + uri);
 
-        if (uri != null && uri.length() > 0) {
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
             return getService().getShortResourceDescription(
-                    URI.create(uri),
+                    absuri,
                     getConfiguration().getLabelRelations(),
                     getConfiguration().getDescriptionRelations()
             );
@@ -254,10 +287,11 @@ public class ExplorerServlet {
 
         getLog().trace("Getting image urls for: " + uri);
         Set<DepictionBean> dps= new HashSet<DepictionBean>();
-        if (uri != null && uri.length() > 0) {
 
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
             for (String u :  getService().getResourceDepiction(
-                    URI.create(uri),
+                    absuri,
                     getConfiguration().getDepictRelation())) {
                 dps.add(new DepictionBean(u));
             }
@@ -274,13 +308,14 @@ public class ExplorerServlet {
 
         getLog().trace("Getting top objects for: " + uri);
 
-        if (uri != null && uri.length() > 0) {
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
             Set<URI> toprelations = new LinkedHashSet<URI>(getConfiguration().getTopRelationships());
             return getService().getRelatedResourceByProperty(
-                    URI.create(uri),
+                    absuri,
                     toprelations,
-                           getConfiguration().getIgnoreTypes(),
-                            getConfiguration().ignoreBlankNodes());
+                    getConfiguration().getIgnoreTypes(),
+                    getConfiguration().ignoreBlankNodes());
         }
         else {
             return Collections.emptyList();
@@ -291,9 +326,11 @@ public class ExplorerServlet {
     @RequestMapping("/relatedFromSubjects")
     public @ResponseBody Collection<RelatedResourceDescription> getRelatedFromSubjects(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
-        if (uri != null && uri.length() > 0) {
+
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
             return getService().getRelatedFromSubjects(
-                    URI.create(uri),
+                    absuri,
                     new HashSet<URI>(),
                     getConfiguration().getIgnoreTypes(),
                     getConfiguration().ignoreBlankNodes());
