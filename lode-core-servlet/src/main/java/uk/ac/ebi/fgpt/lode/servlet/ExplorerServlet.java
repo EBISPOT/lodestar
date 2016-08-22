@@ -185,24 +185,51 @@ public class ExplorerServlet {
         }
     }
 
+    @RequestMapping (produces="text/plain")
+    public @ResponseBody
+    void describeResourceAsNtriples (
+            @RequestParam(value = "uri", required = true ) String uri,
+            HttpServletResponse response) throws IOException, LodeException {
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
+            String query = "DESCRIBE <" + absuri + ">";
+            log.info("querying for graph rdf+ntriples");
+            response.setContentType("text/plain; charset=utf-8");
+            ServletOutputStream out = response.getOutputStream();
+            out.println();
+            out.println();
+            getSparqlService().query(query, "N-TRIPLES", false, out);
+            out.close();
+        }
+        else {
+            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+        }
+    }
+
+    @RequestMapping
     public @ResponseBody
     void describeResource (
             @RequestParam(value = "uri", required = true ) String uri,
             @RequestParam(value = "format", required = false ) String format,
             HttpServletResponse response) throws IOException, LodeException {
-        if (uri != null && uri.length() > 0) {
-            if (format.toLowerCase().equals("n3")) {
-                describeResourceAsN3(uri, response);
-            }
-            else if (format.toLowerCase().equals("json-ld")) {
-                describeResourceAsJson(uri, response);
-            }
-            else {
-                describeResourceAsXml(uri, response);
-            }
+        if (format == null) {
+            describeResourceAsNtriples(uri, response);
+        } else if (format.toLowerCase().equals("rdf") ||
+                   format.toLowerCase().equals("xml") ||
+                   format.toLowerCase().equals("rdf/xml")) {
+            describeResourceAsXml(uri, response);
+        }
+        else if (format.toLowerCase().equals("n3")) {
+            describeResourceAsN3(uri, response);
+        }
+        else if (format.toLowerCase().equals("ttl") || format.toLowerCase().equals("turtle")) {
+            describeResourceAsTurtle(uri, response);
+        }
+        else if (format.toLowerCase().equals("json") || format.toLowerCase().equals("json-ld")) {
+            describeResourceAsJson(uri, response);
         }
         else {
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+	    describeResourceAsNtriples(uri, response);
         }
     }
 
