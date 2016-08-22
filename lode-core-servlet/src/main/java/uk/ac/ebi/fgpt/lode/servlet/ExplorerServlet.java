@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.model.ShortResourceDescription;
@@ -229,7 +230,26 @@ public class ExplorerServlet {
             describeResourceAsJson(uri, response);
         }
         else {
-	    describeResourceAsNtriples(uri, response);
+            describeResourceAsNtriples(uri, response);
+        }
+    }
+
+    @RequestMapping(value = "/html", method = RequestMethod.GET)
+    public ModelAndView describeResourceAsHtml(
+            @RequestParam(value = "uri", required = true ) String uri,
+            @RequestParam(value = "resource_prefix", required = false) String resource_prefix) throws LodeException {
+        URI absuri = resolveUri(uri);
+        if (absuri != null) {
+            ModelAndView mv = new ModelAndView();
+            mv.setViewName("explore");
+            if (resource_prefix == null) {
+                resource_prefix = "";
+            }
+            mv.addObject("uri", absuri.toString());
+            mv.addObject("resource_prefix", resource_prefix);
+            return mv;
+        } else {
+            throw new LodeException("Malformed or empty URI request: " + uri);
         }
     }
 
