@@ -23,8 +23,7 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-
+            <version>${log4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -35,6 +34,22 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- NOTE: Tomcat 7 is providing JSP API 3.0; be careful -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- NOTE: Tomcat 7 is providing JSP API 2.2; be careful -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-servlet</artifactId>
@@ -42,9 +57,9 @@
         </dependency>
 
         <dependency>
-        <groupId>org.tuckey</groupId>
-        <artifactId>urlrewritefilter</artifactId>
-        <version>4.0.3</version>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.3</version>
         </dependency>
 
     </dependencies>
