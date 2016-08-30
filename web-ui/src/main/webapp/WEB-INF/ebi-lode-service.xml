@@ -12,6 +12,11 @@
 
     <bean name="explorerConfig" class="uk.ac.ebi.fgpt.lode.impl.DefaultExplorerViewConfigImpl"/>
 
+    <!--
+      NOTE: This bean is not really used.   The Spring MVC DispatcherServlet loads looks
+      at lode-servlet.xml, it is the child context, and is getting an autowired bean.
+      Probably don't much in ebi-lode-service.xml
+     -->
     <bean id="serviceServlet" class="uk.ac.ebi.fgpt.lode.servlet.ExplorerServlet">
         <property name="sparqlService" ref="jenaSparqlService"/>
         <property name="configuration" ref="explorerConfig"/>
