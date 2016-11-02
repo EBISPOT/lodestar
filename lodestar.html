@@ -1,168 +1,21 @@
 <!doctype html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
-<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-
-        <!-- Use the .htaccess and remove these lines to avoid edge case issues.
-        More info: h5bp.com/b/378 -->
-        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->	<!-- Not yet implemented -->
-
-        <title>LODESTAR &lt; FGPT &lt; EMBL-EBI</title>
-        <meta name="description" content="EMBL-EBI"><!-- Describe what this page is about -->
-        <meta name="keywords" content="bioinformatics, europe, institute"><!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
-        <meta name="author" content="EMBL-EBI"><!-- Your [project-name] here -->
-
-        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
-
-        <!-- CSS: implied media=all -->
-        <!-- CSS concatenated and minified via ant build script-->
-        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/boilerplate-style.css">
-        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-global.css" type="text/css" media="screen">
-        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-visual.css" type="text/css" media="screen">
-        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/984-24-col-fluid.css" type="text/css" media="screen">
-
-        <!-- you can replace this with [projectname]-colours.css. See http://frontier.ebi.ac.uk/web/style/colour for details of how to do this -->
-        <!-- also inform ES so we can host your colour palette file -->
-        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/embl-petrol-colours.css" type="text/css" media="screen">
-
-        <!-- for production the above can be replaced with -->
-        <!--
-        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/mini/ebi-fluid-embl.css">
-        -->
-
-        <style type=text/css>
-            /* You have the option of setting a maximum width for your page, and making sure everything is centered */
-            body { max-width: 1366px; margin: 0 auto; }
-        </style>
-
-        <!-- end CSS-->
-
-
-        <!-- All JavaScript at the bottom, except for Modernizr / Respond.
-        Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
-        For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
-
-        <!-- Full build -->
-        <!-- <script src="../js/libs/modernizr.minified.2.1.6.js"></script> -->
-
-        <!-- custom build (lacks most of the "advanced" HTML5 support -->
-        <script src="http://www.ebi.ac.uk/web_guidelines/js/libs/modernizr.custom.49274.js"></script>
-
-    </head>
+  <head>
+    <meta charset="UTF-8">
+    <title>Lodestar by EBISPOT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
 
     <body class="level2">
-
-        <div id="skip-to">
-            <ul>
-                <li><a href="#content" title="">Skip to main content</a></li>
-                <li><a href="#local-nav" title="">Skip to local navigation</a></li>
-                <li><a href="#global-nav" title="">Skip to EBI global navigation menu</a></li>
-                <li><a href="#global-nav-expanded" title="">Skip to expanded EBI global navigation menu (includes all sub-sections)</a></li>
-            </ul>
-        </div>
-
-        <div id="wrapper" class="container_24">
-<header>
-        <div id="global-masthead" class="masthead grid_24">
-            <!--This has to be one line and no newline characters-->
-            <a href="http://www.ebi.ac.uk/" title="Go to the EMBL-EBI homepage"><img src="http://www.ebi.ac.uk/web_guidelines/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.png" alt="EMBL European Bioinformatics Institute"></a>
-
-            <nav>
-               <ul id="global-nav">
-                    <!-- set active class as appropriate -->
-                    <li class="first active" id="services"><a href="http://www.ebi.ac.uk/services">Services</a></li>
-                    <li id="research"><a href="http://www.ebi.ac.uk/research">Research</a></li>
-                    <li id="training"><a href="http://www.ebi.ac.uk/training">Training</a></li>
-                    <li id="industry"><a href="http://www.ebi.ac.uk/industry">Industry</a></li>
-                    <li id="about" class="last"><a href="http://www.ebi.ac.uk/about">About us</a></li>
-                </ul>
-            </nav>
-
-        </div>
-
-        <div id="local-masthead" class="masthead grid_24 nomenu">
-
-            <!-- local-title -->
-            <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
-
-            <div class="grid_12 alpha" id="local-title">
-                <h1><a href="/lodestar" title="">Lodestar</a></h1>
-            </div>
-
-            <!-- /local-title -->
-
-            <!-- local-search -->            <!-- NB: if you do not have a local-search, delete the following div, and drop the class="grid_12 alpha" class from local-title above -->
-
-            <div class="grid_12 omega">
-                <form id="local-search" name="local-search" action="/ebisearch/search.ebi" method="get">
-
-                    <fieldset>
-
-                        <div class="left">
-                            <label>
-                                <input type="text" name="query" id="local-searchbox">
-                                <input type="hidden" name="db" value="allebi">
-                                <input type="hidden" name="requestFrom" value="searchBox">
-                            </label>
-                            <!-- Include some example searchterms - keep them short and few! -->
-                            <span class="examples">Examples:                                <a href="/ebisearch/search.ebi?db=allebi&amp;requestFrom=ebi_index&amp;query=ROA1_HUMAN">ROA1_HUMAN</a>,
-                                <a href="/ebisearch/search.ebi?db=allebi&amp;query=tpi1&amp;requestFrom=ebi_index">tpi1</a>,
-                                <a href="/ebisearch/search.ebi?db=allebi&amp;query=Sulston&amp;requestFrom=ebi_index">Sulston</a> ...
-                            </span>
-                        </div>
-
-                        <div class="right">
-                            <input type="submit" name="submitSearch" value="Search" class="submit" onclick="var q = $.trim(document.getElementById('local-searchbox').value); document.getElementById('local-searchbox').value = q; if (q == null || q == '') {alert('Please type a search term in the box'); return false;}">
-                            <span class="adv"><a href="/ebisearch/advancedsearch.ebi" id="adv-search" title="Advanced">Advanced</a></span>
-                        </div>
-
-                    </fieldset>
-
-                </form>
-            </div>
-
-            <!-- /local-search -->
-
-
-            <!-- local-nav -->
-	     <nav>
-                <ul class="grid_24" id="local-nav">
-                        <li><a href="../../index.html">Home</a></li>
-                        <li><a href="http://www.ebi.ac.uk/about/people/helen-parkinson" title="Team">Team</a></li>
-                        <li><a href="../../projects.html" title="Projects">Projects</a></li>
-                        <li><a href="../../publications.html" title="Publications">Publications</a></li>
-                        <li><a href="../../ontologies.html" title="Ontologies">Ontologies</a></li>
-                        <li class="first active"><a href="../index.html" title="Software">Software</a></li>
-                        <li><a href="../../contact.html" title="Contact">Contact</a></li>
-            	</ul>
-            </nav>
-
-            <!-- /local-nav -->
-
-        </div>
-    </header><div id="content" role="main" class="grid_24 clearfix">
-
-
-
-                <!-- InstanceBeginEditable name="contents" -->
-                <div class="breadcrumbs">
-                     
-                     
-                </div>
+ <div>
 		<section class="grid_18 alpha">	
                 <h2>Documentation</h2>
                 <p>
 		  Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based web app that can wrap any existing SPARQL endpoint to provide a set of additional SPARQL and Linked Data services. Lodestar was developed to provide a consistent set of SPARQL and Linked Data services across the European Bioinformatics Institute (EBI). Some of the service provided by Lodestar: 
-		<span style="float:right"><a href="../downloads/index.html"><img style="width:200px;" src="db.jpg"/></a></span>
-		  
+			  
 		  <ul>
 		    <li>Javascript based SPARQL endpoint with configurable example queries and paginated results table</li>
 		    <li>Read only SPARQL endpoint for protection from write operations</li>
@@ -505,93 +358,11 @@ lode.explorer.virtuoso.querytimeout=-1
                 <img src="http://www.ebi.ac.uk/inc/images/spacer.gif" class="spacer" alt="spacer">
 
 
-</div>    <footer>
-        <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
-        <!--
-        <div id="local-footer" class="grid_24 clearfix">
-
-        </div>
-         -->
-         <!-- End optional local footer -->
-
-        <div id="global-footer" class="grid_24 clearfix">
-
-            <nav id="global-nav-expanded">
-
-                <div class="grid_4 alpha">
-                    <h3 class="explore">Explore</h3>
-                </div>
-
-                <div class="grid_4">
-                    <h3 class="services"><a href="/services" title="Services">Services</a></h3>
-                </div>
-
-                <div class="grid_4">
-                    <h3 class="research"><a href="/research" title="Research">Research</a></h3>
-                </div>
-
-                <div class="grid_4">
-                    <h3 class="training"><a href="/training" title="Training">Training</a></h3>
-                </div>
-
-                <div class="grid_4">
-                    <h3 class="industry"><a href="/industry" title="Industry">Industry</a></h3>
-                </div>
-
-                <div class="grid_4 omega">
-                    <h3 class="about"><a href="/about" title="About us">About us</a></h3>
-                </div>
-
-            </nav>
-            <script src="http://www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
-
-        </div>
-
-        <div class="grid_24">
-            <section id="ebi-footer-meta">
-                <p> &copy; EMBL-EBI European Bioinformatics Institute | <a href="#" title="">Privacy</a> | <a href="#" title="">Cookies</a> | <a href="#" title="">Terms of use</a></p>
-            </section>
-        </div>
-
-    </footer>
+</div>
         </div> <!--! end of #wrapper -->
 
 
-        <!-- JavaScript at the bottom for fast page loading -->
 
-        <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
-        <!--
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="../js/libs/jquery-1.6.2.min.js"></script>')</script>
-        -->
-
-
-        <!-- scripts concatenated and minified via ant build script-->
-        <!--
-        <script defer src="../js/plugins.js"></script>
-        <script defer src="../js/script.js"></script>
-        -->
-        <script defer src="http://www.ebi.ac.uk/web_guidelines/js/cookiebanner.js"></script>
-        <!-- end scripts-->
-
-
-        <!-- Change UA-XXXXX-X to be your site's ID -->
-        <!--
-        <script>
-            window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
-            Modernizr.load({
-                load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
-            });
-        </script>
-        -->
-
-
-        <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
-        chromium.org/developers/how-tos/chrome-frame-getting-started -->
-        <!--[if lt IE 7 ]>
-        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
-        <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
-        <![endif]-->
 
     </body>
 </html>
