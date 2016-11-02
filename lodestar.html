@@ -1,0 +1,597 @@
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!-- Consider adding an manifest.appcache: h5bp.com/d/Offline -->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+
+        <!-- Use the .htaccess and remove these lines to avoid edge case issues.
+        More info: h5bp.com/b/378 -->
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->	<!-- Not yet implemented -->
+
+        <title>LODESTAR &lt; FGPT &lt; EMBL-EBI</title>
+        <meta name="description" content="EMBL-EBI"><!-- Describe what this page is about -->
+        <meta name="keywords" content="bioinformatics, europe, institute"><!-- A few keywords that relate to the content of THIS PAGE (not the whol project) -->
+        <meta name="author" content="EMBL-EBI"><!-- Your [project-name] here -->
+
+        <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
+
+        <!-- CSS: implied media=all -->
+        <!-- CSS concatenated and minified via ant build script-->
+        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/boilerplate-style.css">
+        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-global.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/ebi-visual.css" type="text/css" media="screen">
+        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/984-24-col-fluid.css" type="text/css" media="screen">
+
+        <!-- you can replace this with [projectname]-colours.css. See http://frontier.ebi.ac.uk/web/style/colour for details of how to do this -->
+        <!-- also inform ES so we can host your colour palette file -->
+        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/develop/embl-petrol-colours.css" type="text/css" media="screen">
+
+        <!-- for production the above can be replaced with -->
+        <!--
+        <link rel="stylesheet" href="http://www.ebi.ac.uk/web_guidelines/css/compliance/mini/ebi-fluid-embl.css">
+        -->
+
+        <style type=text/css>
+            /* You have the option of setting a maximum width for your page, and making sure everything is centered */
+            body { max-width: 1366px; margin: 0 auto; }
+        </style>
+
+        <!-- end CSS-->
+
+
+        <!-- All JavaScript at the bottom, except for Modernizr / Respond.
+        Modernizr enables HTML5 elements & feature detects; Respond is a polyfill for min/max-width CSS3 Media Queries
+        For optimal performance, use a custom Modernizr build: www.modernizr.com/download/ -->
+
+        <!-- Full build -->
+        <!-- <script src="../js/libs/modernizr.minified.2.1.6.js"></script> -->
+
+        <!-- custom build (lacks most of the "advanced" HTML5 support -->
+        <script src="http://www.ebi.ac.uk/web_guidelines/js/libs/modernizr.custom.49274.js"></script>
+
+    </head>
+
+    <body class="level2">
+
+        <div id="skip-to">
+            <ul>
+                <li><a href="#content" title="">Skip to main content</a></li>
+                <li><a href="#local-nav" title="">Skip to local navigation</a></li>
+                <li><a href="#global-nav" title="">Skip to EBI global navigation menu</a></li>
+                <li><a href="#global-nav-expanded" title="">Skip to expanded EBI global navigation menu (includes all sub-sections)</a></li>
+            </ul>
+        </div>
+
+        <div id="wrapper" class="container_24">
+<header>
+        <div id="global-masthead" class="masthead grid_24">
+            <!--This has to be one line and no newline characters-->
+            <a href="http://www.ebi.ac.uk/" title="Go to the EMBL-EBI homepage"><img src="http://www.ebi.ac.uk/web_guidelines/images/logos/EMBL-EBI/EMBL_EBI_Logo_white.png" alt="EMBL European Bioinformatics Institute"></a>
+
+            <nav>
+               <ul id="global-nav">
+                    <!-- set active class as appropriate -->
+                    <li class="first active" id="services"><a href="http://www.ebi.ac.uk/services">Services</a></li>
+                    <li id="research"><a href="http://www.ebi.ac.uk/research">Research</a></li>
+                    <li id="training"><a href="http://www.ebi.ac.uk/training">Training</a></li>
+                    <li id="industry"><a href="http://www.ebi.ac.uk/industry">Industry</a></li>
+                    <li id="about" class="last"><a href="http://www.ebi.ac.uk/about">About us</a></li>
+                </ul>
+            </nav>
+
+        </div>
+
+        <div id="local-masthead" class="masthead grid_24 nomenu">
+
+            <!-- local-title -->
+            <!-- NB: for additional title style patterns, see http://frontier.ebi.ac.uk/web/style/patterns -->
+
+            <div class="grid_12 alpha" id="local-title">
+                <h1><a href="/lodestar" title="">Lodestar</a></h1>
+            </div>
+
+            <!-- /local-title -->
+
+            <!-- local-search -->            <!-- NB: if you do not have a local-search, delete the following div, and drop the class="grid_12 alpha" class from local-title above -->
+
+            <div class="grid_12 omega">
+                <form id="local-search" name="local-search" action="/ebisearch/search.ebi" method="get">
+
+                    <fieldset>
+
+                        <div class="left">
+                            <label>
+                                <input type="text" name="query" id="local-searchbox">
+                                <input type="hidden" name="db" value="allebi">
+                                <input type="hidden" name="requestFrom" value="searchBox">
+                            </label>
+                            <!-- Include some example searchterms - keep them short and few! -->
+                            <span class="examples">Examples:                                <a href="/ebisearch/search.ebi?db=allebi&amp;requestFrom=ebi_index&amp;query=ROA1_HUMAN">ROA1_HUMAN</a>,
+                                <a href="/ebisearch/search.ebi?db=allebi&amp;query=tpi1&amp;requestFrom=ebi_index">tpi1</a>,
+                                <a href="/ebisearch/search.ebi?db=allebi&amp;query=Sulston&amp;requestFrom=ebi_index">Sulston</a> ...
+                            </span>
+                        </div>
+
+                        <div class="right">
+                            <input type="submit" name="submitSearch" value="Search" class="submit" onclick="var q = $.trim(document.getElementById('local-searchbox').value); document.getElementById('local-searchbox').value = q; if (q == null || q == '') {alert('Please type a search term in the box'); return false;}">
+                            <span class="adv"><a href="/ebisearch/advancedsearch.ebi" id="adv-search" title="Advanced">Advanced</a></span>
+                        </div>
+
+                    </fieldset>
+
+                </form>
+            </div>
+
+            <!-- /local-search -->
+
+
+            <!-- local-nav -->
+	     <nav>
+                <ul class="grid_24" id="local-nav">
+                        <li><a href="../../index.html">Home</a></li>
+                        <li><a href="http://www.ebi.ac.uk/about/people/helen-parkinson" title="Team">Team</a></li>
+                        <li><a href="../../projects.html" title="Projects">Projects</a></li>
+                        <li><a href="../../publications.html" title="Publications">Publications</a></li>
+                        <li><a href="../../ontologies.html" title="Ontologies">Ontologies</a></li>
+                        <li class="first active"><a href="../index.html" title="Software">Software</a></li>
+                        <li><a href="../../contact.html" title="Contact">Contact</a></li>
+            	</ul>
+            </nav>
+
+            <!-- /local-nav -->
+
+        </div>
+    </header><div id="content" role="main" class="grid_24 clearfix">
+
+
+
+                <!-- InstanceBeginEditable name="contents" -->
+                <div class="breadcrumbs">
+                     
+                     
+                </div>
+		<section class="grid_18 alpha">	
+                <h2>Documentation</h2>
+                <p>
+		  Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based web app that can wrap any existing SPARQL endpoint to provide a set of additional SPARQL and Linked Data services. Lodestar was developed to provide a consistent set of SPARQL and Linked Data services across the European Bioinformatics Institute (EBI). Some of the service provided by Lodestar: 
+		<span style="float:right"><a href="../downloads/index.html"><img style="width:200px;" src="db.jpg"/></a></span>
+		  
+		  <ul>
+		    <li>Javascript based SPARQL endpoint with configurable example queries and paginated results table</li>
+		    <li>Read only SPARQL endpoint for protection from write operations</li>
+		    <li>A single SPARQL endpoint that provides a UI, the service and a SPARQL 1.1 service description</li>
+		    <li>SPARQL syntax highlighting provided by CodeMirror</li>
+		    <li>Works with any SPARQL endpoint (Includes Virtuoso JDBC connection option)</li>
+		    <li>Linked data browser for navigating data from a SPARQL endpoint</li>
+		    <li>Configurable resource description/linked data pages:
+		      <ul>
+			<li>Renders resources by label where possible</li>
+			<li>Grouping of related resource by type</li>
+			<li>Set top facts to display, such as labels and descriptions</li>
+			<li>Configurable limits for how many related resources to render in the browser</li>
+			<li>Renders depictions of resources</li>
+		      </ul>
+		    </li>
+		    <li>Handles content negotiation for both SPARQL queries and linked data pages</li>
+		    <li>CORS enabled for cross domain scripting</li>
+		    <li>Basic REST API for accessing data in simplified JSON format</li>
+		  </ul>
+
+                </p>
+
+		<p>
+		  To see a demonstration of the Lodestar linked data browser please see the <a href="http://www.ebi.ac.uk/rdf/services/atlas/sparql">Expression Atlas RDF</a> SPARQL endpoint. Lodestar has been primarily developed as an internal tool for EBI resources, however, the application should be sufficiently generic that others can use and adopt it as they see fit. We can't guarantee any support for the software at this time, but please feel free to use it or adapt for your own purposes and let us know how you get on.
+		</p>
+		
+                <h3> Availability </h3>
+
+                <p>The source code for Lodestar is available from GitHub at <a href="https://github.com/EBISPOT/lodestar">https://github.com/EBISPOT/lodestar</a>. A stable release is available as a Java web archive (WAR)
+		 from our downloads page <a href="../downloads/index.html">here</a>. This can be deployed in any Java servlet container (such as Tomcat)</p>
+
+		
+
+		<h3> Installation </h3>
+
+		<p>
+		  Deploy the lode.war from the downloads section into your Java servlet container. Assuming you are running tomcat on port 8080, you can drop the lode.war file into the tomcat webapps directory. Restart tomcat and you should have a sparql endpoint at http://localhost:8080/lode/sparql. Lodestar is a wrapper for a standard SPARQL endpoint, so once deployed you need to configure Lodestar to point at an accessible SPARQL endpoint. Typically these are endpoints provided by existing triple stores such as Virtuoso, Sesame and OWLIM. 
+		</p>
+
+		<h3> Building from source </h3>
+
+		<p>
+		  Checkout the source code from the GitHub respository. You can build the web application with</p> <pre>mvn clean package</pre>. 
+		
+		<p>
+		  If you want to use the virtuoso configuration you will need to use the virtuoso profile.</p> <pre>mvn -P virtuoso clean package</pre> 
+<p>This build will most likely fail as it requires the virtuoso Jena providers and virtuoso JDBC libraries from OpenLink. In the lode-virtuoso-impl pom.xml there are two dependencies, one on virt-jena and one on virt-jdbc. Get the latest jars from here <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtJenaProvider">here</a> and install <a href="http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html">locally with maven</a>.  
+		</p>
+
+
+		<h3> Configuration </h3>
+		
+		<p>
+		  A clean install will deploy a Lodestar instance that has been configured to wrap the DBpedia SPARQL 
+		  endpoint (http://www.dbpedia.org/sparql). To connect to a different SPARQL endpoint over HTTP you need to set the
+		  lode.sparqlendpoint.url property. Assuming a Tomcat based setup, this property can either be set in the tomcat startup script 
+		  or you can edit the properties file directly in 
+		   $TOMCAT_HOME/webapps/lode/WEB-INF/classes/lode.properties 
+		</p>
+		
+
+		<h3>Advanced Configuration </h3>
+		<p> The following properties can be set that control some of the more advanced Lodestar features 
+
+		<pre>
+# Set the max number of results returned by your sparql endpoint
+  lode.sparql.query.maxlimit=1000  
+# List the relations to show at the top in the box at the top of the linkded data explorer page
+  lode.explorer.toprelationship=http://xmlns.com/foaf/0.1/page,http://purl.org/dc/terms/identifier		  
+# List any predicates that you want to hide in the HTML view of the linked data browser, not type is already dealt with by lodestar so we ignore it as we don't want to show it twice
+  lode.explorer.ignore.relationship=http://www.w3.org/1999/02/22-rdf-syntax-ns#type
+# List any resource types (classes) that you want to hide form the linked data HTML view
+  lode.explorer.ignore.types=http://www.w3.org/2000/01/rdf-schema#Resource
+# Ignore blank nodes in the HTML view
+  lode.explorer.ignore.blanknode=true
+# set the predicates used to describe resource labels (ordered in preference)
+  lode.explorer.label=http://www.w3.org/2004/02/skos/core#prefLabel,http://www.w3.org/2000/01/rdf-schema#label
+# set the predicates used to provide a description for resources
+   lode.explorer.description=http://purl.org/dc/terms/description,http://purl.org/dc/elements/1.1/description
+# Set the predicates that link to depictions of resources
+  lode.explorer.depict=http://xmlns.com/foaf/0.1/depiction
+# Set the max number of objects to show for a given resource in the HTML view
+  lode.explorer.max.objects=50
+# Specifies if the query engine should use any inference when answering queries. This should be false when querying over http and is only relevant when using the virtuoso JDBC configuration at the moment
+lode.explorer.useInference=false
+		</pre>
+		</p>
+
+		<h3>Embedding Lodestar into existing website</h3>
+
+		<p>
+		Lodestar comes with a basic HTML layout, but assumes you will want to apply your own style. Integrating Lodestar into your web app can be done using Javascript. See the example html files query.html and explore.html to see how little code is needed to drop a SPARQL endpoint of resource description into an existing html page. For example, you can drop a SPARQL endpoint into a static page with the following html. Note the scripts and CSS files that must be imported into your page. 
+		
+		<pre>
+&lt;html&gt; 
+ &lt;head&gt; 
+  &lt;title&gt;SPARQL Endpoint&lt;/title&gt; 
+  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/lode-style.css&quot; /&gt; 
+  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;codemirror/codemirror.css&quot; /&gt; 
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt; 
+  &lt;script type=&quot;text/javascript&quot; src=&quot;codemirror/codemirror.js&quot;&gt;&lt;/script&gt; 
+  &lt;script type=&quot;text/javascript&quot; src=&quot;codemirror/sparql.js&quot;&gt;&lt;/script&gt; 
+  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/namespaces.js&quot;&gt;&lt;/script&gt; 
+  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/queries.js&quot;&gt;&lt;/script&gt; 
+  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/lode.js&quot;&gt;&lt;/script&gt; 
+ &lt;/head&gt; 
+&lt;body onload=&quot;$('#sparql-content').sparql({namespaces : lodeNamespacePrefixes});&quot;&gt;
+ &lt;div class=&quot;grid_24&quot; id=&quot;sparql-content&quot;&gt; &lt;/div&gt; 
+&lt;/body&gt; 
+&lt;/html&gt;
+		</pre>
+
+		</p>
+
+		<p>
+		  Notice the SPARQL function takes a set of default namespaces. This can be configured in the scripts/namespaces.js file. 
+
+		<pre>
+var lodeNamespacePrefixes = {
+  rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+  rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+  owl: 'http://www.w3.org/2002/07/owl#',
+  xsd: 'http://www.w3.org/2001/XMLSchema#',
+  dc: 'http://purl.org/dc/elements/1.1/',
+  foaf: 'http://xmlns.com/foaf/0.1/',
+};
+		</pre>
+		</p>
+
+		<p>
+		  You can edit the example queries that appear alongside the SPARQL query box by editing the scripts/queries.js.
+
+		  <pre>
+var exampleQueries = [
+ {
+   shortname : "Query 1",
+   description: "People who were born in Berlin before 1900",
+   query: "PREFIX : &lt;http://dbpedia.org/resource/&gt;\n" +
+            "PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt;\n\n" +
+            "SELECT ?name ?birth ?death ?person WHERE {\n" +
+            "?person dbo:birthPlace :Berlin .\n" +
+            "?person dbo:birthDate ?birth .\n" +
+            "?person foaf:name ?name .\n" +
+            "?person dbo:deathDate ?death .\n" +
+            "FILTER (?birth < \"1900-01-01\"^^xsd:date) . \n" +
+            "}   \n" +
+            "ORDER BY ?name"
+    }
+]
+		  </pre>
+		</p>
+
+		<h3>Connecting to Virtuoso</h3>
+		<p>
+		If you are connecting to a Virtuoso instance you can configure Lodestar to connect directly via JDBC. This can increase performance and allows you to exploit some of the advanced virtuoso features, like inference and their extended SPARQL syntax, in your queries. There are two virtuoso connection configurations, the first is for direct jdbc connections, and the second uses a virtuoso JNDI datasource. This second option is reccommended for production servers as it allows your servlet container to manage connections and connection pooling to the virtuoso instance. 
+		</p>
+		
+		<h4>Direct JDBC connection</h4>
+
+		<p>Set the following properties in the lode.properties file </p>
+		<pre>
+# virtuoso jdbc connection details#
+lode.sparqlendpoint.url=jdbc:virtuoso://localhost:1111
+lode.explorer.virtuoso.user=dba
+lode.explorer.virtuoso.password=dba
+# Set the name of the inference rule graph
+lode.explorer.virtuoso.inferencerule=default-rules
+# Query all graphs by default
+lode.explorer.virtuoso.allgraphs=true
+# set a limit on query time out, default is -1 (no limit)
+lode.explorer.virtuoso.querytimeout=-1
+		</pre>
+
+<p>		You will also need to make a changes in the spring config in $TOMCAT_HOME/webapps/lode/WEB-INF/ebi-lode-service.xml. Edit the jenaSparqlService bean description and the explorerServiceImpl bean description to use the jenaVirtuosoExecutorService. e.g. <p>
+
+		<pre>		  
+&lt;bean id=&quot;jenaSparqlService&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaSparqlService&quot;&gt; &lt;property name=&quot;endpointURL&quot; value=&quot;${lode.sparqlendpoint.url}&quot;/&gt; 
+ &lt;property name=&quot;maxQueryLimit&quot; value=&quot;${lode.sparql.query.maxlimit}&quot;/&gt; 
+ &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoExecutorService&quot;/&gt; 
+&lt;/bean&gt; 
+
+&lt;bean name=&quot;explorerServiceImpl&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaExploreService&quot;&gt; 
+ &lt;property name=&quot;queryReader&quot; ref=&quot;queryReader&quot;/&gt; 
+ &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoExecutorService&quot;/&gt; 
+&lt;/bean&gt;
+		</pre>
+
+
+		</p>
+
+		<h4>JNDI datasource</h4>
+
+		<p>Set the following properties in the lode.properties file </p>
+		<pre>
+# virtuoso jdbc connection details#
+lode.sparqlendpoint.url=localhost
+lode.sparqlendpoint.port=1111
+lode.explorer.virtuoso.user=dba
+lode.explorer.virtuoso.password=dba
+# Set the name of the inference rule graph
+lode.explorer.virtuoso.inferencerule=default-rules
+# Query all graphs by default
+lode.explorer.virtuoso.allgraphs=true
+# set a limit on query time out, default is -1 (no limit)
+lode.explorer.virtuoso.querytimeout=-1
+		</pre>
+		
+		<br/>
+		
+<p>
+  Specify your context Resource element. For tomcat this can go in $CATALINA_BASE/conf/server.xml, or in a specifc application context (better) (e.g. $CATALINA_BASE/conf/Catalina/localhost/lode.xml)
+</p>
+<pre>
+    &lt;Resource 
+                name="jdbc/virtuoso"
+                auth="Container"
+                factory="virtuoso.jdbc4.VirtuosoDataSourceFactory"
+                type="virtuoso.jdbc4.VirtuosoConnectionPoolDataSource"
+                description="Virtuoso Pool"
+                connectionFactoryClassName="virtuoso.jdbc4.VirtuosoConnectionPoolDataSource"            
+                charset="UTF-8"
+                initialPoolSize="0"
+                minPoolSize="0"
+                maxPoolSize="8"
+                maxPoolSize="20"
+                propertyCycle="0" 
+                maxIdleTime="10"
+                maxStatements="100"
+            &gt;
+  <&lt;/Resource&gt; 
+</pre>
+
+
+<br/>		
+<p>You will also need to make a changes in the spring config in $TOMCAT_HOME/webapps/lode/WEB-INF/ebi-lode-service.xml. You need to use the virtusoDataSource provider and jenaVirtusosConnectionPoolService beans. Use the jenaVirtuosoConnectionPoolService as input the jenaSparqlService and explorerServiceImpl. e.g. Edit the jenaSparqlService bean description and the explorerServiceImpl bean description to use the jenaVirtuosoExecutorService. e.g.
+		</p>
+		<br/>		
+
+		<pre>		  
+
+
+    &lt;bean id=&quot;virtuosoDataSourceProvider&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider&quot;&gt;
+        &lt;constructor-arg name=&quot;endpointUrl&quot; value=&quot;${lode.sparqlendpoint.url}&quot;/&gt;
+        &lt;constructor-arg name=&quot;port&quot; value=&quot;${lode.sparqlendpoint.port}&quot;/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id=&quot;jenaVirtuosoConnectionPoolService&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService&quot;&gt;
+        &lt;constructor-arg ref=&quot;virtuosoDataSourceProvider&quot;/&gt;
+    &lt;/bean&gt;
+    
+    &lt;bean id=&quot;jenaSparqlService&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaSparqlService&quot;&gt;
+        &lt;property name=&quot;maxQueryLimit&quot; value=&quot;${lode.sparql.query.maxlimit}&quot;/&gt;
+        &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoConnectionPoolService&quot;/&gt;
+    &lt;/bean&gt;
+
+
+    &lt;bean name=&quot;explorerServiceImpl&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaExploreService&quot;&gt;
+        &lt;property name=&quot;queryReader&quot; ref=&quot;queryReader&quot;/&gt;
+        &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoConnectionPoolService&quot;/&gt;
+    &lt;/bean&gt;
+		</pre>
+
+
+		</p>
+
+
+
+                <h3> Issues and support </h3>
+
+                <h5> Issues and feature requests </h5>
+
+                <p>To request a new feature or if you think you've found a bug, use the GitHub issue tracker or contact support below.
+		</p>
+
+                <h5> Support </h5>
+
+                <p>If you need help using this tool, please email
+                    <a href="mailto:fgpt@ebi.ac.uk?subject=Lodestar+support">fgpt@ebi.ac.uk</a>.</p>
+
+                <h5> Contact </h5>
+
+                <p>For more information or to get involved please email <a href="mailto:jupp@ebi.ac.uk">Simon Jupp</a>.
+                </p>
+
+                <h3> Acknowledgements </h3>
+
+                <p>This tool was developed by Simon Jupp.</p>
+
+                <p></p>
+
+                <div class="linktotop"><a href="#">Top</a></div>
+                <br>
+
+                 </section>
+
+		<section class="grid_6 omega">
+		<h3>Software</h3>
+		<ul id="secondary-nav">
+		<li><a href="../index.html">Software home</a></li>
+		<li>Curation and Annotation Tools
+		  <ul>
+		   <li><a href="../annotare/index.html">Annotare</a></li>
+		   <li><a href="../conan/index.html">Conan</a></li>
+		   <li><a href="../corona/index.html">Corona</a></li>
+ 		   <li><a href="../limpopo/index.html">Limpopo MAGE-TAB Validation Service</a></li>
+ 		   <li><a href="../magecomet/index.html">MageComet</a></li>
+ 		   <li><a href="../perl/index.html">MAGE-TAB Perl Libraries</a></li>
+		   <li><a href="../sampletabaccession/index.html">SampleTab Accessioner Service</a></li>
+		  </ul>
+		</li>
+		<li>Ontology Powered Tools
+		   <ul>
+		   <li><a href="http://www.ebi.ac.uk/efo/index.html">EFO Browser</a></li>
+		   <li><a href="../gwas/index.html">GWAS Diagram Browser</a></li>
+		   <li><a href="http://www.ontocat.org/">OntoCAT</a></li>
+		   <li><a href="../zooma/index.html">ZOOMA2</a></li>
+		  </ul>
+		</li>
+		<li>Ontology Development Tools
+		     <ul>
+		   <li><a href="../bubastis/index.html">Bubastis</a></li>
+		   <li><a href="../efoimporter/index.html">EFO Importer</a></li>
+		   <li><a href="../efovalidator/index.html">EFO Validator</a></li>
+		   <li><a href="./index.html">URIGen</a></li>
+		  </ul>
+		</li>
+		<li>Sematic web tools
+		  <ul>
+		    <li class="active"><a href=".index.html">Lodestar</a></li>
+<!--		    <li><a href="../atlasrdfr/index.html">Atlas RDF-R</a></li> -->
+		  </ul>
+		</li>
+		<li><a href="../downloads/index.html">Downloads</a></li>
+		</ul>
+		</section>
+
+
+                <!-- InstanceEndEditable -->
+                <img src="http://www.ebi.ac.uk/inc/images/spacer.gif" class="spacer" alt="spacer">
+
+
+</div>    <footer>
+        <!-- Optional local footer (insert citation / project-specific copyright / etc here -->
+        <!--
+        <div id="local-footer" class="grid_24 clearfix">
+
+        </div>
+         -->
+         <!-- End optional local footer -->
+
+        <div id="global-footer" class="grid_24 clearfix">
+
+            <nav id="global-nav-expanded">
+
+                <div class="grid_4 alpha">
+                    <h3 class="explore">Explore</h3>
+                </div>
+
+                <div class="grid_4">
+                    <h3 class="services"><a href="/services" title="Services">Services</a></h3>
+                </div>
+
+                <div class="grid_4">
+                    <h3 class="research"><a href="/research" title="Research">Research</a></h3>
+                </div>
+
+                <div class="grid_4">
+                    <h3 class="training"><a href="/training" title="Training">Training</a></h3>
+                </div>
+
+                <div class="grid_4">
+                    <h3 class="industry"><a href="/industry" title="Industry">Industry</a></h3>
+                </div>
+
+                <div class="grid_4 omega">
+                    <h3 class="about"><a href="/about" title="About us">About us</a></h3>
+                </div>
+
+            </nav>
+            <script src="http://www.ebi.ac.uk/web_guidelines/js/foot.js"></script>
+
+        </div>
+
+        <div class="grid_24">
+            <section id="ebi-footer-meta">
+                <p> &copy; EMBL-EBI European Bioinformatics Institute | <a href="#" title="">Privacy</a> | <a href="#" title="">Cookies</a> | <a href="#" title="">Terms of use</a></p>
+            </section>
+        </div>
+
+    </footer>
+        </div> <!--! end of #wrapper -->
+
+
+        <!-- JavaScript at the bottom for fast page loading -->
+
+        <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
+        <!--
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="../js/libs/jquery-1.6.2.min.js"></script>')</script>
+        -->
+
+
+        <!-- scripts concatenated and minified via ant build script-->
+        <!--
+        <script defer src="../js/plugins.js"></script>
+        <script defer src="../js/script.js"></script>
+        -->
+        <script defer src="http://www.ebi.ac.uk/web_guidelines/js/cookiebanner.js"></script>
+        <!-- end scripts-->
+
+
+        <!-- Change UA-XXXXX-X to be your site's ID -->
+        <!--
+        <script>
+            window._gaq = [['_setAccount','UAXXXXXXXX1'],['_trackPageview'],['_trackPageLoadTime']];
+            Modernizr.load({
+                load: ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js'
+            });
+        </script>
+        -->
+
+
+        <!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+        chromium.org/developers/how-tos/chrome-frame-getting-started -->
+        <!--[if lt IE 7 ]>
+        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+        <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+        <![endif]-->
+
+    </body>
+</html>
