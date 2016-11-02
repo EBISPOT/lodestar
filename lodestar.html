@@ -10,12 +10,12 @@
   </head>
 
     <body class="level2">
- <div>
-		<section class="grid_18 alpha">	
+
+		<section class="main-content">
                 <h2>Documentation</h2>
                 <p>
-		  Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based web app that can wrap any existing SPARQL endpoint to provide a set of additional SPARQL and Linked Data services. Lodestar was developed to provide a consistent set of SPARQL and Linked Data services across the European Bioinformatics Institute (EBI). Some of the service provided by Lodestar: 
-			  
+		  Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based web app that can wrap any existing SPARQL endpoint to provide a set of additional SPARQL and Linked Data services. Lodestar was developed to provide a consistent set of SPARQL and Linked Data services across the European Bioinformatics Institute (EBI). Some of the service provided by Lodestar:
+
 		  <ul>
 		    <li>Javascript based SPARQL endpoint with configurable example queries and paginated results table</li>
 		    <li>Read only SPARQL endpoint for protection from write operations</li>
@@ -42,50 +42,50 @@
 		<p>
 		  To see a demonstration of the Lodestar linked data browser please see the <a href="http://www.ebi.ac.uk/rdf/services/atlas/sparql">Expression Atlas RDF</a> SPARQL endpoint. Lodestar has been primarily developed as an internal tool for EBI resources, however, the application should be sufficiently generic that others can use and adopt it as they see fit. We can't guarantee any support for the software at this time, but please feel free to use it or adapt for your own purposes and let us know how you get on.
 		</p>
-		
+
                 <h3> Availability </h3>
 
                 <p>The source code for Lodestar is available from GitHub at <a href="https://github.com/EBISPOT/lodestar">https://github.com/EBISPOT/lodestar</a>. A stable release is available as a Java web archive (WAR)
 		 from our downloads page <a href="../downloads/index.html">here</a>. This can be deployed in any Java servlet container (such as Tomcat)</p>
 
-		
+
 
 		<h3> Installation </h3>
 
 		<p>
-		  Deploy the lode.war from the downloads section into your Java servlet container. Assuming you are running tomcat on port 8080, you can drop the lode.war file into the tomcat webapps directory. Restart tomcat and you should have a sparql endpoint at http://localhost:8080/lode/sparql. Lodestar is a wrapper for a standard SPARQL endpoint, so once deployed you need to configure Lodestar to point at an accessible SPARQL endpoint. Typically these are endpoints provided by existing triple stores such as Virtuoso, Sesame and OWLIM. 
+		  Deploy the lode.war from the downloads section into your Java servlet container. Assuming you are running tomcat on port 8080, you can drop the lode.war file into the tomcat webapps directory. Restart tomcat and you should have a sparql endpoint at http://localhost:8080/lode/sparql. Lodestar is a wrapper for a standard SPARQL endpoint, so once deployed you need to configure Lodestar to point at an accessible SPARQL endpoint. Typically these are endpoints provided by existing triple stores such as Virtuoso, Sesame and OWLIM.
 		</p>
 
 		<h3> Building from source </h3>
 
 		<p>
-		  Checkout the source code from the GitHub respository. You can build the web application with</p> <pre>mvn clean package</pre>. 
-		
+		  Checkout the source code from the GitHub respository. You can build the web application with</p> <pre>mvn clean package</pre>.
+
 		<p>
-		  If you want to use the virtuoso configuration you will need to use the virtuoso profile.</p> <pre>mvn -P virtuoso clean package</pre> 
-<p>This build will most likely fail as it requires the virtuoso Jena providers and virtuoso JDBC libraries from OpenLink. In the lode-virtuoso-impl pom.xml there are two dependencies, one on virt-jena and one on virt-jdbc. Get the latest jars from here <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtJenaProvider">here</a> and install <a href="http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html">locally with maven</a>.  
+		  If you want to use the virtuoso configuration you will need to use the virtuoso profile.</p> <pre>mvn -P virtuoso clean package</pre>
+<p>This build will most likely fail as it requires the virtuoso Jena providers and virtuoso JDBC libraries from OpenLink. In the lode-virtuoso-impl pom.xml there are two dependencies, one on virt-jena and one on virt-jdbc. Get the latest jars from here <a href="http://virtuoso.openlinksw.com/dataspace/doc/dav/wiki/Main/VirtJenaProvider">here</a> and install <a href="http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html">locally with maven</a>.
 		</p>
 
 
 		<h3> Configuration </h3>
-		
+
 		<p>
-		  A clean install will deploy a Lodestar instance that has been configured to wrap the DBpedia SPARQL 
+		  A clean install will deploy a Lodestar instance that has been configured to wrap the DBpedia SPARQL
 		  endpoint (http://www.dbpedia.org/sparql). To connect to a different SPARQL endpoint over HTTP you need to set the
-		  lode.sparqlendpoint.url property. Assuming a Tomcat based setup, this property can either be set in the tomcat startup script 
-		  or you can edit the properties file directly in 
-		   $TOMCAT_HOME/webapps/lode/WEB-INF/classes/lode.properties 
+		  lode.sparqlendpoint.url property. Assuming a Tomcat based setup, this property can either be set in the tomcat startup script
+		  or you can edit the properties file directly in
+		   $TOMCAT_HOME/webapps/lode/WEB-INF/classes/lode.properties
 		</p>
-		
+
 
 		<h3>Advanced Configuration </h3>
-		<p> The following properties can be set that control some of the more advanced Lodestar features 
+		<p> The following properties can be set that control some of the more advanced Lodestar features
 
 		<pre>
 # Set the max number of results returned by your sparql endpoint
-  lode.sparql.query.maxlimit=1000  
+  lode.sparql.query.maxlimit=1000
 # List the relations to show at the top in the box at the top of the linkded data explorer page
-  lode.explorer.toprelationship=http://xmlns.com/foaf/0.1/page,http://purl.org/dc/terms/identifier		  
+  lode.explorer.toprelationship=http://xmlns.com/foaf/0.1/page,http://purl.org/dc/terms/identifier
 # List any predicates that you want to hide in the HTML view of the linked data browser, not type is already dealt with by lodestar so we ignore it as we don't want to show it twice
   lode.explorer.ignore.relationship=http://www.w3.org/1999/02/22-rdf-syntax-ns#type
 # List any resource types (classes) that you want to hide form the linked data HTML view
@@ -108,31 +108,31 @@ lode.explorer.useInference=false
 		<h3>Embedding Lodestar into existing website</h3>
 
 		<p>
-		Lodestar comes with a basic HTML layout, but assumes you will want to apply your own style. Integrating Lodestar into your web app can be done using Javascript. See the example html files query.html and explore.html to see how little code is needed to drop a SPARQL endpoint of resource description into an existing html page. For example, you can drop a SPARQL endpoint into a static page with the following html. Note the scripts and CSS files that must be imported into your page. 
-		
+		Lodestar comes with a basic HTML layout, but assumes you will want to apply your own style. Integrating Lodestar into your web app can be done using Javascript. See the example html files query.html and explore.html to see how little code is needed to drop a SPARQL endpoint of resource description into an existing html page. For example, you can drop a SPARQL endpoint into a static page with the following html. Note the scripts and CSS files that must be imported into your page.
+
 		<pre>
-&lt;html&gt; 
- &lt;head&gt; 
-  &lt;title&gt;SPARQL Endpoint&lt;/title&gt; 
-  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/lode-style.css&quot; /&gt; 
-  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;codemirror/codemirror.css&quot; /&gt; 
-  &lt;script type=&quot;text/javascript&quot; src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt; 
-  &lt;script type=&quot;text/javascript&quot; src=&quot;codemirror/codemirror.js&quot;&gt;&lt;/script&gt; 
-  &lt;script type=&quot;text/javascript&quot; src=&quot;codemirror/sparql.js&quot;&gt;&lt;/script&gt; 
-  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/namespaces.js&quot;&gt;&lt;/script&gt; 
-  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/queries.js&quot;&gt;&lt;/script&gt; 
-  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/lode.js&quot;&gt;&lt;/script&gt; 
- &lt;/head&gt; 
+&lt;html&gt;
+ &lt;head&gt;
+  &lt;title&gt;SPARQL Endpoint&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/lode-style.css&quot; /&gt;
+  &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;codemirror/codemirror.css&quot; /&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;codemirror/codemirror.js&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;codemirror/sparql.js&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/namespaces.js&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/queries.js&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;text/javascript&quot; src=&quot;scripts/lode.js&quot;&gt;&lt;/script&gt;
+ &lt;/head&gt;
 &lt;body onload=&quot;$('#sparql-content').sparql({namespaces : lodeNamespacePrefixes});&quot;&gt;
- &lt;div class=&quot;grid_24&quot; id=&quot;sparql-content&quot;&gt; &lt;/div&gt; 
-&lt;/body&gt; 
+ &lt;div class=&quot;grid_24&quot; id=&quot;sparql-content&quot;&gt; &lt;/div&gt;
+&lt;/body&gt;
 &lt;/html&gt;
 		</pre>
 
 		</p>
 
 		<p>
-		  Notice the SPARQL function takes a set of default namespaces. This can be configured in the scripts/namespaces.js file. 
+		  Notice the SPARQL function takes a set of default namespaces. This can be configured in the scripts/namespaces.js file.
 
 		<pre>
 var lodeNamespacePrefixes = {
@@ -171,9 +171,9 @@ var exampleQueries = [
 
 		<h3>Connecting to Virtuoso</h3>
 		<p>
-		If you are connecting to a Virtuoso instance you can configure Lodestar to connect directly via JDBC. This can increase performance and allows you to exploit some of the advanced virtuoso features, like inference and their extended SPARQL syntax, in your queries. There are two virtuoso connection configurations, the first is for direct jdbc connections, and the second uses a virtuoso JNDI datasource. This second option is reccommended for production servers as it allows your servlet container to manage connections and connection pooling to the virtuoso instance. 
+		If you are connecting to a Virtuoso instance you can configure Lodestar to connect directly via JDBC. This can increase performance and allows you to exploit some of the advanced virtuoso features, like inference and their extended SPARQL syntax, in your queries. There are two virtuoso connection configurations, the first is for direct jdbc connections, and the second uses a virtuoso JNDI datasource. This second option is reccommended for production servers as it allows your servlet container to manage connections and connection pooling to the virtuoso instance.
 		</p>
-		
+
 		<h4>Direct JDBC connection</h4>
 
 		<p>Set the following properties in the lode.properties file </p>
@@ -192,15 +192,15 @@ lode.explorer.virtuoso.querytimeout=-1
 
 <p>		You will also need to make a changes in the spring config in $TOMCAT_HOME/webapps/lode/WEB-INF/ebi-lode-service.xml. Edit the jenaSparqlService bean description and the explorerServiceImpl bean description to use the jenaVirtuosoExecutorService. e.g. <p>
 
-		<pre>		  
-&lt;bean id=&quot;jenaSparqlService&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaSparqlService&quot;&gt; &lt;property name=&quot;endpointURL&quot; value=&quot;${lode.sparqlendpoint.url}&quot;/&gt; 
- &lt;property name=&quot;maxQueryLimit&quot; value=&quot;${lode.sparql.query.maxlimit}&quot;/&gt; 
- &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoExecutorService&quot;/&gt; 
-&lt;/bean&gt; 
+		<pre>
+&lt;bean id=&quot;jenaSparqlService&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaSparqlService&quot;&gt; &lt;property name=&quot;endpointURL&quot; value=&quot;${lode.sparqlendpoint.url}&quot;/&gt;
+ &lt;property name=&quot;maxQueryLimit&quot; value=&quot;${lode.sparql.query.maxlimit}&quot;/&gt;
+ &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoExecutorService&quot;/&gt;
+&lt;/bean&gt;
 
-&lt;bean name=&quot;explorerServiceImpl&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaExploreService&quot;&gt; 
- &lt;property name=&quot;queryReader&quot; ref=&quot;queryReader&quot;/&gt; 
- &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoExecutorService&quot;/&gt; 
+&lt;bean name=&quot;explorerServiceImpl&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaExploreService&quot;&gt;
+ &lt;property name=&quot;queryReader&quot; ref=&quot;queryReader&quot;/&gt;
+ &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoExecutorService&quot;/&gt;
 &lt;/bean&gt;
 		</pre>
 
@@ -223,39 +223,39 @@ lode.explorer.virtuoso.allgraphs=true
 # set a limit on query time out, default is -1 (no limit)
 lode.explorer.virtuoso.querytimeout=-1
 		</pre>
-		
+
 		<br/>
-		
+
 <p>
   Specify your context Resource element. For tomcat this can go in $CATALINA_BASE/conf/server.xml, or in a specifc application context (better) (e.g. $CATALINA_BASE/conf/Catalina/localhost/lode.xml)
 </p>
 <pre>
-    &lt;Resource 
+    &lt;Resource
                 name="jdbc/virtuoso"
                 auth="Container"
                 factory="virtuoso.jdbc4.VirtuosoDataSourceFactory"
                 type="virtuoso.jdbc4.VirtuosoConnectionPoolDataSource"
                 description="Virtuoso Pool"
-                connectionFactoryClassName="virtuoso.jdbc4.VirtuosoConnectionPoolDataSource"            
+                connectionFactoryClassName="virtuoso.jdbc4.VirtuosoConnectionPoolDataSource"
                 charset="UTF-8"
                 initialPoolSize="0"
                 minPoolSize="0"
                 maxPoolSize="8"
                 maxPoolSize="20"
-                propertyCycle="0" 
+                propertyCycle="0"
                 maxIdleTime="10"
                 maxStatements="100"
             &gt;
-  <&lt;/Resource&gt; 
+  <&lt;/Resource&gt;
 </pre>
 
 
-<br/>		
+<br/>
 <p>You will also need to make a changes in the spring config in $TOMCAT_HOME/webapps/lode/WEB-INF/ebi-lode-service.xml. You need to use the virtusoDataSource provider and jenaVirtusosConnectionPoolService beans. Use the jenaVirtuosoConnectionPoolService as input the jenaSparqlService and explorerServiceImpl. e.g. Edit the jenaSparqlService bean description and the explorerServiceImpl bean description to use the jenaVirtuosoExecutorService. e.g.
 		</p>
-		<br/>		
+		<br/>
 
-		<pre>		  
+		<pre>
 
 
     &lt;bean id=&quot;virtuosoDataSourceProvider&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider&quot;&gt;
@@ -266,7 +266,7 @@ lode.explorer.virtuoso.querytimeout=-1
     &lt;bean id=&quot;jenaVirtuosoConnectionPoolService&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService&quot;&gt;
         &lt;constructor-arg ref=&quot;virtuosoDataSourceProvider&quot;/&gt;
     &lt;/bean&gt;
-    
+
     &lt;bean id=&quot;jenaSparqlService&quot; class=&quot;uk.ac.ebi.fgpt.lode.impl.JenaSparqlService&quot;&gt;
         &lt;property name=&quot;maxQueryLimit&quot; value=&quot;${lode.sparql.query.maxlimit}&quot;/&gt;
         &lt;property name=&quot;queryExecutionService&quot; ref=&quot;jenaVirtuosoConnectionPoolService&quot;/&gt;
@@ -312,54 +312,13 @@ lode.explorer.virtuoso.querytimeout=-1
 
                  </section>
 
-		<section class="grid_6 omega">
-		<h3>Software</h3>
-		<ul id="secondary-nav">
-		<li><a href="../index.html">Software home</a></li>
-		<li>Curation and Annotation Tools
-		  <ul>
-		   <li><a href="../annotare/index.html">Annotare</a></li>
-		   <li><a href="../conan/index.html">Conan</a></li>
-		   <li><a href="../corona/index.html">Corona</a></li>
- 		   <li><a href="../limpopo/index.html">Limpopo MAGE-TAB Validation Service</a></li>
- 		   <li><a href="../magecomet/index.html">MageComet</a></li>
- 		   <li><a href="../perl/index.html">MAGE-TAB Perl Libraries</a></li>
-		   <li><a href="../sampletabaccession/index.html">SampleTab Accessioner Service</a></li>
-		  </ul>
-		</li>
-		<li>Ontology Powered Tools
-		   <ul>
-		   <li><a href="http://www.ebi.ac.uk/efo/index.html">EFO Browser</a></li>
-		   <li><a href="../gwas/index.html">GWAS Diagram Browser</a></li>
-		   <li><a href="http://www.ontocat.org/">OntoCAT</a></li>
-		   <li><a href="../zooma/index.html">ZOOMA2</a></li>
-		  </ul>
-		</li>
-		<li>Ontology Development Tools
-		     <ul>
-		   <li><a href="../bubastis/index.html">Bubastis</a></li>
-		   <li><a href="../efoimporter/index.html">EFO Importer</a></li>
-		   <li><a href="../efovalidator/index.html">EFO Validator</a></li>
-		   <li><a href="./index.html">URIGen</a></li>
-		  </ul>
-		</li>
-		<li>Sematic web tools
-		  <ul>
-		    <li class="active"><a href=".index.html">Lodestar</a></li>
-<!--		    <li><a href="../atlasrdfr/index.html">Atlas RDF-R</a></li> -->
-		  </ul>
-		</li>
-		<li><a href="../downloads/index.html">Downloads</a></li>
-		</ul>
-		</section>
+
 
 
                 <!-- InstanceEndEditable -->
                 <img src="http://www.ebi.ac.uk/inc/images/spacer.gif" class="spacer" alt="spacer">
 
 
-</div>
-        </div> <!--! end of #wrapper -->
 
 
 
