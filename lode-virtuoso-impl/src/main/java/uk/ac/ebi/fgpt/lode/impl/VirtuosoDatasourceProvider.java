@@ -30,15 +30,14 @@ import java.sql.SQLException;
 public class VirtuosoDatasourceProvider implements DatasourceProvider {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    private VirtuosoDataSource virtuosoSource = null;
+    private DataSource dataSource = null;
 
     public VirtuosoDatasourceProvider() {
         // Get the DataSource using JNDI
-        if (virtuosoSource == null) {
+        if (dataSource == null) {
             try {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
-                virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/virtuoso");
-
+                dataSource = (DataSource) context.lookup("jdbc/virtuoso");
             }
             catch (NamingException e) {
                 throw new IllegalStateException("Virtuoso JNDI datasource not configured: " + e.getMessage());
@@ -49,13 +48,14 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
     public VirtuosoDatasourceProvider(String endpointUrl, int port) {
 
         // Get the DataSource
-        if (virtuosoSource == null) {
+        if (dataSource == null) {
             try {
                 Context context = (Context) (new InitialContext()).lookup("java:comp/env");
-                virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/virtuoso");
-
+                // NOTE: If we need setServerName() and setPortNumber(), we insist on the real thing
+                VirtuosoDataSource virtuosoSource = (VirtuosoDataSource) context.lookup("jdbc/virtuoso");
                 virtuosoSource.setServerName(endpointUrl);
                 virtuosoSource.setPortNumber(port);
+                dataSource = virtuosoSource;
             }
             catch (NamingException e) {
                 throw new IllegalStateException("Virtuoso JNDI datasource not configured: " + e.getMessage());
@@ -64,6 +64,6 @@ public class VirtuosoDatasourceProvider implements DatasourceProvider {
     }
 
     public DataSource getDataSource() throws SQLException {
-        return virtuosoSource;
+        return dataSource;
     }
 }
