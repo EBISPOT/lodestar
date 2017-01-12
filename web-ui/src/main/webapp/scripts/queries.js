@@ -20,7 +20,7 @@ var exampleQueries = [
             {
                 shortname: "Query 1",
                 description: "List all species identifers and their names in model http://identifiers.org/biomodels.db/BIOMD0000000001",
-                namedgraph: "http://ebi.rdf.ac.uk/dataset/biomodels.com",
+                namedgraph: "http://rdf.ebi.ac.uk/dataset/biomodels",
                 query:
                 "PREFIX sbmlrdf: <http://identifiers.org/biomodels.vocabulary#>\n\n" +
                 "SELECT ?speciesid ?name WHERE {\n" +
@@ -30,7 +30,7 @@ var exampleQueries = [
             {
                 shortname: "Query 2",
                 description: "Get element annotations of the model http://identifiers.org/biomodels.db/BIOMD0000000001",
-                namedgraph: "http://ebi.rdf.ac.uk/dataset/biomodels.com",
+                namedgraph: "http://rdf.ebi.ac.uk/dataset/biomodels",
                 query:
                 "PREFIX sbmlrdf: <http://identifiers.org/biomodels.vocabulary#>\n\n" +
                 "SELECT ?element ?qualifier ?annotation WHERE {\n" +
@@ -42,7 +42,7 @@ var exampleQueries = [
             {
                 shortname: "Query 3",
                 description: "All model elements with annotations to acetylcholine-gated channel complex (http://identifiers.org/go/GO:0005892)",
-                namedgraph: "http://ebi.rdf.ac.uk/dataset/biomodels.com",
+                namedgraph: "http://rdf.ebi.ac.uk/dataset/biomodels",
                 query:
                 "PREFIX sbmlrdf: <http://identifiers.org/biomodels.vocabulary#>\n\n" +
                 "SELECT ?modelElement ?elementType ?qualifier WHERE {\n" +
@@ -61,7 +61,7 @@ var exampleQueries = [
             {
                 shortname: "Show main resources",
                 description: "An example that selects Sample Groups, Samples, the main resource types in the dataset.",
-                namedgraph: "XXXX",
+                namedgraph: "http://rdf.ebi.ac.uk/dataset/rdf_biosamples_test",
                 query:
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
                 "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
@@ -81,6 +81,7 @@ var exampleQueries = [
             {
                 shortname: "Samples from homo sapiens and their provenance",
                 description: "Shows how to get and filter sample attributes. It also shows how the web pages on the provenance databases are linked.",
+                namedgraph: "http://rdf.ebi.ac.uk/dataset/rdf_biosamples_test",
                 query:
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
                 "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
@@ -127,6 +128,7 @@ var exampleQueries = [
             {
                 shortname: "Query 1",
                 description: "Get ChEMBL molecules",
+                namedgraph: "http://rdf.ebi.ac.uk/dataset/chembl",
                 query:
                 "PREFIX cco: <http://rdf.ebi.ac.uk/terms/chembl#>\n"+
                 "SELECT ?molecule\n"+
@@ -139,6 +141,7 @@ var exampleQueries = [
             {
                 shortname: "Query 2",
                 description: "Get ChEMBL targets",
+                namedgraph: "http://rdf.ebi.ac.uk/dataset/chembl",
                 query:
                 "PREFIX cco: <http://rdf.ebi.ac.uk/terms/chembl#>\n"+
                 "SELECT ?target \n"+
@@ -155,6 +158,7 @@ var exampleQueries = [
             {
                 shortname: "Query 1",
                 description: "Show all transcripts of human BRCA2 gene and their coordinates",
+                namedgraph: "",
                 query:
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
                 "PREFIX sio: <http://semanticscience.org/resource/>\n"+
