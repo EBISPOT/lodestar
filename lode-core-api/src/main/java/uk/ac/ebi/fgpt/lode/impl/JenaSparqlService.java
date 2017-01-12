@@ -69,12 +69,13 @@ public class JenaSparqlService implements SparqlService {
         this.queryExecutionService = queryExecutionService;
     }
 
-    public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException {
+    public void query(String query, String format, Integer offset, Integer limit, boolean inference, String namedGraph, OutputStream output) throws LodeException {
 
         try {
 
             Query q1 = QueryFactory.create(query, Syntax.syntaxARQ);
             QueryType qtype = getQueryType(query);
+
 
             // detect format
 
@@ -82,25 +83,25 @@ public class JenaSparqlService implements SparqlService {
                 if (isNullOrEmpty(format)) {
                     format = TupleQueryFormats.XML.toString();
                 }
-                executeTupleQuery(q1, format, offset, limit, inference, output);
+                executeTupleQuery(q1, format, namedGraph, offset, limit, inference, output);
             }
             else if (qtype.equals(QueryType.DESCRIBEQUERY)) {
                 if (isNullOrEmpty(format)) {
                     format = GraphQueryFormats.RDFXML.toString();
                 }
-                executeDescribeQuery(q1, format, output);
+                executeDescribeQuery(q1, format, namedGraph, output);
             }
             else if (qtype.equals(QueryType.CONSTRUCTQUERY)) {
                 if (isNullOrEmpty(format)) {
                     format = GraphQueryFormats.RDFXML.toString();
                 }
-                executeConstructQuery(q1, format, output);
+                executeConstructQuery(q1, format, namedGraph, output);
             }
             else if (qtype.equals((QueryType.BOOLEANQUERY))) {
                 if (isNullOrEmpty(format)) {
                     format = TupleQueryFormats.XML.toString();
                 }
-                executeBooleanQuery(q1, format, output);
+                executeBooleanQuery(q1, format, namedGraph, output);
             }
             else {
                 // unknown query type
@@ -118,8 +119,8 @@ public class JenaSparqlService implements SparqlService {
 
     }
 
-    public void query(String query, String format, boolean inference, OutputStream output) throws LodeException {
-        query(query, format, 0, getMaxQueryLimit(), inference, output);
+    public void query(String query, String format, boolean inference, String namedGraph, OutputStream output) throws LodeException {
+        query(query, format, 0, getMaxQueryLimit(), inference, namedGraph , output);
     }
 
     public void getServiceDescription(OutputStream outputStream, String format) {
@@ -171,12 +172,27 @@ public class JenaSparqlService implements SparqlService {
         return "".equals(o);
     }
 
-    private void executeConstructQuery(Query q1, String format, OutputStream output) {
+    private Graph setGraph(String namedGraph){
+        Graph g;
+
+        //Choose the default graph IF named graph is empty
+        if ((namedGraph.equals("")) || (namedGraph==null) || namedGraph.equals("undefined")) {
+            g = getQueryExecutionService().getDefaultGraph();
+        }
+        //If we do have a namedGraph variable, set the namedGraph
+        else{
+            g = getQueryExecutionService().getNamedGraph(namedGraph);
+        }
+
+        return g;
+    }
+
+    private void executeConstructQuery(Query q1, String format, String namedGraph, OutputStream output) {
         long startTime = System.currentTimeMillis();
         log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
+        Graph g=setGraph(namedGraph);
 
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
@@ -246,7 +262,7 @@ public class JenaSparqlService implements SparqlService {
 
     }
 
-    private void executeTupleQuery(Query q1, String format, Integer offset, Integer limit, boolean inference, OutputStream output)  {
+    private void executeTupleQuery(Query q1, String format, String namedGraph, Integer offset, Integer limit, boolean inference, OutputStream output)  {
         // check the limit is not greater that the max
 
         q1 = setLimits(q1, limit);
@@ -259,7 +275,8 @@ public class JenaSparqlService implements SparqlService {
         log.info("preparing to execute tuple query: " + startTime + "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
+        Graph g=setGraph(namedGraph);
+
         try {
 
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, inference);
@@ -295,13 +312,13 @@ public class JenaSparqlService implements SparqlService {
     }
 
 
-    private void executeDescribeQuery(Query q1, String format, OutputStream output)  {
+    private void executeDescribeQuery(Query q1, String format, String namedGraph, OutputStream output)  {
 
         long startTime = System.currentTimeMillis();
         log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
+        Graph g=setGraph(namedGraph);
 
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
@@ -327,13 +344,13 @@ public class JenaSparqlService implements SparqlService {
     }
 
 
-    private void executeBooleanQuery(Query q1, String format, OutputStream output) {
+    private void executeBooleanQuery(Query q1, String format, String namedGraph, OutputStream output) {
 
         long startTime = System.currentTimeMillis();
         log.info("preparing to execute ASK query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
+        Graph g=setGraph(namedGraph);
 
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);

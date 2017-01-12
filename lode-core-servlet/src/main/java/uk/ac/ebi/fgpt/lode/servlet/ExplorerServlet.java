@@ -49,7 +49,8 @@ public class ExplorerServlet {
     private ExploreService service;
     private SparqlService sparqlService;
 
-    @Value("${lode.explorer.service.baseuri}")
+   //@Value("${lode.explorer.service.baseuri}")
+   @Value("http://rdf-hh-01.ebi.ac.uk:8890/sparql")
     private URI baseUri;
 
     public SparqlService getSparqlService() {
@@ -107,6 +108,7 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsXml (
             @RequestParam(value = "uri", required = true ) String uri,
+            @RequestParam(value = "namedGraph", required = false) String namedGraph,
             HttpServletResponse response) throws IOException, LodeException {
         URI absuri = this.resolveUri(uri);
         if (absuri != null) {
@@ -115,7 +117,7 @@ public class ExplorerServlet {
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
-            getSparqlService().query(query, "RDF/XML", false, out);
+            getSparqlService().query(query, "RDF/XML", false, namedGraph, out);
             out.close();
         }
         else {
@@ -127,6 +129,7 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsN3 (
             @RequestParam(value = "uri", required = true ) String uri,
+            @RequestParam(value = "namedGraph", required = false) String namedGraph,
             HttpServletResponse response) throws IOException, LodeException {
         URI absuri = resolveUri(uri);
         if (absuri != null) {
@@ -136,7 +139,7 @@ public class ExplorerServlet {
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
-            getSparqlService().query(query, "N3", false, out);
+            getSparqlService().query(query, "N3", false, namedGraph,out);
             out.close();
         }
         else {
@@ -148,6 +151,7 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsTurtle (
             @RequestParam(value = "uri", required = true ) String uri,
+            @RequestParam(value = "namedGraph", required = false) String namedGraph,
             HttpServletResponse response) throws IOException, LodeException {
         URI absuri = this.resolveUri(uri);
         if (absuri != null) {
@@ -157,7 +161,7 @@ public class ExplorerServlet {
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
-            getSparqlService().query(query, "TURTLE", false, out);
+            getSparqlService().query(query, "TURTLE", false, namedGraph, out);
             out.close();
         }
         else {
@@ -169,6 +173,7 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsJson (
             @RequestParam(value = "uri", required = true ) String uri,
+            @RequestParam(value = "namedGraph", required = false) String namedGraph,
             HttpServletResponse response) throws IOException, LodeException {
         URI absuri = resolveUri(uri);
         if (absuri != null) {
@@ -178,7 +183,7 @@ public class ExplorerServlet {
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
-            getSparqlService().query(query, "JSON-LD", false, out);
+            getSparqlService().query(query, "JSON-LD", false, namedGraph, out);
             out.close();
         }
         else {
@@ -190,6 +195,7 @@ public class ExplorerServlet {
     public @ResponseBody
     void describeResourceAsNtriples (
             @RequestParam(value = "uri", required = true ) String uri,
+            @RequestParam(value = "namedGraph", required = false) String namedGraph,
             HttpServletResponse response) throws IOException, LodeException {
         URI absuri = resolveUri(uri);
         if (absuri != null) {
@@ -199,7 +205,7 @@ public class ExplorerServlet {
             ServletOutputStream out = response.getOutputStream();
             out.println();
             out.println();
-            getSparqlService().query(query, "N-TRIPLES", false, out);
+            getSparqlService().query(query, "N-TRIPLES", false, namedGraph, out);
             out.close();
         }
         else {
@@ -212,25 +218,26 @@ public class ExplorerServlet {
     void describeResource (
             @RequestParam(value = "uri", required = true ) String uri,
             @RequestParam(value = "format", required = false ) String format,
+            @RequestParam(value = "namedGraph", required = false) String namedGraph,
             HttpServletResponse response) throws IOException, LodeException {
         if (format == null) {
-            describeResourceAsNtriples(uri, response);
+            describeResourceAsNtriples(uri, namedGraph,response);
         } else if (format.toLowerCase().equals("rdf") ||
                    format.toLowerCase().equals("xml") ||
                    format.toLowerCase().equals("rdf/xml")) {
-            describeResourceAsXml(uri, response);
+            describeResourceAsXml(uri, namedGraph, response);
         }
         else if (format.toLowerCase().equals("n3")) {
-            describeResourceAsN3(uri, response);
+            describeResourceAsN3(uri, namedGraph, response);
         }
         else if (format.toLowerCase().equals("ttl") || format.toLowerCase().equals("turtle")) {
-            describeResourceAsTurtle(uri, response);
+            describeResourceAsTurtle(uri, namedGraph, response);
         }
         else if (format.toLowerCase().equals("json") || format.toLowerCase().equals("json-ld")) {
-            describeResourceAsJson(uri, response);
+            describeResourceAsJson(uri, namedGraph, response);
         }
         else {
-            describeResourceAsNtriples(uri, response);
+            describeResourceAsNtriples(uri,namedGraph, response);
         }
     }
 

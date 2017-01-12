@@ -1,5 +1,3 @@
-
-
 /*
  * Copyright (c) 2013 EMBL - European Bioinformatics Institute
  * Licensed under the Apache License, Version 2.0 (the
@@ -13,21 +11,26 @@
  */
 
 var exampleQueries = [
-
     {
-        shortname : "Query 1",
-        description: "People who were born in Berlin before 1900",
-        query: "PREFIX : <http://dbpedia.org/resource/>\n" +
-            "PREFIX dbo: <http://dbpedia.org/ontology/>\n\n" +
-            "SELECT ?name ?birth ?death ?person WHERE {\n" +
-            "?person dbo:birthPlace :Berlin .\n" +
-            "?person dbo:birthDate ?birth .\n" +
-            "?person foaf:name ?name .\n" +
-            "?person dbo:deathDate ?death .\n" +
-            "FILTER (?birth < \"1900-01-01\"^^xsd:date) . \n" +
-            "}   \n" +
-            "ORDER BY ?name"
+        category: "Example",
+        queries:[
+            {
+                shortname : "Example Query 1",
+                description: "People who were born in Berlin before 1900",
+                namedgraph: "",
+                query: "PREFIX : <http://dbpedia.org/resource/>\n" +
+                "PREFIX dbo: <http://dbpedia.org/ontology/>\n\n" +
+                "SELECT ?name ?birth ?death ?person WHERE {\n" +
+                "?person dbo:birthPlace :Berlin .\n" +
+                "?person dbo:birthDate ?birth .\n" +
+                "?person foaf:name ?name .\n" +
+                "?person dbo:deathDate ?death .\n" +
+                "FILTER (?birth < \"1900-01-01\"^^xsd:date) . \n" +
+                "}   \n" +
+                "ORDER BY ?name"
+            }
+        ]
+
     }
 
 ]
-
