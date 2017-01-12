@@ -20,7 +20,7 @@ var exampleQueries = [
             {
                 shortname: "Query 1",
                 description: "List all species identifers and their names in model http://identifiers.org/biomodels.db/BIOMD0000000001",
-                namedgraph: "http://rdf.ebi.ac.uk/dataset/biomodels",
+                namedgraph: "XXXX",
                 query:
                 "PREFIX sbmlrdf: <http://identifiers.org/biomodels.vocabulary#>\n\n" +
                 "SELECT ?speciesid ?name WHERE {\n" +
