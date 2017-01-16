@@ -388,10 +388,10 @@ function _buildSparqlPage(element) {
         '<div class="tabs-content" data-tabs-content="example-tabs">' +
         '<div id="resultTab" class="tabs-panel">' +
         '<div id="pagination" class="pagination-banner"></div> ' +
-        '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"></table></div>' +
+        '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"><th>No results without query execution</th></table></div>' +
         '</div>' +
         '<div id="historyTab" class="tabs-panel" style="border:solid gray;"></div>' +
-        '<div id="visulizeTab" class="tabs-panel"></div>' +
+        //'<div id="visulizeTab" class="tabs-panel"></div>' +
         '</div>')
 
 
@@ -419,6 +419,9 @@ function initSparql() {
         setNamespaces(lodeNamespacePrefixes);
         setExampleQueries ();
         querySparql();
+
+        //Update Tab with an empty query leads to
+        updateHistoryTab("",0,0)
 
         $("#resultTab").show()      //Show resultsTab by default
         $('#historyTab').hide();    //Hide historyTab by default at startup
