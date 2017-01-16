@@ -35,11 +35,10 @@ public interface SparqlService {
      * @param offset Any offest set or the query, default is zero
      * @param limit Any limit set on this query
      * @param inference Use inference to answer query (not supported by all implementations)
-     * @param namedGraph Parameter can be used to limit search to a specific graph. If empty the whole database is searched
      * @param output The output stream for the results
      * @throws LodeException All exceptions are wrapped in a LodeException
      */
-    void query(String query, String format, Integer offset, Integer limit, boolean inference, String namedGraph, OutputStream output) throws LodeException;
+    void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException;
 
     /**
      * Execute a SPARQL query and render results to an OutputStream
@@ -47,11 +46,10 @@ public interface SparqlService {
      * @param query The SPARQL query
      * @param format The output format See GraphQueryFormats and TupleQueryFormats
      * @param inference Use inference to answer query (not supported by all implementations)
-     * @param namedGraph Parameter can be used to limit search to a specific graph. If empty the whole database is searched
      * @param output The output stream for the results
      * @throws LodeException All exceptions are wrapped in a LodeException
      */
-    void query(String query, String format, boolean inference, String namedGraph, OutputStream output) throws LodeException;
+    void query(String query, String format, boolean inference, OutputStream output) throws LodeException;
 
     /**
      * Returns a description of the SPARQL endpoint (http://www.w3.org/TR/sparql11-service-description/)
