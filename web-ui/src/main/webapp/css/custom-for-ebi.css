@@ -18,6 +18,42 @@
 }
 
 
+/************************************ History Tab************************************/
+.historyEntry{
+    background-color: #e8e8e8;
+    border-color: 	#DCDCDC;
+    border-style: solid;
+    font-size: 10px;
+    margin:5px 10px 10px 5px;
+}
+
+.descriptionInputBox{
+    display:inline-block;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    background-color : lightblue;
+    font-size: 10px;
+    height:auto;
+    width:30%;
+}
+
+.historyButton {
+    margin-left: 10px;
+}
+
+.shareButton {
+    float:right;
+    margin-right:40px;
+}
+
+.savedOnPhrase{
+    margin-left:100px;
+    display:inline;
+}
+
+/************************************ ************************************/
+
+
 /************************************Just temporary css for the alert box *** */
 .alert {
     padding: 20px;

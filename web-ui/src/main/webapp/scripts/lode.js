@@ -625,7 +625,7 @@ function querySparql () {
 }
 
 function updateHistoryTab(query, numerOfRows, headings){
-    var queryHistory = $.jStorage.get("history")
+    var queryHistory = $.jStorage.get("history");
 
     //If the query is not empty, add it to the queryHistory store - in the other case, we have to create the very first entry of the array
     if (query!="") {
@@ -635,17 +635,14 @@ function updateHistoryTab(query, numerOfRows, headings){
         else {
                 //queryHistory.push({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
                 queryHistory.unshift({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
-
         }
             $.jStorage.set("history", queryHistory);
     }
 
     $('#historyTab').empty();
 
-    //var queryHistoryButton=$('<button type="button" class="button secondary">Show query History</button>')
     var deleteHistoryButton=$('<a href="#">Delete history</a>')
 
-    //$('#historyTab').append(queryHistoryButton)
     $('#historyTab').append(deleteHistoryButton)
 
     //Onclick event for the History button - Delete the complete history
@@ -654,23 +651,22 @@ function updateHistoryTab(query, numerOfRows, headings){
         $('#entryPinwall').text('');
     })
 
-
     var entryPinwall=$('<div id="entryPinwall"></div>')
 
     queryHistory.forEach(function (value, i) {
-        var entry =$('<div  style="background-color: lightblue; border-style: solid;  font-size: 10px; margin:5px 10px 10px 5px;"></div>')
-        entry.html("<b>Description:</b><input id='input"+i+"' type='text' value='"+value.description+"' style='display:inline-block; margin: 0px 0px 0px 0px; padding: 0px 0px 0px 0px;   background-color : lightblue ;font-size: 10px; height:auto; width:30%;'>")
+        var entry =$('<div class="historyEntry"></div>')
+        entry.html("<b>Description:</b><input id='input"+i+"' class='descriptionInputBox' type='text' value='"+value.description+">")
 
-        var link=$("<a id="+i+" style='margin-left:20px;'>Save description</a>")
+        var link=$("<a id="+i+">Save description</a>")
         var infobox=$("<br><b>Result had "+value.rows+" rows</b> with the following headings: <b>"+value.headings+"</b>")
-        var queryText=$('<textarea id="historyQueryText" ></textarea>')
+        var queryText=$('<textarea id="historyQueryText"></textarea>')
 
         tmpArray=value.query.split("\n");
 
         //Getting 'rid' of Prefixes just for displaying purposes! (only in tmpResult BUT not in the real data)
         tmpResult=[]
         tmpArray.forEach(function(value){
-            if (value.startsWith("PREFIX")===false) {         // || (tmpArray[i]!=="")) {
+            if (value.startsWith("PREFIX")===false) {
                 var tmp=value
                 if (tmp.length<=1)               //Trim short strings so we can get rid of strings with length 0 later on
                 {   tmp=tmp.trim();         }
@@ -686,13 +682,13 @@ function updateHistoryTab(query, numerOfRows, headings){
             updateHistoryTab("", 0, "")
         })
 
-        var runButton=$('<button type="button" class="button tiny" value="'+i+'" style="margin-left: 10px">Use this query</button>');
+        var runButton=$('<button type="button" class="button tiny historyButton" value="'+i+'">Use this query</button>');
         runButton.click(function(){
             sparqlQueryTextArea.setValue(value.query);
             location.href = "#main-content-area"
         })
 
-        var deleteThisButton=$('<button type="button" class="button tiny" value="'+i+'" style="margin-left: 10px">Remove this query</button>')
+        var deleteThisButton=$('<button type="button" class="button tiny historyButton" value="'+i+'">Remove this query</button>')
         deleteThisButton.click(function(){
              queryHistory.splice(this.value, 1);
             $.jStorage.set("history", queryHistory);
@@ -700,32 +696,31 @@ function updateHistoryTab(query, numerOfRows, headings){
         })
 
 
-        var shareThisButton=$('<button type="button" class="button tiny" style="margin-left: 10px">Share this query</button>')
+        var shareThisButton=$('<button type="button" class="button tiny shareButton">Share this query</button>')
         shareThisButton.click(function(){
             console.log("Not implemented yet!")
         })
 
+        var savedOnDatePhrase="<div class='savedOnPhrase'><i>This query was saved on </i><b>"+value.date.toString()+"</b></div>"
 
         entry.append(link)
         entry.append(infobox)
         entry.append(queryText)
         entry.append(runButton)
         entry.append(deleteThisButton)
+        entry.append(savedOnDatePhrase)
         entry.append(shareThisButton)
-        entry.append("<div style='margin-left:100px; display:inline;'><i>This query was saved on </i><b>"+value.date.toString()+"</b></div>")
         entryPinwall.append(entry)
 
         var codeQueryText=CodeMirror.fromTextArea(queryText[0], {autoRefresh: true, readOnly:true})
         codeQueryText.setValue(tmpResult.join("\n"))
 
         codeQueryText.getWrapperElement().style.height ="auto";
-        codeQueryText.getWrapperElement().style.margin = "10px 10px 10px 10px";
+        codeQueryText.getWrapperElement().style.margin ="10px 10px 10px 10px";
     })
 
 
     $('#historyTab').append(entryPinwall)
-    //$('#historyTab').text(query['input'])
-    //$("#entryPinwall").hide();
 }
 
 function setNextPrevUrl (queryString, limit, offset, rdfs) {
@@ -810,6 +805,9 @@ function renderGraphQuery (graph, tableid) {
 }
 
 function displayPagination(numberOfRowsOfSparqlResult)  {
+    //Clear pagination first before it is build again
+    $('#pagination').html("")
+
     var prevA = $('<a></a>');
     prevA.attr('href',"?" + loadstarPrevUrl);
     prevA.attr('class',"pag prev");
@@ -833,7 +831,7 @@ function displayPagination(numberOfRowsOfSparqlResult)  {
 
     //Only show next button if the number of results equals the 'limit' per page - e.g. if there are only 2 results, we don't need a next button
     if (numberOfRowsOfSparqlResult == $('#limit').val())
-        {   $('#pagination').append(nextA); }
+        {   $('#pagination').append(nextA);        }
 
     $('#pagination').show();
 
