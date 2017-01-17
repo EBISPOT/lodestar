@@ -368,19 +368,6 @@ function _buildSparqlPage(element) {
 
     var resultsSection = $("<section id='loadstar-results-section' styname='results'></section>");
 
-    /*
-    var tabs=$('<ul class="tabs"  data-tabs id="example-tabs">' +
-        '<li class="tabs-title is-active" id="linkResult"><a href="#resultTab" aria-selected="true">Results</a></li> ' +
-        '<li class="tabs-title" id="linkHistory"><a href="#historyTab">History</a></li> </ul>' + //
-        '<div class="tabs-content" data-tabs-content="example-tabs">' +
-            '<div id="resultTab" class="tabs-panel is-active" aria-hidden="false">' +
-                '<div id="pagination" class="pagination-banner"></div> ' +
-                '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"></table></div>' +
-            '</div>' +
-            '<div id="historyTab" class="tabs-panel" aria-hidden="false" style="border:solid gray;"></div>' +
-        '</div>')*/
-
-
     var tabs=$('<ul class="tabs"  data-tabs id="example-tabs">' +
         '<li class="tabs-title" id="linkResult"><a>Results</a></li> ' +
         //'<li class="tabs-title" id="visualizeResult"><a>Visualize results</a></li>' +
@@ -390,26 +377,12 @@ function _buildSparqlPage(element) {
         '<div id="pagination" class="pagination-banner"></div> ' +
         '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"></table></div>' +
         '</div>' +
-        '<div id="historyTab" class="tabs-panel" style="border:solid gray;"></div>' +
-        '<div id="visulizeTab" class="tabs-panel"></div>' +
+        '<div id="historyTab" class="tabs-panel historyTab"></div>' +
         '</div>')
 
 
     resultsSection.append(tabs)
-
-
-    // resultsSection.append ("");
-    //resultsSection.append ("<div id='pagination' class='pagination-banner'></div>");
-    //resultsSection.append ("<div style='padding: 5px; width:99%;overflow: auto;'>" +
-    ///    "<table id='loadstar-results-table'></tabel>" +
-    //   "</div>");
-
     element.append(resultsSection);
-
-
-    //var visPage="Not done"
-    //$("#visulizeTab").append(visPage)
-
 }
 
 function initSparql() {
@@ -435,12 +408,6 @@ function initSparql() {
         //  $("#visulizeTab").hide()
             $("#historyTab").show()
         })
-
-        //$("#visualizeResult").click(function() {
-        //    $("#resultTab").show()
-        //    $("#historyTab").hide()
-        //    $("#visulizeTab").show()
-        //})
 
     });
 }
@@ -1314,10 +1281,6 @@ function renderShortDescription (element) {
                     p.append(" : ");
 
                     p.append(_hrefBuilder(data.datasetUri, data.datasetUri, true));
-//                    p.append($("<ul></ul>")
-//                        .append($("<li></li>")
-//                        .append(_hrefBuilder(data.datasetUri, data.datasetUri, true)))
-//                    );
                     p.append($("<br/>"));
                 }
                 div.append(p);
@@ -1361,14 +1324,8 @@ function renderTopRelatedObjects(p) {
                         p.append(" : ");
                         if (uri == undefined){
                             p.append("\"" + label + "\"");
-//                            p.append($("<ul></ul>")
-//                                .append($("<li></li>")
-//                                .append("\"" + label + "\"")));
                         }
                         else {
-//                            p.append($("<ul></ul>")
-//                                .append($("<li></li>")
-//                                .append(_hrefBuilder(uri, label, true))));
                             p.append(_hrefBuilder(uri, label, true));
                         }
                         p.append($("<br/>"));
@@ -1523,15 +1480,11 @@ function renderRelatedFromSubjects(element) {
                     element.append(about);
                     element.append(div);
 
-//                    var table = $('<table></table>');
-//                    table.append($("<tr><th>Resources</th><th>Resources types</th><th>Relation</th></tr>"));
-
                     for (var x = 0; x < data.length; x ++) {
 
                         var propertyLabel = data[x].propertyLabel;
                         var propertyUri = data[x].propertyUri;
 
-//                        var tr = $('<tr></tr>');
                         var typelist = $('<span></span>');
 
                         for (var y = 0; y <data[x].relatedObjectTypes.length; y++) {
