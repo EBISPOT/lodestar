@@ -19,6 +19,10 @@
 
 
 /************************************ History Tab************************************/
+.historyTab{
+    /*border:solid gray;*/
+}
+
 .historyEntry{
     background-color: #e8e8e8;
     border-color: 	#DCDCDC;
