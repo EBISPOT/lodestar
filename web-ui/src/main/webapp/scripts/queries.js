@@ -13,7 +13,6 @@
  */
 
 var exampleQueries = [
-
     {
         category: "Biomodels",
         queries: [

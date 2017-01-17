@@ -115,6 +115,35 @@ function _parseOptions(options) {
 
 }
 
+function namedGraphPopup(){
+    //var namedGraphQuery="SELECT ?namedGraph WHERE { ?namedGraph ?b <http://purl.org/dc/terms/Dataset>. ?namedGraph <http://purl.org/pav/hasCurrentVersion> ?c }"
+    var namedGraphQuery="PREFIX dct: <http://purl.org/dc/terms/>" +
+    "SELECT ?title ?namedGraph ?description WHERE {" +
+    "?namedGraph ?b <http://purl.org/dc/terms/Dataset>." +
+    "?namedGraph <http://purl.org/pav/hasCurrentVersion> ?c ." +
+    "?namedGraph <http://purl.org/dc/terms/title> ?title ." +
+    "?namedGraph <http://purl.org/dc/terms/description> ?description" +
+    "}"
+
+    $("#namedGraphTab").html("Loading named Graphs...")
+    $.ajax ( {
+        type: 'GET',
+        url: loadestarQueryService + "?query=" + encodeURIComponent(namedGraphQuery),
+        headers: {
+            Accept: "application/sparql-results+json"
+        },
+        success: function (json) {
+            console.log(json)
+            $("#namedGraphTab").html("<table id='namedGraphTable'></table>")
+            renderSparqlResultJsonAsTable (json, 'namedGraphTable')
+        }
+        }
+    )
+
+
+
+}
+
 function _buildVoid(element) {
 
     var voidSparql = "PREFIX dcterms: <http://purl.org/dc/terms/> " +
@@ -348,7 +377,6 @@ function _buildSparqlPage(element) {
     section1.append(
         $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query' />&nbsp;")
                     .append("<input type='button' class='submit  ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
-
     );
 
     section1.append("<div id='query-executing-spinner'>" +
@@ -384,14 +412,15 @@ function _buildSparqlPage(element) {
     var tabs=$('<ul class="tabs"  data-tabs id="example-tabs">' +
         '<li class="tabs-title" id="linkResult"><a>Results</a></li> ' +
         //'<li class="tabs-title" id="visualizeResult"><a>Visualize results</a></li>' +
-        '<li class="tabs-title" id="linkHistory"><a>Query history</a></li> </ul>'+
+        '<li class="tabs-title" id="linkHistory"><a>Query history</a></li>'+
+        '<li class="tabs-title" id="linkNamedGraph"><a>Named Graphs</a></li></ul>'+
         '<div class="tabs-content" data-tabs-content="example-tabs">' +
         '<div id="resultTab" class="tabs-panel">' +
         '<div id="pagination" class="pagination-banner"></div> ' +
         '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"><th>No results without query execution</th></table></div>' +
         '</div>' +
         '<div id="historyTab" class="tabs-panel" style="border:solid gray;"></div>' +
-        //'<div id="visulizeTab" class="tabs-panel"></div>' +
+        '<div id="namedGraphTab" class="tabs-panel"></div>' +
         '</div>')
 
 
@@ -423,27 +452,29 @@ function initSparql() {
         //Update Tab with an empty query leads to
         updateHistoryTab("",0,0)
 
-        $("#resultTab").show()      //Show resultsTab by default
+        $("#resultTab").show();      //Show resultsTab by default
         $('#historyTab').hide();    //Hide historyTab by default at startup
+        $('#namedGraphTab').hide();
 
         //Register click events for Result and History Button
         $("#linkResult").on('click', function(){
             $("#resultTab").show()
             $("#historyTab").hide()
-        //  $("#visulizeTab").hide()
+            $("#namedGraphTab").hide()
         })
 
         $("#linkHistory").click(function(){
             $("#resultTab").hide()
-        //  $("#visulizeTab").hide()
+            $("#namedGraphTab").hide()
             $("#historyTab").show()
         })
 
-        //$("#visualizeResult").click(function() {
-        //    $("#resultTab").show()
-        //    $("#historyTab").hide()
-        //    $("#visulizeTab").show()
-        //})
+        $("#linkNamedGraph").click(function() {
+            $("#resultTab").hide()
+            $("#historyTab").hide()
+            $("#namedGraphTab").show()
+            namedGraphPopup();
+        })
 
     });
 }
@@ -992,6 +1023,7 @@ function _hrefBuilder(uri, label, internal) {
 
 
 function setExampleQueries() {
+    console.log(exampleQueries)
 
     if (exampleQueries != null) {
 
