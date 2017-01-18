@@ -26,9 +26,9 @@
 
 
     <!--Uncomment these two beans for virtuoso connection pooling-->
-    <!--<bean id="jenaVirtuosoConnectionPoolService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService">-->
-        <!--<constructor-arg ref="virtuosoDataSourceProvider"/>-->
-    <!--</bean>-->
+    <bean id="jenaVirtuosoConnectionPoolService" class="uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoConnectionPoolService">
+        <constructor-arg ref="virtuosoDataSourceProvider"/>
+    </bean>
 
     <!-- JNDI based datasource provider -->
 
