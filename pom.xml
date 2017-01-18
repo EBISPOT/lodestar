@@ -8,6 +8,7 @@
         <module>lode-core-api</module>
         <module>web-ui</module>
         <module>lode-core-servlet</module>
+        <module>lode-virtuoso-impl</module>
     </modules>
     <name>ebi-lode Maven Webapp</name>
     <url>http://maven.apache.org</url>
