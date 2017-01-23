@@ -10,6 +10,8 @@
  * and limitations under the License.
  */
 
+var activateQueryHistory=false;
+
 var exampleQueries = [
     {
         category: "Example",
