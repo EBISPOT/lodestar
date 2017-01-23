@@ -522,16 +522,16 @@ function querySparql () {
                 };
             }
             else if (rendering.match(/^XML/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs;
             }
             else if (rendering.match(/JSON$/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/CSV/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/TSV/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else  {
                 displayError("You can only render SELECT queries in either HTML, XML, CSV, TSV or JSON format")
@@ -545,7 +545,7 @@ function querySparql () {
     setNextPrevUrl(querytext, limit, offset, rdfs);
     $.ajax ( {
         type: 'GET',
-        url: loadestarQueryService + "?"+ "namedGraph="+localStorage['named']+"&" + queryString,
+        url: loadestarQueryService + "?"+ queryString,
         headers: {
             Accept: requestHeader
         },
@@ -1003,14 +1003,6 @@ function setExampleQueries() {
 
 function _setTextAreQuery(anchor) {
     sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + exampleQueries[$(anchor).attr('data-category')]['queries'][anchor.id].query);
-
-    //Storing the namedGraph is there is one
-    if (exampleQueries[$(anchor).attr('data-category')]['queries'][anchor.id].namedgraph!=undefined){
-        localStorage['named'] = exampleQueries[$(anchor).attr('data-category')]['queries'][anchor.id].namedgraph;
-    }
-    else{
-        localStorage['named'] = "";
-    }
 }
 
 function _formatPlainLiteral (node, varName) {
