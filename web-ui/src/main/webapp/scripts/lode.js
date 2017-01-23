@@ -566,16 +566,16 @@ function querySparql () {
                 };
             }
             else if (rendering.match(/^XML/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=XML&limit=" + limit + "&offset=" + offset + "&inference=" + rdfs;
             }
             else if (rendering.match(/JSON$/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) + "&format=JSON&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/CSV/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=CSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else if (rendering.match(/TSV/)) {
-                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs + "&namedGraph="+localStorage['named'];
+                location.href = loadestarQueryService + "?query=" + encodeURIComponent(querytext) +"&format=TSV&limit=" + limit + "&offset=" + offset+ "&inference=" + rdfs;
             }
             else  {
                 displayError("You can only render SELECT queries in either HTML, XML, CSV, TSV or JSON format")
@@ -589,7 +589,7 @@ function querySparql () {
     setNextPrevUrl(querytext, limit, offset, rdfs);
     $.ajax ( {
         type: 'GET',
-        url: loadestarQueryService + "?"+ "namedGraph="+localStorage['named']+"&" + queryString,
+        url: loadestarQueryService + "?"+ queryString,
         headers: {
             Accept: requestHeader
         },
@@ -630,72 +630,77 @@ function updateHistoryTab(query, numerOfRows, headings){
 
     var entryPinwall=$('<div id="entryPinwall"></div>')
 
-    queryHistory.forEach(function (value, i) {
-        var entry =$('<div class="historyEntry"></div>')
-        entry.html("<b>Description:</b><input id='input"+i+"' class='descriptionInputBox' type='text' value='"+value.description+">")
+    if (queryHistory!=null) {
+        queryHistory.forEach(function (value, i) {
+            console.log(value.description)
+            var entry = $('<div class="historyEntry"></div>')
+            entry.html("<b>Description:</b><input id='input" + i + "' class='descriptionInputBox' type='text' value='" + value.description + "'/>")
 
-        var link=$("<a id="+i+">Save description</a>")
-        var infobox=$("<br><b>Result had "+value.rows+" rows</b> with the following headings: <b>"+value.headings+"</b>")
-        var queryText=$('<textarea id="historyQueryText"></textarea>')
+            var link = $("<a id=" + i + ">Save description</a>")
+            var infobox = $("<br><b>Result had " + value.rows + " rows</b> with the following headings: <b>" + value.headings + "</b>")
+            var queryText = $('<textarea id="historyQueryText"></textarea>')
 
-        tmpArray=value.query.split("\n");
+            tmpArray = value.query.split("\n");
 
-        //Getting 'rid' of Prefixes just for displaying purposes! (only in tmpResult BUT not in the real data)
-        tmpResult=[]
-        tmpArray.forEach(function(value){
-            if (value.startsWith("PREFIX")===false) {
-                var tmp=value
-                if (tmp.length<=1)               //Trim short strings so we can get rid of strings with length 0 later on
-                {   tmp=tmp.trim();         }
-                if (tmp.length!=0)
-                {   tmpResult.push(tmp);    }
+            //Getting 'rid' of Prefixes just for displaying purposes! (only in tmpResult BUT not in the real data)
+            tmpResult = []
+            tmpArray.forEach(function (value) {
+                if (value.startsWith("PREFIX") === false) {
+                    var tmp = value
+                    if (tmp.length <= 1)               //Trim short strings so we can get rid of strings with length 0 later on
+                    {
+                        tmp = tmp.trim();
+                    }
+                    if (tmp.length != 0) {
+                        tmpResult.push(tmp);
+                    }
 
-            }
+                }
+            })
+
+            link.click(function () {
+                queryHistory[i].description = $("#input" + i).val()
+                $.jStorage.set("history", queryHistory);
+                updateHistoryTab("", 0, "")
+            })
+
+            var runButton = $('<button type="button" class="button tiny historyButton" value="' + i + '">Use this query</button>');
+            runButton.click(function () {
+                sparqlQueryTextArea.setValue(value.query);
+                location.href = "#main-content-area"
+            })
+
+            var deleteThisButton = $('<button type="button" class="button tiny historyButton" value="' + i + '">Remove this query</button>')
+            deleteThisButton.click(function () {
+                queryHistory.splice(this.value, 1);
+                $.jStorage.set("history", queryHistory);
+                updateHistoryTab("", 0, "")
+            })
+
+
+            var shareThisButton = $('<button type="button" class="button tiny shareButton">Share this query</button>')
+            shareThisButton.click(function () {
+                console.log("Not implemented yet!")
+            })
+
+            var savedOnDatePhrase = "<div class='savedOnPhrase'><i>This query was saved on </i><b>" + value.date.toString() + "</b></div>"
+
+            entry.append(link)
+            entry.append(infobox)
+            entry.append(queryText)
+            entry.append(runButton)
+            entry.append(deleteThisButton)
+            entry.append(savedOnDatePhrase)
+            entry.append(shareThisButton)
+            entryPinwall.append(entry)
+
+            var codeQueryText = CodeMirror.fromTextArea(queryText[0], {autoRefresh: true, readOnly: true})
+            codeQueryText.setValue(tmpResult.join("\n"))
+
+            codeQueryText.getWrapperElement().style.height = "auto";
+            codeQueryText.getWrapperElement().style.margin = "10px 10px 10px 10px";
         })
-
-        link.click(function(){
-            queryHistory[i].description=$("#input"+i).val()
-            $.jStorage.set("history", queryHistory);
-            updateHistoryTab("", 0, "")
-        })
-
-        var runButton=$('<button type="button" class="button tiny historyButton" value="'+i+'">Use this query</button>');
-        runButton.click(function(){
-            sparqlQueryTextArea.setValue(value.query);
-            location.href = "#main-content-area"
-        })
-
-        var deleteThisButton=$('<button type="button" class="button tiny historyButton" value="'+i+'">Remove this query</button>')
-        deleteThisButton.click(function(){
-             queryHistory.splice(this.value, 1);
-            $.jStorage.set("history", queryHistory);
-            updateHistoryTab("", 0, "")
-        })
-
-
-        var shareThisButton=$('<button type="button" class="button tiny shareButton">Share this query</button>')
-        shareThisButton.click(function(){
-            console.log("Not implemented yet!")
-        })
-
-        var savedOnDatePhrase="<div class='savedOnPhrase'><i>This query was saved on </i><b>"+value.date.toString()+"</b></div>"
-
-        entry.append(link)
-        entry.append(infobox)
-        entry.append(queryText)
-        entry.append(runButton)
-        entry.append(deleteThisButton)
-        entry.append(savedOnDatePhrase)
-        entry.append(shareThisButton)
-        entryPinwall.append(entry)
-
-        var codeQueryText=CodeMirror.fromTextArea(queryText[0], {autoRefresh: true, readOnly:true})
-        codeQueryText.setValue(tmpResult.join("\n"))
-
-        codeQueryText.getWrapperElement().style.height ="auto";
-        codeQueryText.getWrapperElement().style.margin ="10px 10px 10px 10px";
-    })
-
+    }
 
     $('#historyTab').append(entryPinwall)
 }
@@ -1045,15 +1050,7 @@ function setExampleQueries() {
 
 function _setTextAreQuery(anchor) {
     sparqlQueryTextArea.setValue(_getPrefixes() + "\n" + exampleQueries[$(anchor).attr('data-category')]['queries'][anchor.id].query);
-
-    //Storing the namedGraph is there is one
-    if (exampleQueries[$(anchor).attr('data-category')]['queries'][anchor.id].namedgraph!=undefined){
-        localStorage['named'] = exampleQueries[$(anchor).attr('data-category')]['queries'][anchor.id].namedgraph;
     }
-    else{
-        localStorage['named'] = "";
-    }
-}
 
 function _formatPlainLiteral (node, varName) {
     var text = '"' + node.value + '"';
@@ -1352,7 +1349,6 @@ function renderTopRelatedObjects(p) {
             url: loadstarExploreService + "/resourceTopObjects?" + queryString,
             success: function (data){
 
-//                var p = $("<p></p>");
                 for (var x = 0; x < data.length; x ++) {
 
                     var propertyLabel = data[x].propertyLabel;
