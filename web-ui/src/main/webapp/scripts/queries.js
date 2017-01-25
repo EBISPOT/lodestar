@@ -582,7 +582,7 @@ var exampleQueries = [
         ]
 
     },
-    {
+   /* {
         category: "Atlas",
         queries: [
             {
@@ -613,18 +613,18 @@ var exampleQueries = [
                 "}"
             }
         ]
-    },
+    },*/
     {
         category: "OntologyLookupService",
         queries: [
             {
                 shortname: "EFO Query",
-                description: "Show all EFO entries with  ",
+                description: "Show all EFO entries that a dubious guys with the name James Malone did edit",
                 query:
                 "SELECT DISTINCT COUNT(?a) \n"+
                 "from <http://rdf.ebi.ac.uk/dataset/efo> \n"+
                 "WHERE { \n"+
-                " ?a <http://www.ebi.ac.uk/efo/definition_editor> 'James Malone' \n"+
+                " ?a <http://purl.obolibrary.org/obo/IAO_0000117> 'James Malone' \n"+
                 "}"
             }
 
@@ -645,6 +645,23 @@ var exampleQueries = [
             }
         ]
 
+
+    },
+    {
+        category: "Textmining",
+        queries: [
+            {
+                shortname: "Query 1",
+                description: "Just a stupid test query: Give me all articles that are related to disodium cromoglycate (CHEBI_128458) ",
+                query:
+                "SELECT DISTINCT ?a\n"+
+                "from <http://rdf.ebi.ac.uk/dataset/pub>\n"+
+                "{?a ?b <http://purl.obolibrary.org/obo/CHEBI_128458> \n"+
+                "}"
+
+            }
+
+        ]
 
     }
 ]

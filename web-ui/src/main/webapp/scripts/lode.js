@@ -116,7 +116,6 @@ function _parseOptions(options) {
 }
 
 function namedGraphPopup(){
-    console.log("NamedGraphPopUp!")
     //var namedGraphQuery="SELECT ?namedGraph WHERE { ?namedGraph ?b <http://purl.org/dc/terms/Dataset>. ?namedGraph <http://purl.org/pav/hasCurrentVersion> ?c }"
     var namedGraphQuery="PREFIX dct: <http://purl.org/dc/terms/>" +
     "SELECT ?title ?namedGraph ?description WHERE {" +
@@ -134,7 +133,6 @@ function namedGraphPopup(){
             Accept: "application/sparql-results+json"
         },
         success: function (json) {
-            console.log(json)
             $("#namedGraphTab").html("<table id='namedGraphTable'></table>")
             renderSparqlResultJsonAsTable (json, 'namedGraphTable')
         }
@@ -405,7 +403,7 @@ function _buildSparqlPage(element) {
             '<div class="tabs-content" data-tabs-content="example-tabs">' +
             '<div id="resultTab" class="tabs-panel">' +
             '<div id="pagination" class="pagination-banner"></div> ' +
-            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"></table></div>' +
+            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"><th>No results without query!</th></table></div>' +
             '</div>' +
             '<div id="historyTab" class="tabs-panel historyTab"></div>' +
             '<div id="namedGraphTab" class="tabs-panel"></div>' +
@@ -418,7 +416,7 @@ function _buildSparqlPage(element) {
             '<div class="tabs-content" data-tabs-content="example-tabs">' +
             '<div id="resultTab" class="tabs-panel">' +
             '<div id="pagination" class="pagination-banner"></div> ' +
-            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"></table></div>' +
+            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"><th>No results without query!</th></table></div>' +
             '</div>' +
             '</div>')
     }
@@ -628,20 +626,19 @@ function updateHistoryTab(query, numerOfRows, headings){
                 //queryHistory.push({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
                 queryHistory.unshift({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
         }
-            $.jStorage.set("history", queryHistory);
+           $.jStorage.set("history", queryHistory);
     }
 
     $('#historyTab').empty();
 
     var deleteHistoryButton=$('<a id="deleteCompleteHistory" title="Deletes every entry in this history tab!" href="#">Delete history</a>')
 
-    $('#historyTab').append(deleteHistoryButton)
-    //$("#linkHistory").append(deleteHistoryButton)
-
-    //Onclick event for the History button - Delete the complete history
+     //Onclick event for the History button - Delete the complete history
     deleteHistoryButton.click(function() {
         $.jStorage.deleteKey("history")
         $('#entryPinwall').text('');
+        $('#deleteCompleteHistory').remove()
+        $('#historyTab').append("The query history is empty at the moment!")
     })
 
     var entryPinwall=$('<div id="entryPinwall"></div>')
@@ -651,7 +648,7 @@ function updateHistoryTab(query, numerOfRows, headings){
             var entry = $('<div class="historyEntry"></div>')
             entry.html("<b>Description:</b><input id='input" + i + "' class='descriptionInputBox' type='text' value='" + value.description + "'/>")
 
-            var link = $("<a id=" + i + ">Save description</a>")
+            var link = $("<a id=saveDescriptionLink" + i + " class='saveDescritionLink'>Save description</a>")
             var infobox = $("<br><b>Result had " + value.rows + " rows</b> with the following headings: <b>" + value.headings + "</b>")
             var queryText = $('<textarea id="historyQueryText"></textarea>')
 
@@ -715,10 +712,26 @@ function updateHistoryTab(query, numerOfRows, headings){
             codeQueryText.getWrapperElement().style.height = "auto";
             codeQueryText.getWrapperElement().style.margin = "10px 10px 10px 10px";
         })
-    }
 
     $('#historyTab').append(entryPinwall)
+    $('#historyTab').append(deleteHistoryButton)
+    }
+    //IF Query History is empty, print a msg telling the user so
+    else{
+        $('#historyTab').append("The query history is empty at the moment!")
+    }
+
 }
+
+/*
+if we want that effect, we have to add onfocus='highlight("+i+")' to entry.html
+function highlight(i){
+    console.log(i)
+    $("#saveDescriptionLink"+i).addClass("saveDescritionLinkHighlighted").delay(200).queue(function() {
+        $("#saveDescriptionLink"+i).removeClass("saveDescritionLinkHighlighted");
+    });
+}*/
+
 
 function setNextPrevUrl (queryString, limit, offset, rdfs) {
 
@@ -860,7 +873,8 @@ function renderSparqlResultJsonAsTable (json, tableid) {
 
                             $("#" + tableid).append(header);
 
-                            displayPagination(_results.length);
+                            if(tableid!=='namedGraphTable')
+                                {displayPagination(_results.length);}
 
                             for (var i = 0; i < _results.length; i++) {
                                 var row =$('<tr />');
@@ -1014,8 +1028,6 @@ function _hrefBuilder(uri, label, internal) {
 
 
 function setExampleQueries() {
-    console.log(exampleQueries)
-
     if (exampleQueries != null) {
 
         if (exampleQueries.length > 0) {
