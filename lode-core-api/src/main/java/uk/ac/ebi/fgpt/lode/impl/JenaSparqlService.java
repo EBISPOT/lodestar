@@ -13,9 +13,14 @@
 package uk.ac.ebi.fgpt.lode.impl;
 
 import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
 
+import com.hp.hpl.jena.sparql.core.BasicPattern;
+import com.hp.hpl.jena.sparql.core.PathBlock;
+import com.hp.hpl.jena.sparql.core.TriplePath;
+import com.hp.hpl.jena.sparql.syntax.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +33,9 @@ import uk.ac.ebi.fgpt.lode.utils.QueryType;
 import uk.ac.ebi.fgpt.lode.utils.TupleQueryFormats;
 
 import java.io.OutputStream;
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Simon Jupp
@@ -69,13 +77,155 @@ public class JenaSparqlService implements SparqlService {
         this.queryExecutionService = queryExecutionService;
     }
 
-    public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException {
+
+    public Collection<Element> getAllElements(Collection<Element> elements) {
+
+        Collection<Element> elements1 = new HashSet<Element>();
+        for (Element e : elements) {
+            elements1.add(e);
+            if (e instanceof ElementGroup) {
+                elements1.addAll(getAllElements( ((ElementGroup) e).getElements()));
+            }
+            else if (e instanceof ElementSubQuery) {
+                Query query =  ((ElementSubQuery) e).getQuery();
+                elements1.addAll(getAllElements(Collections.singleton(query.getQueryPattern())));
+            }
+            else if (e instanceof  ElementService) {
+                elements1.addAll(getAllElements( Collections.singleton( ((ElementService) e).getElement())));
+            }
+            else if (e instanceof  ElementOptional) {
+                elements1.addAll(getAllElements(Collections.singleton( ((ElementOptional) e).getOptionalElement())));
+            }
+            else if (e instanceof  ElementUnion) {
+                elements1.addAll(getAllElements(((ElementUnion) e).getElements()));
+            }
+        }
+        return elements1;
+
+    }
+
+    public Collection<String> getNamedPredicates (Collection<Element> elements) throws QueryParseException {
+        Collection<String> uris = new HashSet<String>();
+
+        for (Element e : elements) {
+            if (e instanceof ElementTriplesBlock) {
+                ElementTriplesBlock tb = (ElementTriplesBlock) e;
+                BasicPattern pattern = tb.getPattern();
+                for (Triple t : pattern.getList()) {
+                    if (t.getPredicate() != null && t.getPredicate().isURI()) {
+                        uris.add(t.getPredicate().getURI());
+                    }
+                }
+            }
+            if (e instanceof ElementPathBlock) {
+                ElementPathBlock epb = (ElementPathBlock) e ;
+
+                PathBlock pb = epb.getPattern();
+                for (TriplePath t : pb.getList()) {
+                    if (t.getPredicate() != null && t.getPredicate().isURI()) {
+                        uris.add(t.getPredicate().getURI());
+                    }
+                }
+            }
+        }
+        return uris;
+    }
+
+    public  boolean containsOptionalElement (Collection<Element> elements) throws QueryParseException {
+        for (Element e : elements) {  if (e instanceof ElementOptional) { return true;} } return false;
+    }
+
+    public  boolean containsBindElement (Collection<Element> elements) throws QueryParseException {
+        for (Element e : elements) {    if (e instanceof ElementBind) { return true;}   }   return false;
+    }
+
+    public  boolean containsFilterElement (Collection<Element> elements) throws QueryParseException {
+        for (Element e : elements) {    if (e instanceof ElementFilter) {   return true;    }   }   return false;
+    }
+
+    public  boolean containsGroupElement (Collection<Element> elements) throws QueryParseException {
+        for (Element e : elements) {    if (e instanceof ElementGroup) {    return true;    }   }   return false;
+    }
+
+    public  boolean containsServiceElement (Collection<Element> elements) throws QueryParseException {
+        for (Element e : elements) {    if (e instanceof ElementService) {  return true;    }   }   return false;
+    }
+
+    public  boolean containsSubqueryElement (Collection<Element> elements) throws QueryParseException {
+        for (Element e : elements) {    if (e instanceof ElementSubQuery) { return true;    }   }   return false;
+    }
+
+    public  boolean containsUnionElement (Collection<Element> elements) throws QueryParseException {
+        for (Element e : elements) {    if (e instanceof ElementUnion) {    return true;    }   }   return false;
+    }
+
+    public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output, HttpServletRequest request) throws LodeException {
+        Collection<Element> elements = new HashSet<Element>();
+        //From JenaSparqlQueryParser
+        Query squery=QueryFactory.create(query);
+        Element element = squery.getQueryPattern();
+        elements = getAllElements(Collections.singleton(element));
+        String jenaLog=" JENA";
+
+        //getSelectedVariableCount
+        jenaLog+=" SelectedVariableCount: "+squery.getResultVars().size();
+
+        //getVariablesinQueryCount
+        jenaLog+=" VariablesInQueryCount: "+squery.getProjectVars().size();
+
+        //getQueryPathSize
+        int size=0;
+        for (Element e : elements) {
+            if (e instanceof ElementTriplesBlock) {
+                ElementTriplesBlock tb = (ElementTriplesBlock) e;
+                BasicPattern pattern = tb.getPattern();
+                size += pattern.getList().size();
+            }
+            if (e instanceof ElementPathBlock) {
+                ElementPathBlock epb = (ElementPathBlock) e ;
+
+                PathBlock pb = epb.getPattern();
+                size += pb.getList().size();
+            }
+        }
+        jenaLog+=" QueryPathSize: "+size;
+
+        //
+        jenaLog+=" namedPredicates: "+getNamedPredicates(elements);
+
+        //containsOptionalElement
+        jenaLog+=" optionalElement: "+containsOptionalElement(elements);
+        jenaLog+=" unionElement: "+containsUnionElement(elements);
+        jenaLog+=" subqueryElement: "+containsSubqueryElement(elements);
+        jenaLog+=" bindElement: "+containsBindElement(elements);
+        jenaLog+=" filterElement: "+containsFilterElement(elements);
+        jenaLog+=" serviceElement: "+containsServiceElement(elements);
+
+        //Logging NamedGraph and Graph URI in one field
+        List<String> list1 = squery.getGraphURIs();
+        List<String> list2=squery.getNamedGraphURIs();
+        list1.addAll(list2);
+
+        Set<String> s = new LinkedHashSet<String>(list1);   //To get rid of duplicated entries
+        list1.clear();  //
+        list2.clear();  //Given
+        list1.addAll(s);
+        jenaLog+=" usedGraphs: "+list1.toString();
+
+        String logInfo;
+        if (request!=null) {
+            logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
+        }
+        else
+        {
+            logInfo = "There was no request class";
+        }
+
 
         try {
 
             Query q1 = QueryFactory.create(query, Syntax.syntaxARQ);
             QueryType qtype = getQueryType(query);
-
 
             // detect format
 
@@ -83,25 +233,25 @@ public class JenaSparqlService implements SparqlService {
                 if (isNullOrEmpty(format)) {
                     format = TupleQueryFormats.XML.toString();
                 }
-                executeTupleQuery(q1, format, offset, limit, inference, output);
+                executeTupleQuery(q1, format, offset, limit, inference, output, logInfo);
             }
             else if (qtype.equals(QueryType.DESCRIBEQUERY)) {
                 if (isNullOrEmpty(format)) {
                     format = GraphQueryFormats.RDFXML.toString();
                 }
-                executeDescribeQuery(q1, format, output);
+                executeDescribeQuery(q1, format, output, logInfo);
             }
             else if (qtype.equals(QueryType.CONSTRUCTQUERY)) {
                 if (isNullOrEmpty(format)) {
                     format = GraphQueryFormats.RDFXML.toString();
                 }
-                executeConstructQuery(q1, format, output);
+                executeConstructQuery(q1, format, output, logInfo);
             }
             else if (qtype.equals((QueryType.BOOLEANQUERY))) {
                 if (isNullOrEmpty(format)) {
                     format = TupleQueryFormats.XML.toString();
                 }
-                executeBooleanQuery(q1, format, output);
+                executeBooleanQuery(q1, format, output, logInfo);
             }
             else {
                 // unknown query type
@@ -116,11 +266,19 @@ public class JenaSparqlService implements SparqlService {
             log.error(e.getMessage(), e);
             throw new LodeException(e.getMessage());
         }
+    }
+
+    public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException {
+        query(query, format, offset, limit, inference, output, null);
 
     }
 
     public void query(String query, String format, boolean inference, OutputStream output) throws LodeException {
         query(query, format, 0, getMaxQueryLimit(), inference, output);
+    }
+
+    public void query(String query, String format, boolean inference, OutputStream output, HttpServletRequest request) throws LodeException {
+        query(query, format, 0, getMaxQueryLimit(), inference, output, request);
     }
 
     public void getServiceDescription(OutputStream outputStream, String format) {
@@ -173,9 +331,9 @@ public class JenaSparqlService implements SparqlService {
     }
 
 
-    private void executeConstructQuery(Query q1, String format, OutputStream output) {
+    private void executeConstructQuery(Query q1, String format, OutputStream output, String logInfo) {
         long startTime = System.currentTimeMillis();
-        log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
+        //log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
         Graph g=getQueryExecutionService().getDefaultGraph();
@@ -186,8 +344,8 @@ public class JenaSparqlService implements SparqlService {
 
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
-            log.info("describe query" +  startTime+ " finished in :" + elapsedTime  + " milliseconds");
 
+            //log.info("Construct " + q1.serialize().replace("\n", " ") + " - elapsedTime " + elapsedTime + logInfo);
             model.write(output, format);
             model.close();
 
@@ -248,7 +406,12 @@ public class JenaSparqlService implements SparqlService {
 
     }
 
-    private void executeTupleQuery(Query q1, String format, Integer offset, Integer limit, boolean inference, OutputStream output)  {
+    private void executeTupleQuery(Query q1, String format, Integer offset, Integer limit, boolean inference, OutputStream output)
+    {
+        executeTupleQuery(q1,format,offset, limit,inference, output, null);
+    }
+
+    private void executeTupleQuery(Query q1, String format, Integer offset, Integer limit, boolean inference, OutputStream output, String logInfo)  {
         // check the limit is not greater that the max
 
         q1 = setLimits(q1, limit);
@@ -258,8 +421,6 @@ public class JenaSparqlService implements SparqlService {
         }
 
         long startTime = System.currentTimeMillis();
-        log.info("preparing to execute tuple query: " + startTime + "\n" + q1.serialize());
-
         QueryExecution endpoint = null;
         Graph g=getQueryExecutionService().getDefaultGraph();
 
@@ -269,7 +430,9 @@ public class JenaSparqlService implements SparqlService {
             ResultSet results = endpoint.execSelect();
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
-            log.info("query" + startTime + " finished in :" + elapsedTime + " milliseconds");
+            if (logInfo!=null) {
+                log.info("Query " + q1.serialize().replace("\n", " ") + " - elapsedTime " + elapsedTime + logInfo);
+            }
 
             if (format.equals(TupleQueryFormats.JSON.toString())) {
                 ResultSetFormatter.outputAsJSON(output, results);
@@ -297,11 +460,13 @@ public class JenaSparqlService implements SparqlService {
 
     }
 
-
     private void executeDescribeQuery(Query q1, String format, OutputStream output)  {
+            executeDescribeQuery(q1,format,output, null);
+    }
+
+    private void executeDescribeQuery(Query q1, String format, OutputStream output, String logInfo)  {
 
         long startTime = System.currentTimeMillis();
-        log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
         Graph g=getQueryExecutionService().getDefaultGraph();
@@ -309,10 +474,13 @@ public class JenaSparqlService implements SparqlService {
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
             Model model = endpoint.execDescribe();
-
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
-            log.info("describe query" + startTime + " finished in :" + elapsedTime + " milliseconds");
+            if (logInfo!=null) {
+                logInfo=logInfo.substring(0,logInfo.indexOf("JENA"));
+                logInfo="Describe " + q1.serialize() + " - elapsedTime " + elapsedTime + logInfo;
+                log.info(logInfo.replace("\n", " "));
+            }
             model.write(output, format);
             model.close();
 
@@ -330,10 +498,10 @@ public class JenaSparqlService implements SparqlService {
     }
 
 
-    private void executeBooleanQuery(Query q1, String format, OutputStream output) {
+    private void executeBooleanQuery(Query q1, String format, OutputStream output, String logInfo) {
 
         long startTime = System.currentTimeMillis();
-        log.info("preparing to execute ASK query: " + startTime+ "\n" + q1.serialize());
+        //log.info("preparing to execute ASK query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
         Graph g=getQueryExecutionService().getDefaultGraph();
@@ -344,7 +512,10 @@ public class JenaSparqlService implements SparqlService {
 
             long endTime = System.currentTimeMillis();
             long elapsedTime = endTime - startTime;
-            log.info("ASK query" +  startTime+ " finished in :" + elapsedTime  + " milliseconds");
+            //log.info("ASK query" +  startTime+ " finished in :" + elapsedTime  + " milliseconds");
+            logInfo=logInfo.substring(0, logInfo.indexOf("JENA"));
+            log.info("ASK " + q1.serialize().replace("\n", " ") + " - elapsedTime " + elapsedTime + logInfo);
+
             if (format.equals(TupleQueryFormats.JSON.toString())) {
                 ResultSetFormatter.outputAsJSON(output, value);
             }

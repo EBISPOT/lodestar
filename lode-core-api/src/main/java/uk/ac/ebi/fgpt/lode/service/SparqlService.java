@@ -3,6 +3,7 @@ package uk.ac.ebi.fgpt.lode.service;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.utils.QueryType;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.OutputStream;
 
 /**
@@ -26,6 +27,12 @@ public interface SparqlService {
      * @return Integer max number of results returned
      */
     Integer getMaxQueryLimit();
+
+
+    /* Experimental, function with additional loggin information*/
+    void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output, HttpServletRequest request) throws LodeException;
+
+    void query(String query, String format, boolean inference, OutputStream output, HttpServletRequest request) throws LodeException;
 
     /**
      * Execute a SPARQL query and render results to an OutputStream

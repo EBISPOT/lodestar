@@ -117,13 +117,12 @@ function _parseOptions(options) {
 
 function namedGraphPopup(){
     //var namedGraphQuery="SELECT ?namedGraph WHERE { ?namedGraph ?b <http://purl.org/dc/terms/Dataset>. ?namedGraph <http://purl.org/pav/hasCurrentVersion> ?c }"
-    var namedGraphQuery="PREFIX dct: <http://purl.org/dc/terms/>" +
-    "SELECT ?title ?namedGraph ?description WHERE {" +
-    "?namedGraph ?b <http://purl.org/dc/terms/Dataset>." +
-    "?namedGraph <http://purl.org/pav/hasCurrentVersion> ?c ." +
-    "?namedGraph <http://purl.org/dc/terms/title> ?title ." +
-    "?namedGraph <http://purl.org/dc/terms/description> ?description" +
-    "}"
+    var namedGraphQuery="SELECT ?title ?namedGraph ?description WHERE {" +
+        "?namedGraph ?b <http://purl.org/dc/dcmitype/Dataset> ." +
+        "?namedGraph <http://purl.org/pav/hasCurrentVersion> ?c ." +
+        "?namedGraph <http://purl.org/dc/terms/title> ?title ." +
+        "?namedGraph <http://purl.org/dc/terms/description> ?description" +
+        "}"
 
     $("#namedGraphTab").html("Loading named Graphs...")
     $.ajax ( {

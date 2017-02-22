@@ -1,7 +1,5 @@
 package uk.ac.ebi.fgpt.lode.servlet;
 
-
-
 import com.hp.hpl.jena.query.QueryParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +17,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 
 
 /**
@@ -108,6 +104,7 @@ public class SparqlServlet {
     public @ResponseBody
     void getGraphXML(
             @RequestParam(value = "query", required = false) String query,
+            HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+xml");
         ServletOutputStream out = response.getOutputStream();
@@ -120,7 +117,8 @@ public class SparqlServlet {
                     query,
                     "RDF/XML",
                     false,
-                    out
+                    out,
+                    request
             );
             out.close();
         }
@@ -130,7 +128,8 @@ public class SparqlServlet {
     public @ResponseBody
     void getGraphN3(
             @RequestParam(value = "query", required = false) String query,
-            HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+            HttpServletResponse response,
+            HttpServletRequest request) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+n3");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
@@ -142,7 +141,8 @@ public class SparqlServlet {
                     query,
                     "N3",
                     false,
-                    out
+                    out,
+                    request
             );
             out.close();
         }
@@ -152,7 +152,8 @@ public class SparqlServlet {
     public @ResponseBody
     void getGraphJson(
             @RequestParam(value = "query", required = false) String query,
-            HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+            HttpServletResponse response,
+            HttpServletRequest request) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+json");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
@@ -164,7 +165,8 @@ public class SparqlServlet {
                     query,
                     "JSON-LD",
                     false,
-                    out
+                    out,
+                    request
             );
             out.close();
         }
@@ -174,7 +176,8 @@ public class SparqlServlet {
     public @ResponseBody
     void getGraphNTriples(
             @RequestParam(value = "query", required = false) String query,
-            HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+            HttpServletResponse response,
+            HttpServletRequest request) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph text/plain (rdf+ntriples)");
         response.setContentType("text/plain; charset=utf-8");
         ServletOutputStream out = response.getOutputStream();
@@ -186,7 +189,8 @@ public class SparqlServlet {
                     query,
                     "N-TRIPLES",
                     false,
-                    out
+                    out,
+                    request
             );
             out.close();
         }
@@ -196,7 +200,8 @@ public class SparqlServlet {
     public @ResponseBody
     void getGraphTurtle(
             @RequestParam(value = "query", required = false) String query,
-            HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+            HttpServletResponse response,
+            HttpServletRequest request) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph turtle");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
@@ -208,7 +213,8 @@ public class SparqlServlet {
                     query,
                     "TURTLE",
                     false,
-                    out
+                    out,
+                    request
             );
             out.close();
         }
@@ -248,13 +254,7 @@ public class SparqlServlet {
             HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
 
-        log.info("What user information can we retrieve here");
-        log.info(request.getRemoteAddr());
-        log.info(request.getRequestedSessionId());
-        log.info((Long.toString(request.getSession().getCreationTime())));
-        log.info(request.getSession().getId());
-
-        ServletOutputStream out = response.getOutputStream();
+            ServletOutputStream out = response.getOutputStream();
 
         if (query == null) {
             // Default to format N3 unless an acceptable format is given
@@ -273,13 +273,6 @@ public class SparqlServlet {
             return;
         }
 
-
-        log.info("Processing raw query:\n" + query + "\nEnd of query.");
-        //HERE WE COULD DO ADVANCED LOGGING TO FILE
-        // Adding HttpServletRequest request as parameter to this query method might enable us to ask for IP
-        // via request.getRemoteAddr() and similar methods, getting more information about the USER associated with a request
-
-        // if no format, try and work out the query type
         String outputFormat = format;
         if (outputFormat == null) {
             QueryType qType = getSparqlService().getQueryType(query);
@@ -289,6 +282,7 @@ public class SparqlServlet {
             }
             else if (qType.equals(QueryType.CONSTRUCTQUERY) || qType.equals(QueryType.DESCRIBEQUERY)) {
                 outputFormat = GraphQueryFormats.RDFXML.toString();
+                log.info(outputFormat);
             }
             else {
                 response.setStatus(406);
@@ -309,7 +303,8 @@ public class SparqlServlet {
                 offset,
                 limit,
                 inference,
-                out
+                out,
+                request
             );
             out.close();
         }
@@ -357,32 +352,39 @@ public class SparqlServlet {
         return "text/plain; charset=utf-8" ;
     }
 
+
+    private String constructLogString(HttpServletRequest request){
+        String logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId();
+        return logInfo;
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(QueryParseException.class)
-    public @ResponseBody String handleQueryException(QueryParseException e) {
-        getLog().error(e.getMessage(), e);
+    public @ResponseBody String handleQueryException(QueryParseException e, HttpServletRequest request) {
+        getLog().error(e.getMessage().replace("\n"," ")+constructLogString(request), e);
         return e.getMessage();
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(LodeException.class)
-    public @ResponseBody String handleLodException(LodeException e) {
-        getLog().error(e.getMessage(), e);
+    public @ResponseBody String handleLodException(LodeException e, HttpServletRequest request) {
+        getLog().error(e.getMessage().replace("\n"," ")+constructLogString(request), e);
         return e.getMessage();
     }
 
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IOException.class)
-    public @ResponseBody String handleIOException(IOException e) {
-        getLog().error(e.getMessage(), e);
+    public @ResponseBody String handleIOException(IOException e, HttpServletRequest request) {
+        getLog().error(e.getMessage().replace("\n"," ")+constructLogString(request), e);
         return e.getMessage();
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public @ResponseBody String handleException(Exception e) {
-        getLog().error(e.getMessage(), e);
+    public @ResponseBody String handleException(Exception e, HttpServletRequest request) {
+        getLog().error(request.toString());
+        getLog().error(e.getMessage().replace("\n"," ")+constructLogString(request), e);
         return e.getMessage();
     }
 }
