@@ -214,7 +214,8 @@ public class JenaSparqlService implements SparqlService {
 
         String logInfo;
         if (request!=null) {
-            logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
+           // logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
+            logInfo = " HOST: " + request.getRemoteAddr() + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
         }
         else
         {

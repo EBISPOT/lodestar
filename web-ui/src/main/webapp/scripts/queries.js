@@ -582,38 +582,22 @@ var exampleQueries = [
         ]
 
     },
-   /* {
-        category: "Atlas",
+ {
+        category: "ExpressionAtlas",
         queries: [
             {
                 shortname: "Query 1",
                 description: "Get experiments where the sample description contains diabetes",
                 query:
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
-                "PREFIX atlas: <http://rdf.ebi.ac.uk/resource/atlas/>\n"+
-                "PREFIX atlasterms: <http://rdf.ebi.ac.uk/terms/atlas/>\n"+
-                "SELECT DISTINCT ?experiment ?description WHERE\n"+
-                "{?experiment\n"+
-                "a atlasterms:Experiment ;\n"+
-                "dcterms:description ?description ;\n"+
-                "atlasterms:hasAssay\n"+
-                "[atlasterms:hasSample\n"+
-                "[atlasterms:hasSampleCharacteristic\n"+
-                "[ atlasterms:propertyType ?propertyType ;\n"+
-                "atlasterms:propertyValue ?propertyValue]\n"+
-                "]\n"+
-                "]\n"+
-                "filter regex (?description, 'diabetes', 'i')\n"+
+                "SELECT * \n" +
+                "from <http://rdf.ebi.ac.uk/dataset/expressionatlas> \n" +
+                "WHERE { \n" +
+                "?a ?b ?c \n" +
                 "}"
+
             }
         ]
-    },*/
+    },
     {
         category: "OntologyLookupService",
         queries: [
@@ -621,7 +605,7 @@ var exampleQueries = [
                 shortname: "EFO Query",
                 description: "Show all EFO entries that a dubious guys with the name James Malone did edit",
                 query:
-                "SELECT DISTINCT COUNT(?a) \n"+
+                "SELECT (COUNT(*) as ?count) \n"+
                 "from <http://rdf.ebi.ac.uk/dataset/efo> \n"+
                 "WHERE { \n"+
                 " ?a <http://purl.obolibrary.org/obo/IAO_0000117> 'James Malone' \n"+
@@ -631,7 +615,7 @@ var exampleQueries = [
         ]
 
     },
-    {
+/* {
         category: "GWAS",
         queries:[
             {
@@ -663,6 +647,6 @@ var exampleQueries = [
 
         ]
 
-    }
+    }*/
 ]
 

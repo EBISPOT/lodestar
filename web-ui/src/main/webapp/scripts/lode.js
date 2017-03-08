@@ -1039,8 +1039,8 @@ function setExampleQueries() {
 
                 $("#cat_"+category).click(function(){
 
-                    console.log(this.id)
-                    console.log($("#queries_"+this.id).is(":visible"))
+                    //console.log(this.id)
+                    //console.log($("#queries_"+this.id).is(":visible"))
 
                     if ($("#queries_"+this.id).is(":visible"))
                     {
@@ -1221,8 +1221,10 @@ function renderResourceTypes(element) {
                         p.append($("<br/>"));
 
                         p.append("<span class='moreTypes'>more types...</span>").click(function() {
-                            $('span.moreTypes').remove();
-                            renderAllResourceTypes(p, uriset);
+                            if ($('span.moreTypes').length>0){
+                                $('span.moreTypes').remove();
+                                renderAllResourceTypes(p, uriset);
+                            }
                         });
                         div.append(p);
                     }

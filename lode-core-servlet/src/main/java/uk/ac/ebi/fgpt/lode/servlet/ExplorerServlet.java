@@ -217,10 +217,6 @@ public class ExplorerServlet {
             HttpServletResponse response,
             HttpServletRequest request) throws IOException, LodeException {
 
-        getLog().info("In explorer describeResource:");
-        String logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId();
-        getLog().info("Explore - uri: "+uri+logInfo);
-
         if (format == null) {
             describeResourceAsNtriples(uri, response);
         } else if (format.toLowerCase().equals("rdf") ||
