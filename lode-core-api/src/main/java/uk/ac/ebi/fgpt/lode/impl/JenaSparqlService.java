@@ -212,16 +212,43 @@ public class JenaSparqlService implements SparqlService {
         list1.addAll(s);
         jenaLog+=" usedGraphs: "+list1.toString();
 
+        //This print out all headers we get. Unfortunatley there is no forward header to get us the 'real IP address' of the request
+        Enumeration<String> x=request.getHeaderNames();
+        while (x.hasMoreElements()){
+            String tmpelement=x.nextElement().toString();
+            log.info(tmpelement);
+            log.info(" ... "+request.getHeader(tmpelement));
+        }
+
         String logInfo;
         if (request!=null) {
            // logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
-            logInfo = " HOST: " + request.getRemoteAddr() + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
+            //IF the query ends with the noLog tag, then do not write into logfile
+            if (!query.endsWith("#noLog"))
+            {
+                String address;
+                try{
+                    address=request.getAttribute("X-Cluster-Client-Ip").toString();
+                }
+                catch(Exception e){
+
+                log.info("Could not find X-Cluster-Client-IP so I go with remote Addr");
+                address=request.getRemoteAddr();
+                }
+
+
+                log.info(address);
+
+                logInfo = " HOST: " + address + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
+            }
+            else{
+                logInfo="Query followed by the noLog flag";
+            }
         }
         else
         {
             logInfo = "There was no request class";
         }
-
 
         try {
 
