@@ -213,12 +213,18 @@ public class JenaSparqlService implements SparqlService {
         jenaLog+=" usedGraphs: "+list1.toString();
 
         //This print out all headers we get. Unfortunatley there is no forward header to get us the 'real IP address' of the request
-        //Enumeration<String> x=request.getHeaderNames();
-        //while (x.hasMoreElements()){
-        //   String tmpelement=x.nextElement().toString();
-        //    log.info(tmpelement);
-        //    log.info(" ... "+request.getHeader(tmpelement));
-        //}
+
+        try {
+            Enumeration<String> x = request.getHeaderNames();
+            while (x.hasMoreElements()) {
+                String tmpelement = x.nextElement().toString();
+                log.info(tmpelement);
+                log.info(" ... " + request.getHeader(tmpelement));
+            }
+        }
+        catch(Exception e){
+            log.info("Printing the headers did now work, but I catch errors :) ");
+        }
 
         String logInfo;
         if (request!=null) {
@@ -228,10 +234,9 @@ public class JenaSparqlService implements SparqlService {
             {
                 String address;
                 try{
-                    address=request.getAttribute("X-Cluster-Client-Ip").toString();
+                    address=request.getHeader("X-Cluster-Client-Ip").toString();
                 }
                 catch(Exception e){
-
                 log.info("Could not find X-Cluster-Client-IP so I go with remote Addr");
                 address=request.getRemoteAddr();
                 }
