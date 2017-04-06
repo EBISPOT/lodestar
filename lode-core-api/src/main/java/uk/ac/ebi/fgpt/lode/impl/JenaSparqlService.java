@@ -212,19 +212,6 @@ public class JenaSparqlService implements SparqlService {
         list1.addAll(s);
         jenaLog+=" usedGraphs: "+list1.toString();
 
-        //This print out all headers we get. Unfortunatley there is no forward header to get us the 'real IP address' of the request
-
-        try {
-            Enumeration<String> x = request.getHeaderNames();
-            while (x.hasMoreElements()) {
-                String tmpelement = x.nextElement().toString();
-                log.info(tmpelement);
-                log.info(" ... " + request.getHeader(tmpelement));
-            }
-        }
-        catch(Exception e){
-            log.info("Printing the headers did now work, but I catch errors :) ");
-        }
 
         String logInfo;
         if (request!=null) {

@@ -10,8 +10,8 @@
 }
 
 #textarea{
-    font-size: 12px;
-    height:350px;
+    font-size: 10px;
+    height:450px;
 }
 
 #example_queries {
@@ -23,8 +23,17 @@
 }
 
 #sparqlTextfield{
-    font-size: 12px;
+    font-size: 11px;
     height:500px;
+}
+
+#controlDiv{
+    margin-bottom: 0px;
+
+}
+
+.CodeMirror {
+    height: 370px;
 }
 
 .exampleCategorieslinks{

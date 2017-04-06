@@ -322,8 +322,8 @@ function _buildSparqlPage(element) {
         $("<p></p>").append(
             myTextArea));
 
-
-    section1.append(
+    var controlDiv=$("<div id='controlDiv'></div>")
+    controlDiv.append(
         $("<p style='float: right;'></p>").append(
             $("<label for='render'>Output: </label>"))
             .append(
@@ -340,7 +340,7 @@ function _buildSparqlPage(element) {
     );
 
     if (lodestarRdfsInference) {
-        section1.append(
+        controlDiv.append(
             $("<p></p>").append(
                 $("<label for='inference'>RDFS inference? </label>"))
                 .append(
@@ -349,7 +349,7 @@ function _buildSparqlPage(element) {
         );
     }
 
-    section1.append(
+    controlDiv.append(
         $("<p></p>").append(
             $("<label for='limit'>Results per page: </label>"))
             .append(
@@ -360,22 +360,25 @@ function _buildSparqlPage(element) {
             )
     );
 
+
     /*
     section1.append(
     $("<label for='limit'>Named Graph</label><input type='text' id='namedGraph'/>")
     $("<label for='namedGraph'>Named Graph</label><textarea  name='namedGraph' id='namedGraph' rows='1' style='width:100%'></textarea>")
     );*/
 
-    section1.append (
+    controlDiv.append (
         $("<input id='offset' name='offset' type='hidden' value='0' />")
 
     );
 
 
-    section1.append(
+    controlDiv.append(
         $("<p></p>").append("<input type='button' class='submit ui-button ui-widget ui-corner-all' style='display: inline;'  onclick='submitQuery()' value='Submit Query' />&nbsp;")
                     .append("<input type='button' class='submit  ui-button ui-widget ui-corner-all' style='display: inline;' onclick='reloadPage()' value='Reset' />")
     );
+
+    section1.append(controlDiv)
 
     section1.append("<div id='query-executing-spinner'>" +
         "Executing query...&nbsp;<img src='images/loadingAnimation.gif'>" +
@@ -624,6 +627,10 @@ function updateHistoryTab(query, numerOfRows, headings){
         else {
                 //queryHistory.push({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
                 queryHistory.unshift({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
+
+                if (queryHistory.length>100){
+                    queryHistory.pop()
+                }
         }
            $.jStorage.set("history", queryHistory);
     }
