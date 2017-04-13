@@ -587,14 +587,118 @@ var exampleQueries = [
         queries: [
             {
                 shortname: "Query 1",
-                description: "Get experiments where the sample description contains diabetes",
+                description: "Show expression for the CYP51 gene",
                 query:
-                "SELECT * \n" +
-                "from <http://rdf.ebi.ac.uk/dataset/expressionatlas> \n" +
-                "WHERE { \n" +
-                "?a ?b ?c \n" +
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
+                "PREFIX atlasterms: <http://rdf.ebi.ac.uk/terms/expressionatlas/>\n"+
+                "PREFIX atlas: <http://rdf.ebi.ac.uk/resource/expressionatlas/>\n\n"+
+                "SELECT distinct ?diffValue ?expUri ?propertyType ?propertyValue ?pvalue\n"+
+                "FROM <http://rdf.ebi.ac.uk/dataset/expressionatlas>\n"+
+                "WHERE {\n"+
+                " ?expUri atlasterms:hasPart ?analysis .\n"+
+                " ?analysis atlasterms:hasOutput ?value .\n"+
+                " ?analysis atlasterms:hasFactorValue ?factor .\n"+
+                " ?factor atlasterms:propertyType ?propertyType .\n"+
+                " ?factor atlasterms:propertyValue ?propertyValue .\n"+
+                " ?value rdfs:label ?diffValue .\n"+
+                " ?value atlasterms:pValue ?pvalue .\n"+
+                " ?value atlasterms:refersTo ?gene .\n"+
+                " ?gene rdfs:label ?genesymbol .\n"+
+                " filter regex (?genesymbol, 'cyp51', 'i')\n"+
                 "}"
-
+            },
+            {
+              shortname: "Query 2",
+              description: "What human protein coding genes are expressed where the experimental factor is asthma (EFO_0000270)?",
+              query:
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
+                "PREFIX atlasterms: <http://rdf.ebi.ac.uk/terms/expressionatlas/>\n"+
+                "PREFIX atlas: <http://rdf.ebi.ac.uk/resource/expressionatlas/>\n"+
+                "PREFIX ensembl: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
+                "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n\n"+              
+                "SELECT distinct ?expUri ?diffValue ?gene ?pvalue\n"+
+                "FROM <http://rdf.ebi.ac.uk/dataset/expressionatlas>\n"+
+                "FROM <http://rdf.ebi.ac.uk/dataset/homo_sapiens>\n"+
+                "WHERE {            \n"+
+                " ?expUri atlasterms:hasPart ?analysis.\n"+
+                " ?analysis atlasterms:hasOutput ?value .\n"+
+                " ?analysis atlasterms:hasFactorValue ?factor .\n"+
+                " ?value rdfs:label ?diffValue .\n"+
+                " ?value atlasterms:pValue ?pvalue .\n"+
+                " ?value atlasterms:refersTo ?gene . \n"+
+                " ?gene a ensembl:protein_coding .\n"+
+                " ?factor a efo:EFO_0000270 .\n"+
+                "}"
+            },
+            {
+              shortname: "Query 3",
+              description: "What human protein coding genes are expressed where the experimental factor is asthma (EFO_0000270)?",
+              query:
+              "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
+              "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
+              "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
+              "PREFIX atlasterms: <http://rdf.ebi.ac.uk/terms/expressionatlas/>\n"+
+              "PREFIX atlas: <http://rdf.ebi.ac.uk/resource/expressionatlas/>\n"+
+              "PREFIX ensembl:<http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
+              "PREFIX biopax3:<http://www.biopax.org/release/biopax-level3.owl#>\n\n"+
+              "SELECT distinct ?expUri ?diffValue ?gene ?pvalue ?pathwayname\n"+
+              "FROM <http://rdf.ebi.ac.uk/dataset/expressionatlas>\n"+
+              "FROM <http://rdf.ebi.ac.uk/dataset/homo_sapiens>\n"+
+              "FROM <http://rdf.ebi.ac.uk/dataset/reactome>\n"+
+              "WHERE {     \n"+
+              "?expUri atlasterms:hasPart ?analysis .     \n"+
+              "?analysis atlasterms:hasOutput ?value . \n"+
+              "?analysis atlasterms:hasFactorValue ?factor .   \n"+
+              "?value rdfs:label ?diffValue .\n"+
+              "?value atlasterms:pValue ?pvalue . \n"+
+              "?value atlasterms:refersTo ?gene .\n"+
+              "?gene a ensembl:protein_coding .\n"+
+              "?factor a efo:EFO_0000270 .\n"+
+              "# get gene to protein from ensembl\n"+
+              "?gene ensembl:DEPENDENT ?dbXref .\n\n"+
+              "# query reactome for protein \n"+
+              "?protein rdf:type biopax3:Protein .\n"+
+              "    ?protein biopax3:memberPhysicalEntity \n"+
+              "             [biopax3:entityReference ?dbXref] .\n"+
+              "    ?pathway rdf:type biopax3:Pathway .\n"+
+              "    ?pathway biopax3:displayName ?pathwayname .\n"+
+              "    ?pathway biopax3:pathwayComponent ?reaction .\n"+
+              "    ?reaction rdf:type biopax3:BiochemicalReaction .\n"+
+              "    {\n"+
+              "      {?reaction biopax3:left ?protein .}\n"+
+              "      UNION \n"+
+              "      {?reaction biopax3:right ?protein .}\n"+
+              "      UNION \n"+
+              "      {?reaction biopax3:left\n"+
+              "                  [a biopax3:Complex ; biopax3:component ?protein ].}\n"+
+              "      UNION\n"+
+              "      {?reaction biopax3:right\n"+
+              "                 [a biopax3:Complex ; biopax3:component ?protein ].}\n"+
+              "    }\n"+
+              "}"
+            },
+            {
+              shortname: "Query 4",
+              description: "Show baseline expression in liver for Illumina body map data",
+              query:
+              "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
+              "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
+              "PREFIX atlasterms: <http://rdf.ebi.ac.uk/terms/expressionatlas/>\n"+
+              "PREFIX atlas: <http://rdf.ebi.ac.uk/resource/expressionatlas/>\n"+
+              "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
+              "PREFIX obo: <http://purl.obolibrary.org/obo/>\n\n"+
+              "SELECT distinct ?desc ?diffValue ?gene ?fpkm\n"+
+              "FROM <http://rdf.ebi.ac.uk/dataset/expressionatlas>\n"+
+              "WHERE {\n"+
+              "atlas:E-MTAB-513 atlasterms:hasPart ?analysis .\n"+
+              "atlas:E-MTAB-513 dcterms:description ?desc .\n"+
+              "?analysis atlasterms:hasOutput ?value . \n"+
+              "?analysis atlasterms:hasFactorValue ?factor .  \n"+
+              "?value rdfs:label ?diffValue .\n"+
+              "?value atlasterms:fpkm ?fpkm . \n"+
+              "?value atlasterms:refersTo ?gene . \n"+
+              "?factor rdf:type obo:UBERON_0002107 .    \n"+
+              "}"
             }
         ]
     },
@@ -649,4 +753,3 @@ var exampleQueries = [
 
     }*/
 ]
-
