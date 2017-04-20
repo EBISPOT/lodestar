@@ -20,7 +20,7 @@ Lodestar is a Linked Data Browser and SPARQL endpoint. Lodestar is a Java based 
 
 To see a demonstration of the Lodestar linked data browser please see the [Expression Atlas RDF website](http://www.ebi.ac.uk/rdf/services/atlas/sparql). Lodestar has been primarily developed as an internal tool for EBI services deploying RDF, however, the application should be sufficiently generic that others can use it. I can't guarantee any support for the software at this time, but please feel free to use it or adapt for your own purposes and let me know how you get on.
 
-Documentation and stable release at http://www.ebi.ac.uk/fgpt/sw/lodestar.
+Documentation and stable release at http://ebispot.github.io/lodestar/.
 
 ## Release Notes
 
