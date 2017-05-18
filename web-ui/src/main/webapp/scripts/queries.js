@@ -602,9 +602,7 @@ var exampleQueries = [
                 " ?factor atlasterms:propertyValue ?propertyValue .\n"+
                 " ?value rdfs:label ?diffValue .\n"+
                 " ?value atlasterms:pValue ?pvalue .\n"+
-                " ?value atlasterms:refersTo ?gene .\n"+
-                " ?gene rdfs:label ?genesymbol .\n"+
-                " filter regex (?genesymbol, 'cyp51', 'i')\n"+
+                " ?value atlasterms:refersTo  <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000001630> .\n"+
                 "}"
             },
             {
@@ -707,15 +705,27 @@ var exampleQueries = [
         queries: [
             {
                 shortname: "EFO Query",
-                description: "Show all EFO entries that a dubious guys with the name James Malone did edit",
+                description: "Show all EFO entries which 'James Malonedid edit",
                 query:
                 "SELECT (COUNT(*) as ?count) \n"+
                 "from <http://rdf.ebi.ac.uk/dataset/efo> \n"+
                 "WHERE { \n"+
                 " ?a <http://purl.obolibrary.org/obo/IAO_0000117> 'James Malone' \n"+
                 "}"
+            },
+            {
+                shortname: "Print a list of all subClasses",
+                description: "Show all children for the term cell from the cell ontology (cl)",
+                query:
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "+
+                "SELECT ?subject ?label ?altTerm" +
+                "from <http://rdf.ebi.ac.uk/dataset/cl>" +
+                "        WHERE { " +
+                "    ?subject rdfs:subClassOf* <http://purl.obolibrary.org/obo/CL_0000000> . "+
+                "    ?subject rdfs:label ?label. " +
+                "optional{?subject <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> ?altTerm}" +
+                "}"
             }
-
         ]
 
     },
