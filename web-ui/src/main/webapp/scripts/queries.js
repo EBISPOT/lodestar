@@ -704,28 +704,97 @@ var exampleQueries = [
         category: "OntologyLookupService",
         queries: [
             {
-                shortname: "EFO Query",
-                description: "Show all EFO entries which 'James Malonedid edit",
+                shortname: "Gene Ontology Query",
+                description: "Get all terms and labels from the Gene Ontology",
                 query:
-                "SELECT (COUNT(*) as ?count) \n"+
-                "from <http://rdf.ebi.ac.uk/dataset/efo> \n"+
-                "WHERE { \n"+
-                " ?a <http://purl.obolibrary.org/obo/IAO_0000117> 'James Malone' \n"+
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
+                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
+                "SELECT ?class ?label\n"+
+                "FROM <http://rdf.ebi.ac.uk/dataset/go>\n"+
+                "   WHERE {\n"+
+                "       ?class a owl:Class .\n"+
+                "       ?class rdfs:label ?label .\n"+
+                "   }"
+            },
+
+            {
+                shortname: "EFO Query",
+                description: "Get all terms and labels from the Gene Ontology",
+                query:
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
+                "SELECT ?child ?childLabel ?parent ?parentLabel\n"+
+                "FROM <http://rdf.ebi.ac.uk/dataset/efo> \n"+
+                "   WHERE {\n"+
+                "   ?child rdfs:subClassOf ?parent .\n"+
+                "   ?child rdfs:label ?childLabel .\n"+
+                "   ?parent rdfs:label ?parentLabel .\n"+
+                "   }"
+
+            },
+
+
+
+            {
+                shortname: "Children of GO",
+                description: "Get all children of “cellular process” from the Gene Ontology ",
+                query:
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
+                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
+                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
+                "SELECT ?child ?childLabel\n"+
+                "FROM <http://rdf.ebi.ac.uk/dataset/go> \n"+
+                "       WHERE {\n"+
+                "       ?child rdfs:subClassOf* obo:GO_0009987 .\n"+
+                "       ?child rdfs:label ?childLabel .\n"+
+                "}"
+            },
+
+            {
+                shortname: "Print a list of all subClasses",
+                description: "Show all children for the term 'cell' from the cell ontology (cl)",
+                query:
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
+                "SELECT ?subject ?label ?altTerm \n" +
+                "from <http://rdf.ebi.ac.uk/dataset/cl> \n" +
+                "    WHERE { \n" +
+                "    ?subject rdfs:subClassOf* <http://purl.obolibrary.org/obo/CL_0000000> . \n"+
+                "    ?subject rdfs:label ?label. \n"+
+                "optional{\n"+
+                "    ?subject <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> ?altTerm}\n" +
                 "}"
             },
             {
-                shortname: "Print a list of all subClasses",
-                description: "Show all children for the term cell from the cell ontology (cl)",
+                shortname : "Query for a Label in all terms",
+                description:"Find all terms that mention 'alzheimer' in the label",
                 query:
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "+
-                "SELECT ?subject ?label ?altTerm" +
-                "from <http://rdf.ebi.ac.uk/dataset/cl>" +
-                "        WHERE { " +
-                "    ?subject rdfs:subClassOf* <http://purl.obolibrary.org/obo/CL_0000000> . "+
-                "    ?subject rdfs:label ?label. " +
-                "optional{?subject <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> ?altTerm}" +
-                "}"
-            }
+                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
+                "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"+
+                "PREFIX dcterms: <http://purl.org/dc/terms/> \n"+
+                "SELECT DISTINCT  ?class ?label\n"+
+                "WHERE {\n"+
+                "<http://rdf.ebi.ac.uk/dataset/ols> dcterms:hasPart  ?allOlsOntologiesGraph  . \n"+
+                "GRAPH ?allOlsOntologiesGraph {\n"+
+                "?class a owl:Class .\n"+
+                "?class rdfs:label ?label .\n"+
+                "filter regex(?label, 'Alzheimer', 'i')\n"+
+                "}\n" +
+                "}\n"
+
+},
+            {
+
+
+            shortname : "Searching for cross references",
+            description:"  Get cross references to DOID_10652 (Alzheimer's disease) from the disease ontology",
+            query:
+            "PREFIX obo: <http://purl.obolibrary.org/obo/> \n"+
+            "PREFIX oboInOWL: <http://www.geneontology.org/formats/oboInOwl#> \n"+
+            "SELECT DISTINCT  ?xref\n"+
+            "WHERE {\n"+
+            "obo:DOID_10652 oboInOWL:hasDbXref ?xref .\n"+
+            "}"
+
+}
         ]
 
     },

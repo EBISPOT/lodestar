@@ -380,7 +380,8 @@ function _buildSparqlPage(element) {
 
     section1.append(controlDiv)
 
-    section1.append("<div id='query-executing-spinner'>" +
+    //section1.append
+    controlDiv.append("<div id='query-executing-spinner'>" +
         "Executing query...&nbsp;<img src='images/loadingAnimation.gif'>" +
         "</div>");
 

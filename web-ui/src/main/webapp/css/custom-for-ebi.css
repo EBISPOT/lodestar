@@ -1,4 +1,6 @@
-
+#loadstar-results-section{
+    margin-top:40px;
+}
 
 #lodestar-description{
     margin-top: 20px;
@@ -29,8 +31,8 @@
 
 #controlDiv{
     margin-bottom: 0px;
-
 }
+
 
 .CodeMirror {
     height: 370px;
