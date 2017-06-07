@@ -60,14 +60,7 @@ var exampleQueries = [
                 shortname: "Show main resources",
                 description: "An example that selects Sample Groups, Samples, the main resource types in the dataset.",
                 query:
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
                 "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"+
-                "PREFIX pav: <http://purl.org/pav/2.0/>\n"+
-                "PREFIX prov: <http://www.w3.org/ns/prov#>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX atlas: <http://rdf.ebi.ac.uk/terms/atlas/>\n"+
-                "PREFIX oac: <http://www.openannotation.org/ns/>\n"+
                 "SELECT DISTINCT *\n"+
                 "WHERE {\n"+
                 "{ select ?item WHERE { ?item a biosd-terms:BiosamplesSubmission. } LIMIT 3}\n"+
@@ -79,15 +72,9 @@ var exampleQueries = [
                 shortname: "Samples from homo sapiens and their provenance",
                 description: "Shows how to get and filter sample attributes. It also shows how the web pages on the provenance databases are linked.",
                 query:
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
                 "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"+
                 "PREFIX pav: <http://purl.org/pav/2.0/>\n"+
-                "PREFIX prov: <http://www.w3.org/ns/prov#>\n"+
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
                 "PREFIX atlas: <http://rdf.ebi.ac.uk/terms/atlas/>\n"+
-                "PREFIX oac: <http://www.openannotation.org/ns/>\n"+
                 "# \n"+
                 "## Samples with a given property value and type, and external links\n"+
                 "## This version doesn't exploit any ontology for sample properties.\n"+
@@ -106,7 +93,6 @@ var exampleQueries = [
                 "dc:type ?propTypeLabel. # this is used even when no specific type is present\n"+
                 "FILTER ( LCASE ( STR ( ?propTypeLabel ) ) = 'organism' ).\n"+
                 "FILTER ( LCASE ( STR ( ?pvLabel ) ) = 'homo sapiens' ).\n"+
-
                 "?webRec\n"+
                 "dcterms:identifier ?repoAcc;\n"+
                 "dcterms:source ?repoName;\n"+
@@ -118,19 +104,7 @@ var exampleQueries = [
                 shortname: "Samples that derives from a given genus",
                 description: "Samples derived from the mus mus genus or specific organisms under it, as they are classified by. the NCBI Taxonomy.",
                 query: "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
                 "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"+
-                "PREFIX pav: <http://purl.org/pav/2.0/>\n"+
-                "PREFIX prov: <http://www.w3.org/ns/prov#>\n"+
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX atlas: <http://rdf.ebi.ac.uk/terms/atlas/>\n"+
-                "PREFIX oac: <http://www.openannotation.org/ns/>\n"+
                 "#"+
                 "## All samples that derives from a given genus (Mus)\n"+
                 "#\n"+
@@ -188,20 +162,9 @@ var exampleQueries = [
             {
                 shortname: "Temperature values and units",
                 description: "This shows how numerical values and units are represented in RDF. When possible, dates are detected and represented the same way, using xsd^dateTime.",
-                query: "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX efo: <http://www.ebi.ac.uk/efo/>\n"+
+                query:
                 "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"+
-                "PREFIX pav: <http://purl.org/pav/2.0/>\n"+
-                "PREFIX prov: <http://www.w3.org/ns/prov#>\n"+
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
                 "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX atlas: <http://rdf.ebi.ac.uk/terms/atlas/>\n"+
-                "PREFIX oac: <http://www.openannotation.org/ns/>\n"+
                 "#\n"+
                 "## Samples with temperature attributes. DO REQUIRE Inference enabled\n"+
                 "#\n"+
@@ -254,14 +217,7 @@ var exampleQueries = [
             {
                 shortname: "Query 3",
                 description: "Get ChEMBL sources",
-                query: "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
+                query:
                 "PREFIX cco: <http://rdf.ebi.ac.uk/terms/chembl#>\n"+
                 "SELECT ?Source ?Description\n"+
                 "   WHERE {\n"+
@@ -273,15 +229,8 @@ var exampleQueries = [
                 shortname: "Query 4",
                 description: "Get ChEMBL protein classification level 1 breakdown",
                 query:
-                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                    "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                    "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
-                    "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                    "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                    "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
                     "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
-                    "PREFIX cco: <http://rdf.ebi.ac.uk/terms/chembl#>\n"+
+                    "PREFIX cco: <http://rdf.ebi.ac.uk/terms/chembl#>\n\n"+
                     "SELECT ?parent ?parent_name  (COUNT(DISTINCT ?parent_tc) AS ?parent_desc_count)\n"+
                     "WHERE {\n"+
                     "?parent cco:classLevel 'L1' ;\n"+
@@ -294,14 +243,6 @@ var exampleQueries = [
                 shortname: "Query 5",
                 description: "Get ChEMBL activities, assays and targets for the drug Gleevec (CHEMBL941)",
                 query:
-                    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                    "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                    "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                    "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
-                    "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                    "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                    "PREFIX foaf: <http://xmlns.com/foaf/0.1/>\n"+
-                    "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
                     "PREFIX cco: <http://rdf.ebi.ac.uk/terms/chembl#>\n"+
                     "PREFIX chembl_molecule: <http://rdf.ebi.ac.uk/resource/chembl/molecule/>\n"+
                     "SELECT ?activity ?assay ?target ?targetcmpt ?uniprot\n"+
@@ -326,16 +267,8 @@ var exampleQueries = [
                 description: "Show all transcripts of human BRCA2 gene and their coordinates",
                 query:
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
                 "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
-                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
-                "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
-                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
-                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
-                "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
-                "PREFIX identifiers: <http://identifiers.org/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
-                "PREFIX core: <http://purl.uniprot.org/core/>\n"+
+                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n\n"+
                 "SELECT DISTINCT ?transcript ?id ?typeLabel ?reference ?begin ?end ?location {\n"+
                 "?transcript obo:SO_transcribed_from ensembl:ENSG00000139618 ;\n"+
                 "a ?type;\n"+
@@ -355,13 +288,8 @@ var exampleQueries = [
                 query:
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
                 "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
-                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
                 "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
-                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
-                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
-                "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
-                "PREFIX identifiers: <http://identifiers.org/>\n"+
+                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n\n"+
                 "SELECT DISTINCT ?id ?order ?reference ?begin ?end ?strand {\n"+
                 "ensembltranscript:ENST00000380152 obo:SO_has_part ?exon;\n"+
                 "sio:SIO_000974 ?orderedPart .\n"+
@@ -388,20 +316,7 @@ var exampleQueries = [
                 shortname:"Query 3",
                 description:"Get all mouse genes on chromosome 11 between location 101,100,523 and 101,190,725 forward strand",
                 query:
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
-                "PREFIX identifiers: <http://identifiers.org/>\n"+
-                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
-                "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
-                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
-                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
-                "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
+                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n\n"+
                 "SELECT DISTINCT ?gene ?id ?label ?typelabel ?desc ?begin ?end {\n"+
                 "?location faldo:begin\n"+
                 "[a faldo:ForwardStrandPosition ;\n"+
@@ -409,7 +324,7 @@ var exampleQueries = [
                 "?location faldo:end\n"+
                 "[a faldo:ForwardStrandPosition ;\n"+
                 "faldo:position ?end] .\n"+
-                "?location faldo:reference <http://rdf.ebi.ac.uk/resource/ensembl/87/mus_musculus/GRCm38/11> .\n"+
+                "?location faldo:reference <http://rdf.ebi.ac.uk/resource/ensembl/88/mus_musculus/GRCm38/11> .\n"+
                 "?gene a ?type ;\n"+
                 "rdfs:label ?label ;\n"+
                 "dc:description ?desc ;\n"+
@@ -423,20 +338,9 @@ var exampleQueries = [
                 shortname: "Query 4",
                 description: "Get orthologs for human gene ENSG00000139618",
                 query:
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
                 "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
-                "PREFIX identifiers: <http://identifiers.org/>\n"+
-                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
-                "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
-                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
-                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
-                "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
+                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n\n"+
                 "SELECT DISTINCT ?gene ?ortholog ?orthologLabel ?name {\n"+
                 "?gene sio:SIO_000558 ?ortholog .\n"+
                 "?gene obo:RO_0002162 ?taxon .\n"+
@@ -452,20 +356,10 @@ var exampleQueries = [
                 shortname: "Do it like Biomart Query 1",
                 description: "Get all exons for a given list of transcripts",
                 query:
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
                 "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
-                "PREFIX identifiers: <http://identifiers.org/>\n"+
-                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
                 "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
-                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
-                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
-                "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
+                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n\n"+
                 "SELECT ?transcript ?exon ?id ?order ?begin ?end ?strand{\n"+
                 "?transcript obo:SO_has_part ?exon;\n"+
                 "sio:SIO_000974 ?orderedPart .\n"+
@@ -488,51 +382,31 @@ var exampleQueries = [
                 shortname: "Do it like Biomart Query 2",
                 description: "Find all non-Ensembl references for features that have EMBL references",
                 query:
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
                 "PREFIX identifiers: <http://identifiers.org/>\n"+
-                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
-                "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
-                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
-                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
-                "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
                 "SELECT ?feature ?dbentry ?other_dbentry ?property WHERE {\n"+
                 "?feature rdfs:seeAlso ?dbentry .\n"+
                 "?dbentry rdf:type identifiers:ena.embl  .\n"+
                 "?feature rdfs:seeAlso ?other_dbentry .\n"+
-                "FILTER ( ?dbentry != ?other_dbentry )\n"
+                "FILTER ( ?dbentry != ?other_dbentry )\n"+
+                "}"
             },
             {
                 shortname: "Do it like Biomart Query 3",
                 description: "Retrieve a list of external references from accessions you know, e.g. Uniprot IDs to all related accessions",
                 query:
-                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/>\n"+
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/>\n"+
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
-                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n"+
-                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
-                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
-                "PREFIX identifiers: <http://identifiers.org/>\n"+
-                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
-                "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
-                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
-                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
                 "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
-                "SELECT DISTINCT ?feature ?dbentry ?property ?dbentry2 WHERE {\n"+
-                "?feature ?property ?dbentry .\n"+
-                "?property rdfs:subPropertyOf* skos:related .\n"+
-                "?feature ?property2 ?dbentry2 .\n"+
-                "VALUES ?dbentry { <http://purl.uniprot.org/uniprot/O15409> }\n"+
-                "FILTER ( ?dbentry != ?dbentry2 )\n"+
+                "SELECT DISTINCT ?feature ?dbentry ?property ?dbentry2 WHERE { \n"+
+                "  ?feature ?property ?dbentry .\n"+
+                "  ?feature ?property2 ?dbentry2 .\n"+
+                "  ?dbentry a ensemblterms:EnsemblDBEntry .\n"+
+                "  ?dbentry2 a ensemblterms:EnsemblDBEntry .\n"+
+                "   VALUES ?dbentry { <http://purl.uniprot.org/uniprot/O15409> }\n"+
+                "   FILTER ( ?dbentry != ?dbentry2 )\n"+
                 "}"
+
+
+
+
             }
         ]
 
@@ -707,8 +581,6 @@ var exampleQueries = [
                 shortname: "Gene Ontology Query",
                 description: "Get all terms and labels from the Gene Ontology",
                 query:
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
                 "SELECT ?class ?label\n"+
                 "FROM <http://rdf.ebi.ac.uk/dataset/go>\n"+
                 "   WHERE {\n"+
@@ -738,9 +610,6 @@ var exampleQueries = [
                 shortname: "Children of GO",
                 description: "Get all children of “cellular process” from the Gene Ontology ",
                 query:
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"+
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n"+
-                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
                 "SELECT ?child ?childLabel\n"+
                 "FROM <http://rdf.ebi.ac.uk/dataset/go> \n"+
                 "       WHERE {\n"+
@@ -753,7 +622,6 @@ var exampleQueries = [
                 shortname: "Print a list of all subClasses",
                 description: "Show all children for the term 'cell' from the cell ontology (cl)",
                 query:
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
                 "SELECT ?subject ?label ?altTerm \n" +
                 "from <http://rdf.ebi.ac.uk/dataset/cl> \n" +
                 "    WHERE { \n" +
@@ -767,9 +635,6 @@ var exampleQueries = [
                 shortname : "Query for a Label in all terms",
                 description:"Find all terms that mention 'alzheimer' in the label",
                 query:
-                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
-                "PREFIX owl: <http://www.w3.org/2002/07/owl#> \n"+
-                "PREFIX dcterms: <http://purl.org/dc/terms/> \n"+
                 "SELECT DISTINCT  ?class ?label\n"+
                 "WHERE {\n"+
                 "<http://rdf.ebi.ac.uk/dataset/ols> dcterms:hasPart  ?allOlsOntologiesGraph  . \n"+
@@ -787,7 +652,6 @@ var exampleQueries = [
             shortname : "Searching for cross references",
             description:"  Get cross references to DOID_10652 (Alzheimer's disease) from the disease ontology",
             query:
-            "PREFIX obo: <http://purl.obolibrary.org/obo/> \n"+
             "PREFIX oboInOWL: <http://www.geneontology.org/formats/oboInOwl#> \n"+
             "SELECT DISTINCT  ?xref\n"+
             "WHERE {\n"+
@@ -830,5 +694,37 @@ var exampleQueries = [
 
         ]
 
-    }*/
+    }* /
+
+
+{   category: "FederatedQuery",
+    queries: [
+        {
+            shortname: "Query connecting Ensemble and Uniprot endpoints",
+            description: "Get protein information from Uniprot that Ensembl has associated with ENSG00000139618 via a federated query",
+            query:
+                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
+                "PREFIX sio: <http://semanticscience.org/resource/>\n"+
+                "PREFIX faldo: <http://biohackathon.org/resource/faldo#>\n"+
+                "PREFIX identifiers: <http://identifiers.org/>\n"+
+                "PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>\n"+
+                "PREFIX ensembltranscript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>\n"+
+                "PREFIX ensemblexon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>\n"+
+                "PREFIX ensemblprotein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>\n"+
+                "PREFIX ensemblterms: <http://rdf.ebi.ac.uk/terms/ensembl/>\n"+
+                "PREFIX core: <http://purl.uniprot.org/core/>\n"+
+                "SELECT ?uniprot_id ?uniprot_uri ?isoform ?seq {\n"+
+                "   ensembl:ENSG00000128573 ensemblterms:DEPENDENT ?uniprot_uri .\n"+
+                "    ?uniprot_uri dc:identifier ?uniprot_id .\n"+
+                "    SERVICE <http://sparql.uniprot.org/sparql> {\n"+
+                " ?uniprot_uri core:sequence ?isoform .\n"+
+                "?isoform rdf:value ?seq . \n"+
+                "  } \n"+
+                "}"
+
+        }
+    ]
+
+}*/
+
 ]
