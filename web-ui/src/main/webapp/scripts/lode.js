@@ -406,7 +406,7 @@ function _buildSparqlPage(element) {
             '<div class="tabs-content" data-tabs-content="example-tabs">' +
             '<div id="resultTab" class="tabs-panel">' +
             '<div id="pagination" class="pagination-banner"></div> ' +
-            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"><th>No results without query!</th></table></div>' +
+            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"></table></div>' +
             '</div>' +
             '<div id="historyTab" class="tabs-panel historyTab"></div>' +
             '<div id="namedGraphTab" class="tabs-panel"></div>' +
@@ -419,7 +419,7 @@ function _buildSparqlPage(element) {
             '<div class="tabs-content" data-tabs-content="example-tabs">' +
             '<div id="resultTab" class="tabs-panel">' +
             '<div id="pagination" class="pagination-banner"></div> ' +
-            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"><th>No results without query!</th></table></div>' +
+            '<div style="padding: 5px; width:99%;overflow: auto;"><table id="loadstar-results-table"></table></div>' +
             '</div>' +
             '</div>')
     }
@@ -870,7 +870,6 @@ function renderSparqlResultJsonAsTable (json, tableid) {
                         var _results = _json.results.bindings;
 
                         if (_results.length ==0) {
-                           // alert("No results for query")
                             $("#resultTab").html("No results for this query!")
                         }
                         else {
