@@ -610,6 +610,7 @@ var exampleQueries = [
                 shortname: "Children of GO",
                 description: "Get all children of “cellular process” from the Gene Ontology ",
                 query:
+                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n\n"+
                 "SELECT ?child ?childLabel\n"+
                 "FROM <http://rdf.ebi.ac.uk/dataset/go> \n"+
                 "       WHERE {\n"+
@@ -652,6 +653,7 @@ var exampleQueries = [
             shortname : "Searching for cross references",
             description:"  Get cross references to DOID_10652 (Alzheimer's disease) from the disease ontology",
             query:
+            "PREFIX obo: <http://purl.obolibrary.org/obo/>\n\n"+
             "PREFIX oboInOWL: <http://www.geneontology.org/formats/oboInOwl#> \n"+
             "SELECT DISTINCT  ?xref\n"+
             "WHERE {\n"+
