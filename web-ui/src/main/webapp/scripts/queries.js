@@ -165,6 +165,7 @@ var exampleQueries = [
                 query:
                 "PREFIX biosd-terms: <http://rdf.ebi.ac.uk/terms/biosd/>\n"+
                 "PREFIX sio: <http://semanticscience.org/resource/>\n"+
+                "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
                 "#\n"+
                 "## Samples with temperature attributes. DO REQUIRE Inference enabled\n"+
                 "#\n"+
@@ -696,13 +697,13 @@ var exampleQueries = [
 
         ]
 
-    }* /
+    }*/
 
 
 {   category: "FederatedQuery",
     queries: [
         {
-            shortname: "Query connecting Ensemble and Uniprot endpoints",
+            shortname: "Query connecting Ensemble with Uniprot endpoint",
             description: "Get protein information from Uniprot that Ensembl has associated with ENSG00000139618 via a federated query",
             query:
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
@@ -727,6 +728,13 @@ var exampleQueries = [
         }
     ]
 
-}*/
+}
 
 ]
+
+
+function returnExampleQueries(){
+    console.log(exampleQueries)
+    console.log(JSON.stringify(exampleQueries));
+    return exampleQueries;
+}

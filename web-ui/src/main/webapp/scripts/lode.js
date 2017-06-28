@@ -122,7 +122,7 @@ function namedGraphPopup(){
         "?namedGraph <http://purl.org/pav/hasCurrentVersion> ?c ." +
         "?namedGraph <http://purl.org/dc/terms/title> ?title ." +
         "?namedGraph <http://purl.org/dc/terms/description> ?description" +
-        "}"
+        "} #noLog"
 
     $("#namedGraphTab").html("Loading named Graphs...")
     $.ajax ( {
@@ -1193,46 +1193,49 @@ function renderResourceTypes(element) {
             type: 'GET',
             url: loadstarExploreService + "/resourceTypes?" + queryString,
             success: function (data){
-
                 loading.empty();
                 if (data.length > 0) {
                     var div = element;
                     if (data[0].relatedObjects.length > 0) {
-                        var about = $("<h3 class='side'>Type: </h3>");
-                        var span = $("<span style='font-size:larger'></span>");
+
                         var uriset = {};
-                        uriset[data[0].relatedObjects[0].uri] = true;
-                        span.append (_hrefBuilder(data[0].relatedObjects[0].uri, data[0].relatedObjects[0].label, true));
-                        div.append(about);
-                        div.append(span);
                         var p = $("<p></p>");
-                        p.append(data[0].relatedObjects[0].description);
 
-                        for (var x = 1; x < data.length; x ++) {
+                        //Looping over other types for this entity if the exist!
+                        for (var z = 0; z <data[0].relatedObjects.length; z++) {
 
-                            for (var z = 0; z <data[x].relatedObjects.length; z++) {
+                            var about = $("<h3 class='side'>Type: </h3>");
+                            var span = $("<span style='font-size:larger'></span>");
 
-                                var description = data[x].relatedObjects[z].description;
-                                var uri = data[x].relatedObjects[z].uri;
-                                uriset[uri] = true;
-                                var label = data[x].relatedObjects[z].label;
 
-                                p.append(_hrefBuilder(uri, label, true));
-                                if (description) {
-                                    p.append(" : ");
-                                    p.append(description)
-                                }
-                                p.append($("<br/>"));
+
+                            var description = data[0].relatedObjects[z].description;
+                            var uri = data[0].relatedObjects[z].uri;
+                            uriset[uri] = true;
+                            var label = data[0].relatedObjects[z].label;
+
+                            p.append($("<br/>"));
+                            p.append(about);
+                            p.append(span);
+                            p.append (_hrefBuilder(uri,label, true));
+                            p.append($("<br/>"));
+
+                            if (description){
+                                p.append(description)
                             }
-                        }
-                        p.append($("<br/>"));
+                            else{
+                                p.append("No description available")
+                            }
 
-                        p.append("<span class='moreTypes'>more types...</span>").click(function() {
+                        }
+
+                        p.append($("<br/><br/>"));
+                        p.append($("<span class='moreTypes'><a>Get types of parent objects</a></span>").click(function() {
                             if ($('span.moreTypes').length>0){
                                 $('span.moreTypes').remove();
                                 renderAllResourceTypes(p, uriset);
                             }
-                        });
+                        }));
                         div.append(p);
                     }
                 }
