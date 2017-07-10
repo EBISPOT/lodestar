@@ -1550,7 +1550,7 @@ function renderRelatedFromSubjects(element) {
         var loadingimg = $('<img />');
         loadingimg.attr('src', 'images/ajax-loader.gif');
         loadingimg.attr('alt', '.');
-        var loading = $('<p>Fetching related from data...</p>').append(loadingimg);
+        var loading = $('<p id="fetchRelated">Fetching related from data...</p>').append(loadingimg);
         element.append(loading);
 
         $.ajax ( {
