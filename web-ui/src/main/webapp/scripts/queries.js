@@ -703,8 +703,8 @@ var exampleQueries = [
 {   category: "FederatedQuery",
     queries: [
         {
-            shortname: "Query connecting Ensemble with Uniprot endpoint",
-            description: "Get protein information from Uniprot that Ensembl has associated with ENSG00000139618 via a federated query",
+            shortname: "Query connecting Ensembl with UniProt endpoint",
+            description: "Get protein information from UniProt that Ensembl has associated with ENSG00000139618 via a federated query",
             query:
                 "PREFIX obo: <http://purl.obolibrary.org/obo/>\n"+
                 "PREFIX sio: <http://semanticscience.org/resource/>\n"+
