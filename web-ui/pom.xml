@@ -69,6 +69,16 @@
 
     <profiles>
         <profile>
+            <id>virtuoso</id>
+            <dependencies>
+                <dependency>
+                    <groupId>ebi-lode</groupId>
+                    <artifactId>lode-virtuoso-impl</artifactId>
+                    <version>1.4-SNAPSHOT</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>local-wapp</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
