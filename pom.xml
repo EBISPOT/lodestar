@@ -1,18 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>ebi-lode</groupId>
-    <artifactId>ebi-lode</artifactId>
-    <packaging>pom</packaging>
-    <version>1.4-SNAPSHOT</version>
-    <modules>
-        <module>lode-core-api</module>
-        <module>web-ui</module>
-        <module>lode-core-servlet</module>
-    </modules>
-    <name>ebi-lode Maven Webapp</name>
-    <url>http://maven.apache.org</url>
 
     <properties>
+        <lodestar.version>1.4-SNAPSHOT</lodestar.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.springframework.version>4.3.3.RELEASE</org.springframework.version>
         <org.slf4j.version>1.7.12</org.slf4j.version>
@@ -21,6 +10,19 @@
         <snapshot.repo.url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</snapshot.repo.url>
         <site.url>scp://orange.ebi.ac.uk/ebi/microarray/home/fgpt/project-web/lodestar</site.url>
     </properties>
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ebi-lode</groupId>
+    <artifactId>ebi-lode</artifactId>
+    <packaging>pom</packaging>
+    <version>${lodestar.version}</version>
+    <modules>
+        <module>lode-core-api</module>
+        <module>web-ui</module>
+        <module>lode-core-servlet</module>
+    </modules>
+    <name>ebi-lode Maven Webapp</name>
+    <url>http://maven.apache.org</url>
 
 
     <build>
