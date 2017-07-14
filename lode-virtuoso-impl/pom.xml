@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <properties>
+        <lodestar.version>1.4-SNAPSHOT</lodestar.version>
+    </properties>
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.4-SNAPSHOT</version>
+        <version>${lodestar.version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>lode-virtuoso-impl</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>${lodestar.version}</version>
 
     <dependencies>
 
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-servlet</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-api</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
 
@@ -42,13 +45,5 @@
 
         <!-- end internal jars -->
     </dependencies>
-
-    <repositories>
-        <repository>
-                <id>coconut.ebi.ac.uk</id>
-                <name>coconut.ebi.ac.uk-releases</name>
-                <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
-            </repository>
-    </repositories>
 
 </project>

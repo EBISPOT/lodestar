@@ -1,12 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <properties>
+        <lodestar.version>1.4-SNAPSHOT</lodestar.version>
+    </properties>
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.4-SNAPSHOT</version>
+        <version>${lodestar.version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>web-ui</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>${lodestar.version}</version>
     <packaging>war</packaging>
     <name>web-ui Maven Webapp</name>
     <url>http://maven.apache.org</url>
@@ -52,8 +55,14 @@
 
         <dependency>
             <groupId>ebi-lode</groupId>
+            <artifactId>lode-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ebi-lode</groupId>
             <artifactId>lode-core-servlet</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -68,6 +77,16 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>virtuoso</id>
+            <dependencies>
+                <dependency>
+                    <groupId>ebi-lode</groupId>
+                    <artifactId>lode-virtuoso-impl</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>local-wapp</id>
             <activation>
