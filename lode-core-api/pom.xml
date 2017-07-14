@@ -7,10 +7,9 @@
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>${lodestar.version}</version>
+        <version>1.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>${lodestar.version}</version>
     <artifactId>lode-core-api</artifactId>
     <dependencies>
 
