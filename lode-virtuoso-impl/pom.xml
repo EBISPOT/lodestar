@@ -25,9 +25,6 @@
         </dependency>
 
 
-        <!-- These are jars required to run Jena with the openlink virtuoso jdbc adaptor
-            cuurently loaded into internal artifactory, so will break build for external developers
-            -->
         <dependency>
             <groupId>openlinksw.com</groupId>
             <artifactId>virt-jena</artifactId>
@@ -40,14 +37,13 @@
         </dependency>
 
 
-        <!-- end internal jars -->
     </dependencies>
 
     <repositories>
         <repository>
-                <id>coconut.ebi.ac.uk</id>
-                <name>coconut.ebi.ac.uk-releases</name>
-                <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
+                <id>spot-public</id>
+                <name>nexus-public</name>
+                <url>https://www.ebi.ac.uk/spot/nexus/repository/maven-public/</url>
             </repository>
     </repositories>
 
