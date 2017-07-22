@@ -77,24 +77,37 @@
         </plugins>
     </reporting>
 
+    <repositories>
+   	    <repository>
+   	        <id>nexus-public</id>
+   	        <name>Public Repository</name>
+   	        <url>https://www.ebi.ac.uk/spot/nexus/repository/maven-public/</url>
+   	        <releases>
+   	            <enabled>true</enabled>
+   	        </releases>
+   	        <snapshots>
+   	            <enabled>true</enabled>
+   	        </snapshots>
+   	    </repository>
+   	</repositories>
+    
     <!-- Maven repository deploy -->
     <distributionManagement>
-        <repository>
-            <id>coconut.ebi.ac.uk</id>
-            <name>coconut.ebi.ac.uk</name>
-            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
-        </repository>
-        <snapshotRepository>
-            <id>coconut.ebi.ac.uk</id>
-            <name>coconut.ebi.ac.uk-snapshots</name>
-            <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
-        </snapshotRepository>
-        <site>
-            <id>lodestar-site</id>
-            <name>lodestar site</name>
-            <url>scp://orange.ebi.ac.uk/ebi/microarray/home/fgpt/project-web/lodestar</url>
-        </site>
-    </distributionManagement>
+   		<repository>
+   			<id>nexus-release</id>
+   			<name>Releases</name>
+   			<url>https://www.ebi.ac.uk/spot/nexus/repository/maven-releases/</url>
+   		</repository>
+   		<snapshotRepository>
+   			<id>nexus-snapshot</id>
+   			<name>Snapshot</name>
+   			<url>https://www.ebi.ac.uk/spot/nexus/repository/maven-snapshots/</url>
+   		</snapshotRepository>
+   		<site>
+   			<id>nexus-site</id>
+   			<url>dav:https://www.ebi.ac.uk/spot/nexus/repository/spot-spring-security-site/</url>
+   		</site>
+   	</distributionManagement>
 
     <profiles>
         <profile>

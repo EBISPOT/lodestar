@@ -43,12 +43,4 @@
         <!-- end internal jars -->
     </dependencies>
 
-    <repositories>
-        <repository>
-                <id>coconut.ebi.ac.uk</id>
-                <name>coconut.ebi.ac.uk-releases</name>
-                <url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</url>
-            </repository>
-    </repositories>
-
 </project>
