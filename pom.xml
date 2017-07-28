@@ -6,9 +6,8 @@
         <org.springframework.version>4.3.3.RELEASE</org.springframework.version>
         <org.slf4j.version>1.7.12</org.slf4j.version>
         <log4j.version>1.2.17</log4j.version>
-        <release.repo.url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</release.repo.url>
-        <snapshot.repo.url>http://coconut.ebi.ac.uk:8081/artifactory/local-repo</snapshot.repo.url>
-        <site.url>scp://orange.ebi.ac.uk/ebi/microarray/home/fgpt/project-web/lodestar</site.url>
+        <release.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-releases/</release.repo.url>
+        <snapshot.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-snapshots/</snapshot.repo.url>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
@@ -107,19 +106,14 @@
     <distributionManagement>
         <repository>
             <id>release-local</id>
-            <name>Repository for lodestar releases</name>
+            <name>Releases</name>
             <url>${release.repo.url}</url>
         </repository>
         <snapshotRepository>
             <id>snapshot-local</id>
-            <name>Repository for lodestar snapshots</name>
+            <name>Snapshot</name>
             <url>${snapshot.repo.url}</url>
         </snapshotRepository>
-        <site>
-            <id>site</id>
-            <name>lodestar site</name>
-            <url>${site.url}</url>
-        </site>
     </distributionManagement>
 
     <profiles>
