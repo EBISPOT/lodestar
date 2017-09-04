@@ -325,7 +325,7 @@ var exampleQueries = [
                 "?location faldo:end\n"+
                 "[a faldo:ForwardStrandPosition ;\n"+
                 "faldo:position ?end] .\n"+
-                "?location faldo:reference <http://rdf.ebi.ac.uk/resource/ensembl/89/mus_musculus/GRCm38/11> .\n"+
+                "?location faldo:reference <http://rdf.ebi.ac.uk/resource/ensembl/90/mus_musculus/GRCm38/11> .\n"+
                 "?gene a ?type ;\n"+
                 "rdfs:label ?label ;\n"+
                 "dc:description ?desc ;\n"+
