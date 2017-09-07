@@ -23,21 +23,18 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- These are jars required to run Jena with the openlink virtuoso jdbc adaptor
-            cuurently loaded into internal artifactory, so will break build for external developers
-            -->
         <dependency>
             <groupId>openlinksw.com</groupId>
             <artifactId>virt-jena</artifactId>
             <version>2.12.1</version>
         </dependency>
+
         <dependency>
             <groupId>openlinksw.com</groupId>
             <artifactId>virt-jdbc</artifactId>
             <version>4.0.1</version>
         </dependency>
 
-        <!-- end internal jars -->
     </dependencies>
 
 </project>

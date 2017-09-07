@@ -49,7 +49,7 @@ public class ExplorerServlet {
     private ExploreService service;
     private SparqlService sparqlService;
 
-    @Value("${lode.explorer.service.baseuri}")
+    @Value("${lode.explorer.service.baseuri:}")
     private URI baseUri;
 
     public SparqlService getSparqlService() {
