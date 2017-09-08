@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -345,41 +346,48 @@ public class SparqlServlet {
     @ExceptionHandler(QueryParseException.class)
     public ResponseEntity<String> handleQueryException(QueryParseException e) {
         getLog().error(e.getMessage(), e);
-        return buildResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleParameterException(MethodArgumentTypeMismatchException e) {
         getLog().error(e.getMessage(), e);
         String typeName = (e.getRequiredType()==Integer.class ? "integer" : e.getRequiredType().toString());
-        String message = String.format("Parameter [%s] should be convertible to [%s]", e.getName(), typeName);
-        return buildResponseEntity(message, HttpStatus.BAD_REQUEST);
+        String message = String.format("Parameter [%s] should be a [%s]", e.getName(), typeName);
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentConversionNotSupportedException.class)
     public ResponseEntity<String> handleParameterException(MethodArgumentConversionNotSupportedException e) {
         getLog().error(e.getMessage(), e);
         String typeName = (e.getRequiredType()==Integer.class ? "integer" : e.getRequiredType().toString());
-        String message = String.format("Parameter [%s] should be convertible to [%s]", e.getName(), typeName);
-        return buildResponseEntity(message, HttpStatus.BAD_REQUEST);
+        String message = String.format("Parameter [%s] should be a [%s]", e.getName(), typeName);
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingParameterException(MissingServletRequestParameterException e) {
+        getLog().error(e.getMessage(), e);
+        String message = String.format("Parameter [%s] is required", e.getParameterName());
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LodeException.class)
     public ResponseEntity<String> handleLodException(LodeException e) {
         getLog().error(e.getMessage(), e);
-        return buildResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<String> handleIOException(IOException e) {
         getLog().error(e.getMessage(), e);
-        return buildResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
         getLog().error(e.getMessage(), e);
-        return buildResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -391,7 +399,7 @@ public class SparqlServlet {
      * @param status An HttpStatus code
      * @return Spring ResponseEntity<String> wrapping the string, content type, and status code.
      */
-    private ResponseEntity<String> buildResponseEntity(String message, HttpStatus status) {
+    private ResponseEntity<String> buildErrorResponse(String message, HttpStatus status) {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.CONTENT_TYPE, "text/plain; charset=utf-8");
         return new ResponseEntity<String>(message, headers, status);
