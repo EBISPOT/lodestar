@@ -4,7 +4,7 @@ ENV BUILD_DIR /tmp/lodestar/
 
 RUN mkdir $BUILD_DIR && \
   cd $BUILD_DIR && \
-  git clone https://github.com/amalic/lodestar.git
+  git clone https://github.com/EBISPOT/lodestar.git
 
 WORKDIR $BUILD_DIR/lodestar/
 
