@@ -3,15 +3,13 @@
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4.1</version>
     </parent>
-    <version>1.4-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>lode-core-servlet</artifactId>
 
     <dependencies>
-
 
         <!-- logging dependencies -->
         <dependency>
@@ -26,14 +24,11 @@
             <scope>runtime</scope>
         </dependency>
 
-
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -45,7 +40,7 @@
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-api</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
     </dependencies>
