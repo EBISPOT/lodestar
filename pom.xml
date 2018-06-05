@@ -118,23 +118,6 @@
     
     <!-- Maven repository deploy -->
     <distributionManagement>
-<<<<<<< HEAD
-   		<repository>
-   			<id>nexus-release</id>
-   			<name>Releases</name>
-   			<url>https://www.ebi.ac.uk/spot/nexus/repository/maven-releases/</url>
-   		</repository>
-   		<snapshotRepository>
-   			<id>nexus-snapshot</id>
-   			<name>Snapshot</name>
-   			<url>https://www.ebi.ac.uk/spot/nexus/repository/maven-snapshots/</url>
-   		</snapshotRepository>
-   		<site>
-   			<id>nexus-site</id>
-   			<url>dav:https://www.ebi.ac.uk/spot/nexus/repository/spot-spring-security-site/</url>
-   		</site>
-   	</distributionManagement>
-=======
         <repository>
             <id>release-local</id>
             <name>Releases</name>
@@ -146,7 +129,6 @@
             <url>${snapshot.repo.url}</url>
         </snapshotRepository>
     </distributionManagement>
->>>>>>> master
 
     <profiles>
         <profile>
