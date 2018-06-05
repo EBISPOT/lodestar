@@ -2,16 +2,14 @@
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>web-ui</artifactId>
-    <version>1.4-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>web-ui Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
-
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -23,8 +21,7 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
-
+            <version>${log4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -35,16 +32,38 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- NOTE: Tomcat 7 is providing JSP API 3.0; be careful -->
         <dependency>
-            <groupId>ebi-lode</groupId>
-            <artifactId>lode-core-servlet</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- NOTE: Tomcat 7 is providing JSP API 2.2; be careful -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
-        <groupId>org.tuckey</groupId>
-        <artifactId>urlrewritefilter</artifactId>
-        <version>4.0.3</version>
+            <groupId>ebi-lode</groupId>
+            <artifactId>lode-core-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ebi-lode</groupId>
+            <artifactId>lode-core-servlet</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.tuckey</groupId>
+            <artifactId>urlrewritefilter</artifactId>
+            <version>4.0.3</version>
         </dependency>
 
     </dependencies>
@@ -53,6 +72,16 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>virtuoso</id>
+            <dependencies>
+                <dependency>
+                    <groupId>ebi-lode</groupId>
+                    <artifactId>lode-virtuoso-impl</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>local-wapp</id>
             <activation>

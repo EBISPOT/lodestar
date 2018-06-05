@@ -1,14 +1,18 @@
 package uk.ac.ebi.fgpt.lode.servlet;
 
-
-
 import com.hp.hpl.jena.query.QueryParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.SparqlService;
 import uk.ac.ebi.fgpt.lode.utils.GraphQueryFormats;
@@ -19,8 +23,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 
 
 /**
@@ -59,7 +61,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql xml");
-        response.setContentType("application/sparql-results+xml");
         query(query, "XML", offset, limit, inference, response);
     }
 
@@ -73,7 +74,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql json");
-        response.setContentType("application/sparql-results+json");
         query(query, "JSON", offset, limit, inference, response);
     }
 
@@ -87,7 +87,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql csv");
-        response.setContentType("text/csv");
         query(query, "CSV", offset, limit, inference, response);
     }
 
@@ -101,7 +100,6 @@ public class SparqlServlet {
 
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql tsv");
-        response.setContentType("text/tab-separated-values");
         query(query, "TSV", offset, limit, inference, response);
     }
 
@@ -111,9 +109,9 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+xml");
-        response.setContentType("application/rdf+xml");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+xml; charset=utf-8");
             sparqlService.getServiceDescription(out, "RDF/XML");
         }
         else {
@@ -133,9 +131,9 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+n3");
-        response.setContentType("application/rdf+n3");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+n3; charset=utf-8");
             sparqlService.getServiceDescription(out, "N3");
         }
         else {
@@ -155,9 +153,9 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph rdf+json");
-        response.setContentType("application/rdf+json");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
+            response.setContentType("application/rdf+json; charset=utf-8");
             sparqlService.getServiceDescription(out, "JSON-LD");
         }
         else {
@@ -177,7 +175,7 @@ public class SparqlServlet {
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph text/plain (rdf+ntriples)");
-        response.setContentType("text/plain");
+        response.setContentType("text/plain; charset=utf-8");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
             getSparqlService().getServiceDescription(out, "N-TRIPLES");
@@ -193,16 +191,16 @@ public class SparqlServlet {
         }
     }
 
-    @RequestMapping (produces="application/x-turtle")
+    @RequestMapping (produces="text/turtle")
     public @ResponseBody
     void getGraphTurtle(
             @RequestParam(value = "query", required = false) String query,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for graph turtle");
-        response.setContentType("application/x-turtle");
         ServletOutputStream out = response.getOutputStream();
         if (query == null) {
-            sparqlService.getServiceDescription(out, "x-turtle");
+            response.setContentType("text/turtle; charset=utf-8");
+            sparqlService.getServiceDescription(out, "TURTLE");
         }
         else {
             getSparqlService().query(
@@ -250,8 +248,18 @@ public class SparqlServlet {
         ServletOutputStream out = response.getOutputStream();
 
         if (query == null) {
-            response.setContentType("text/plain");
-            getSparqlService().getServiceDescription(out, "N3");
+            // Default to format N3 unless an acceptable format is given
+            if (format == null || !(format.equals("TURTLE")
+                    || format.equals("N-TRIPLES")
+                    || format.equals("JSON-LD")
+                    || format.equals("N3")
+                    || format.equals("RDF/XML"))) {
+                response.setContentType("text/plain; charset=utf-8");
+                sparqlService.getServiceDescription(out, "N3");
+            } else {
+                response.setContentType( getMimeType(format));
+                sparqlService.getServiceDescription(out, format);
+            }
             out.close();
             return;
         }
@@ -262,17 +270,15 @@ public class SparqlServlet {
         if (outputFormat == null) {
             QueryType qType = getSparqlService().getQueryType(query);
             if (qType.equals(QueryType.BOOLEANQUERY) || qType.equals(QueryType.TUPLEQUERY)) {
-                response.setContentType("application/sparql-results+xml");
                 log.debug("no format, tuple query: setting format to XML");
                 outputFormat = TupleQueryFormats.XML.toString();
             }
             else if (qType.equals(QueryType.CONSTRUCTQUERY) || qType.equals(QueryType.DESCRIBEQUERY)) {
-                response.setContentType("application/rdf+xml");
                 outputFormat = GraphQueryFormats.RDFXML.toString();
             }
             else {
                 response.setStatus(406);
-                response.setContentType("text/plain");
+                response.setContentType("text/plain; charset=utf-8");
                 out.println("406 Not Acceptable: Can't handle this query type");
                 out.println("Supported queries are BOOLEAN, SELECT, CONSTRUCT, DESCRIBE, ASK and SERVICE");
                 out.close();
@@ -282,15 +288,16 @@ public class SparqlServlet {
         }
 
         if (validFormat(outputFormat)) {
-                getSparqlService().query(
-                        query,
-                        outputFormat.toUpperCase(),
-                        offset,
-                        limit,
-                        inference,
-                        out
-                );
-                out.close();
+            response.setContentType( getMimeType(outputFormat) );
+            getSparqlService().query(
+                query,
+                outputFormat.toUpperCase(),
+                offset,
+                limit,
+                inference,
+                out
+            );
+            out.close();
         }
         else {
             response.setStatus(406);
@@ -319,32 +326,84 @@ public class SparqlServlet {
 
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    private String getMimeType(String format) {
+
+        for (GraphQueryFormats gf : GraphQueryFormats.values()) {
+            if (format.toUpperCase().equals(gf.toString())) {
+                return gf.toMimeType()+"; charset=utf-8";
+            }
+        }
+
+        for (TupleQueryFormats tf : TupleQueryFormats.values()) {
+            if (format.toUpperCase().equals(tf.toString())) {
+                return tf.toMimeType()+"; charset=utf-8";
+            }
+        }
+
+        return "text/plain; charset=utf-8" ;
+    }
+
     @ExceptionHandler(QueryParseException.class)
-    public @ResponseBody String handleQueryException(QueryParseException e) {
+    public ResponseEntity<String> handleQueryException(QueryParseException e) {
         getLog().error(e.getMessage(), e);
-        return e.getMessage();
+        return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleParameterException(MethodArgumentTypeMismatchException e) {
+        getLog().error(e.getMessage(), e);
+        String typeName = (e.getRequiredType()==Integer.class ? "integer" : e.getRequiredType().toString());
+        String message = String.format("Parameter [%s] should be a [%s]", e.getName(), typeName);
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentConversionNotSupportedException.class)
+    public ResponseEntity<String> handleParameterException(MethodArgumentConversionNotSupportedException e) {
+        getLog().error(e.getMessage(), e);
+        String typeName = (e.getRequiredType()==Integer.class ? "integer" : e.getRequiredType().toString());
+        String message = String.format("Parameter [%s] should be a [%s]", e.getName(), typeName);
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingParameterException(MissingServletRequestParameterException e) {
+        getLog().error(e.getMessage(), e);
+        String message = String.format("Parameter [%s] is required", e.getParameterName());
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(LodeException.class)
-    public @ResponseBody String handleLodException(LodeException e) {
+    public ResponseEntity<String> handleLodException(LodeException e) {
         getLog().error(e.getMessage(), e);
-        return e.getMessage();
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IOException.class)
-    public @ResponseBody String handleIOException(IOException e) {
+    public ResponseEntity<String> handleIOException(IOException e) {
         getLog().error(e.getMessage(), e);
-        return e.getMessage();
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public @ResponseBody String handleException(Exception e) {
+    public ResponseEntity<String> handleException(Exception e) {
         getLog().error(e.getMessage(), e);
-        return e.getMessage();
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * All exception handlers call this method to assure that the Sparql endpoint returns text/plain.
+     * This assures that the browser will not attempt to execute any malicious scripts in the URL,
+     * and thus prevent XSS attacks.
+     *
+     * @param message A string message, formatted by the caller
+     * @param status An HttpStatus code
+     * @return Spring ResponseEntity<String> wrapping the string, content type, and status code.
+     */
+    private ResponseEntity<String> buildErrorResponse(String message, HttpStatus status) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/plain; charset=utf-8");
+        return new ResponseEntity<String>(message, headers, status);
+
+    }
+
 }
