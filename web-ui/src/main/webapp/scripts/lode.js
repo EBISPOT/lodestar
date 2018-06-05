@@ -970,9 +970,10 @@ function setExampleQueries() {
         if (exampleQueries.length > 0) {
 
             for (var j=0;j<exampleQueries.length; j++) {
-                var category = exampleQueries[j].category;
+                var categoryLabel = exampleQueries[j].category;
+                var category = exampleQueries[j].category.replace(" ", "_");
 
-                $('#queries_list').append("<h4><a id=cat_"+category+">"+category+"</a><h4>");
+                $('#queries_list').append("<h4><a id=cat_"+category+">"+categoryLabel+"</a><h4>");
                 $('#queries_list').append("<div id=queries_cat_"+category+" class='list_exampleQueries'></div>")
 
                 $("#cat_"+category).click(function(){

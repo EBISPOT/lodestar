@@ -14,7 +14,7 @@ var activateQueryHistory=false;
 
 var exampleQueries = [
     {
-        category: "Example",
+        category: "DBpedia example",
         queries:[
             {
                 shortname : "Example Query 1",
