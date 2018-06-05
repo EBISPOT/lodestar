@@ -427,7 +427,6 @@ function _buildSparqlPage(element) {
 
     resultsSection.append(tabs)
 
-
     element.append(resultsSection);
 
 }
@@ -624,7 +623,7 @@ function updateHistoryTab(query, numerOfRows, headings){
     if (query!="") {
         if (queryHistory == null) {
             queryHistory = [{"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings}]
-            }
+        }
         else {
                 //queryHistory.push({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
                 queryHistory.unshift({"query": query, "date": Date(), "description": "You can put a description here", "rows": numerOfRows, "headings":headings})
@@ -729,6 +728,7 @@ function updateHistoryTab(query, numerOfRows, headings){
     }
 
 }
+
 
 /*
 if we want that effect, we have to add onfocus='highlight("+i+")' to entry.html
@@ -1039,7 +1039,8 @@ function setExampleQueries() {
         if (exampleQueries.length > 0) {
 
             for (var j=0;j<exampleQueries.length; j++) {
-                var category = exampleQueries[j].category;
+                var categoryLabel = exampleQueries[j].category;
+                var category = exampleQueries[j].category.replace(" ", "_");
 
                 $('#queries_list').append("<a class='exampleCategorieslinks' id=cat_"+category+">"+category+"</a><br>");
                 $('#queries_list').append("<div id=queries_cat_"+category+" class='list_exampleQueries'></div>")
@@ -1567,7 +1568,6 @@ function renderRelatedFromSubjects(element) {
 
                     element.append(about);
                     element.append(div);
-
 
                     for (var x = 0; x < data.length; x ++) {
 

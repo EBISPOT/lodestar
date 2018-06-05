@@ -30,7 +30,7 @@
         <constructor-arg ref="virtuosoDataSourceProvider"/>
     </bean>
 
-    <!-- JNDI based datasource provider -->
+     <!--JNDI based datasource provider -->
 
     <!--<bean id="virtuosoDataSourceProvider" class="uk.ac.ebi.fgpt.lode.impl.VirtuosoDatasourceProvider">-->
         <!--<constructor-arg name="endpointUrl" value="${lode.sparqlendpoint.url}"/>-->

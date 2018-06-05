@@ -77,7 +77,6 @@ public class JenaSparqlService implements SparqlService {
         this.queryExecutionService = queryExecutionService;
     }
 
-
     public Collection<Element> getAllElements(Collection<Element> elements) {
 
         Collection<Element> elements1 = new HashSet<Element>();
@@ -241,6 +240,8 @@ public class JenaSparqlService implements SparqlService {
         {
             logInfo = "There was no request class";
         }
+      
+    public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException {
 
         try {
 
@@ -350,7 +351,6 @@ public class JenaSparqlService implements SparqlService {
         return "".equals(o);
     }
 
-
     private void executeConstructQuery(Query q1, String format, OutputStream output, String logInfo) {
         long startTime = System.currentTimeMillis();
         //log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
@@ -445,7 +445,6 @@ public class JenaSparqlService implements SparqlService {
         Graph g=getQueryExecutionService().getDefaultGraph();
 
         try {
-
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, inference);
             ResultSet results = endpoint.execSelect();
             long endTime = System.currentTimeMillis();

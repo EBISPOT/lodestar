@@ -4,9 +4,15 @@ import com.hp.hpl.jena.query.QueryParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.SparqlService;
 import uk.ac.ebi.fgpt.lode.utils.GraphQueryFormats;
@@ -273,6 +279,12 @@ public class SparqlServlet {
             return;
         }
 
+        log.info("Processing raw query:\n" + query + "\nEnd of query.");
+        //HERE WE COULD DO ADVANCED LOGGING TO FILE
+        // Adding HttpServletRequest request as parameter to this query method might enable us to ask for IP
+        // via request.getRemoteAddr() and similar methods, getting more information about the USER associated with a request
+
+        // if no format, try and work out the query type
         String outputFormat = format;
         if (outputFormat == null) {
             QueryType qType = getSparqlService().getQueryType(query);
@@ -305,6 +317,7 @@ public class SparqlServlet {
                 inference,
                 out,
                 request
+                out
             );
             out.close();
         }
@@ -372,19 +385,54 @@ public class SparqlServlet {
         return e.getMessage();
     }
 
+    @ExceptionHandler(MethodArgumentConversionNotSupportedException.class)
+    public ResponseEntity<String> handleParameterException(MethodArgumentConversionNotSupportedException e) {
+        getLog().error(e.getMessage(), e);
+        String typeName = (e.getRequiredType()==Integer.class ? "integer" : e.getRequiredType().toString());
+        String message = String.format("Parameter [%s] should be a [%s]", e.getName(), typeName);
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingParameterException(MissingServletRequestParameterException e) {
+        getLog().error(e.getMessage(), e);
+        String message = String.format("Parameter [%s] is required", e.getParameterName());
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(LodeException.class)
+    public ResponseEntity<String> handleLodException(LodeException e) {
+        getLog().error(e.getMessage(), e);
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(IOException.class)
     public @ResponseBody String handleIOException(IOException e, HttpServletRequest request) {
         getLog().error(e.getMessage().replace("\n"," ")+constructLogString(request), e);
         return e.getMessage();
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public @ResponseBody String handleException(Exception e, HttpServletRequest request) {
         getLog().error(request.toString());
         getLog().error(e.getMessage().replace("\n"," ")+constructLogString(request), e);
         return e.getMessage();
     }
+
+    /**
+     * All exception handlers call this method to assure that the Sparql endpoint returns text/plain.
+     * This assures that the browser will not attempt to execute any malicious scripts in the URL,
+     * and thus prevent XSS attacks.
+     *
+     * @param message A string message, formatted by the caller
+     * @param status An HttpStatus code
+     * @return Spring ResponseEntity<String> wrapping the string, content type, and status code.
+     */
+    private ResponseEntity<String> buildErrorResponse(String message, HttpStatus status) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/plain; charset=utf-8");
+        return new ResponseEntity<String>(message, headers, status);
+
+    }
+
 }
