@@ -16,10 +16,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.model.ShortResourceDescription;
 import uk.ac.ebi.fgpt.lode.model.ExplorerViewConfiguration;
@@ -95,11 +101,15 @@ public class ExplorerServlet {
         if (reluri == null || reluri.length() == 0) {
             return null;
         }
-        else if (baseUri != null) {
-            return baseUri.resolve(reluri);
-        }
-        else {
-            return URI.create(reluri);
+        try {
+            if (baseUri != null) {
+                return baseUri.resolve(reluri);
+            } else {
+                return URI.create(reluri);
+            }
+        } catch (IllegalArgumentException e) {
+            // Do not echo the URL because it may be an XSS attack
+            throw new IllegalArgumentException("Parameter [uri] should be an RFC 2396 compliant URI");
         }
     }
 
@@ -117,9 +127,8 @@ public class ExplorerServlet {
             out.println();
             getSparqlService().query(query, "RDF/XML", false, out);
             out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty ID request: " + uri));
+        } else {
+            throw new IllegalArgumentException("Parameter [uri] is required");
         }
     }
 
@@ -138,9 +147,8 @@ public class ExplorerServlet {
             out.println();
             getSparqlService().query(query, "N3", false, out);
             out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+        } else {
+            throw new IllegalArgumentException("Parameter [uri] is required");
         }
     }
 
@@ -159,9 +167,8 @@ public class ExplorerServlet {
             out.println();
             getSparqlService().query(query, "TURTLE", false, out);
             out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+        } else {
+            throw new IllegalArgumentException("Parameter [uri] is required");
         }
     }
 
@@ -180,9 +187,8 @@ public class ExplorerServlet {
             out.println();
             getSparqlService().query(query, "JSON-LD", false, out);
             out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+        } else {
+            throw new IllegalArgumentException("Parameter [uri] is required");
         }
     }
 
@@ -201,9 +207,8 @@ public class ExplorerServlet {
             out.println();
             getSparqlService().query(query, "N-TRIPLES", false, out);
             out.close();
-        }
-        else {
-            handleBadUriException(new Exception("Malformed or empty URI request: " + uri));
+        } else {
+            throw new IllegalArgumentException("Parameter [uri] is required");
         }
     }
 
@@ -249,7 +254,7 @@ public class ExplorerServlet {
             mv.addObject("resource_prefix", resource_prefix);
             return mv;
         } else {
-            throw new LodeException("Malformed or empty URI request: " + uri);
+            throw new IllegalArgumentException("Parameter [uri] is required");
         }
     }
 
@@ -387,25 +392,67 @@ public class ExplorerServlet {
         }
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleParameterException(MethodArgumentTypeMismatchException e) {
+        getLog().error(e.getMessage(), e);
+        String typeName = (e.getRequiredType()==Integer.class ? "integer" : e.getRequiredType().toString());
+        String message = String.format("Parameter [%s] should be a [%s]", e.getName(), typeName);
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentConversionNotSupportedException.class)
+    public ResponseEntity<String> handleParameterException(MethodArgumentConversionNotSupportedException e) {
+        getLog().error(e.getMessage(), e);
+        String typeName = (e.getRequiredType()==Integer.class ? "integer" : e.getRequiredType().toString());
+        String message = String.format("Parameter [%s] should be a [%s]", e.getName(), typeName);
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<String> handleMissingParameterException(MissingServletRequestParameterException e) {
+        getLog().error(e.getMessage(), e);
+        String message = String.format("Parameter [%s] is required", e.getParameterName());
+        return buildErrorResponse(message, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleBadUriException(IllegalArgumentException e)  {
+        getLog().error(e.getMessage(), e);
+        return buildErrorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
-    public @ResponseBody String handleBadUriException(Exception e)  {
+    public ResponseEntity<String> handleGenericException(Exception e)  {
         getLog().error(e.getMessage(), e);
-        return e.getMessage();
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(LodeException.class)
-    public @ResponseBody String handleLodException(LodeException e) {
+    public ResponseEntity<String> handleLodException(LodeException e) {
         getLog().error(e.getMessage(), e);
-        return e.getMessage();
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IOException.class)
-    public @ResponseBody String handleIOException(IOException e) {
+    public ResponseEntity<String> handleIOException(IOException e) {
         getLog().error(e.getMessage(), e);
-        return e.getMessage();
+        return buildErrorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * All exception handlers call this method to assure that the Sparql endpoint returns text/plain.
+     * This assures that the browser will not attempt to execute any malicious scripts in the URL,
+     * and thus prevent XSS attacks.
+     *
+     * @param message A string message, formatted by the caller
+     * @param status An HttpStatus code
+     * @return Spring ResponseEntity<String> wrapping the string, content type, and status code.
+     */
+    private ResponseEntity<String> buildErrorResponse(String message, HttpStatus status) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.CONTENT_TYPE, "text/plain; charset=utf-8");
+        return new ResponseEntity<String>(message, headers, status);
+
     }
 }

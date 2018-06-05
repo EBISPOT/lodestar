@@ -3,48 +3,38 @@
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.4.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>lode-virtuoso-impl</artifactId>
-    <version>1.4-SNAPSHOT</version>
 
     <dependencies>
 
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-servlet</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>ebi-lode</groupId>
             <artifactId>lode-core-api</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>openlinksw.com</groupId>
             <artifactId>virt-jena</artifactId>
-            <version>1.8</version>
+            <version>2.12.1</version>
         </dependency>
+
         <dependency>
             <groupId>openlinksw.com</groupId>
             <artifactId>virt-jdbc</artifactId>
             <version>4.0.1</version>
         </dependency>
 
-
     </dependencies>
-
-    <repositories>
-        <repository>
-                <id>spot-public</id>
-                <name>nexus-public</name>
-                <url>https://www.ebi.ac.uk/spot/nexus/repository/maven-public/</url>
-            </repository>
-    </repositories>
 
 </project>
