@@ -35,6 +35,7 @@ import uk.ac.ebi.fgpt.lode.service.SparqlService;
 import uk.ac.ebi.fgpt.lode.view.DepictionBean;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
@@ -141,7 +142,7 @@ public class ExplorerServlet {
         URI absuri = resolveUri(uri);
         if (absuri != null) {
             String query = "DESCRIBE <" + absuri + ">";
-            log.trace("querying for graph n3");
+            log.info("querying for graph n3");
             response.setContentType("text/n3; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
@@ -161,7 +162,7 @@ public class ExplorerServlet {
         URI absuri = this.resolveUri(uri);
         if (absuri != null) {
             String query = "DESCRIBE <" + absuri + ">";
-            log.trace("querying for graph turtle");
+            log.info("querying for graph turtle");
             response.setContentType("text/turtle; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
@@ -181,7 +182,7 @@ public class ExplorerServlet {
         URI absuri = resolveUri(uri);
         if (absuri != null) {
             String query = "DESCRIBE <" + absuri + ">";
-            log.trace("querying for graph rdf+n3");
+            log.info("querying for graph rdf+n3");
             response.setContentType("application/rdf+json; charset=utf-8");
             ServletOutputStream out = response.getOutputStream();
             out.println();
@@ -218,9 +219,11 @@ public class ExplorerServlet {
     void describeResource (
             @RequestParam(value = "uri", required = true ) String uri,
             @RequestParam(value = "format", required = false ) String format,
-            HttpServletResponse response) throws IOException, LodeException {
+            HttpServletResponse response,
+            HttpServletRequest request) throws IOException, LodeException {
+
         if (format == null) {
-            describeResourceAsNtriples(uri,response);
+            describeResourceAsNtriples(uri, response);
         } else if (format.toLowerCase().equals("rdf") ||
                    format.toLowerCase().equals("xml") ||
                    format.toLowerCase().equals("rdf/xml")) {
@@ -318,7 +321,7 @@ public class ExplorerServlet {
     public @ResponseBody ShortResourceDescription getShortResourceDescritption(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
 
-        getLog().trace("Getting short description for: " + uri);
+        getLog().info("Getting short description for: " + uri);
 
         URI absuri = resolveUri(uri);
         if (absuri != null) {
@@ -338,7 +341,7 @@ public class ExplorerServlet {
     Collection<DepictionBean> getShortResourceDepiction(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
 
-        getLog().trace("Getting image urls for: " + uri);
+        getLog().info("Getting image urls for: " + uri);
         Set<DepictionBean> dps= new HashSet<DepictionBean>();
 
         URI absuri = resolveUri(uri);
@@ -359,7 +362,7 @@ public class ExplorerServlet {
     public @ResponseBody Collection<RelatedResourceDescription> getTopRelatedResourceByProperty(
             @RequestParam(value = "uri", required = true ) String uri) throws LodeException {
 
-        getLog().trace("Getting top objects for: " + uri);
+        getLog().info("Getting top objects for: " + uri);
 
         URI absuri = resolveUri(uri);
         if (absuri != null) {
@@ -374,7 +377,6 @@ public class ExplorerServlet {
             return Collections.emptyList();
         }
     }
-
 
     @RequestMapping("/relatedFromSubjects")
     public @ResponseBody Collection<RelatedResourceDescription> getRelatedFromSubjects(

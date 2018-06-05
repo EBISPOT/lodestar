@@ -55,7 +55,7 @@ public class TestJeneRemoteRespoitoryQueries extends TestCase {
         JenaSparqlService service = new JenaSparqlService();
         service.setQueryExecutionService(new JenaHttpExecutorService(endpointURL));
         try {
-            service.query(describe1, "", 0, -1, false,System.out);
+            service.query(describe1, "", 0, -1, false, System.out);
         } catch (LodeException e) {
             assertEquals(e.getMessage(), "You must specify a SPARQL endpoint URL");
         }
@@ -69,7 +69,7 @@ public class TestJeneRemoteRespoitoryQueries extends TestCase {
             service.query(selectQuery1, "XML", 10, 10, false, System.out);
 
 
-            service.query(describe1, "RDF/XML", false, System.out );
+            service.query(describe1, "RDF/XML", false,  System.out );
             service.query(describe1, "TURTLE",false, System.out );
             service.query(describe1, "N-TRIPLES", false, System.out );
 
