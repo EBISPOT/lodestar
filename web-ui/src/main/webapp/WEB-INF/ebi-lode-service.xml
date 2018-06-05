@@ -44,7 +44,9 @@
         <constructor-arg name="port" value="${lode.sparqlendpoint.port}"/>
         <property name="user" value="${lode.explorer.virtuoso.user}"/>
         <property name="password" value="${lode.explorer.virtuoso.password}"/>
-        <property name="maxPoolSize" value="10"/>
+        <property name="initialPoolSize" value="${lode.explorer.virtuoso.initialPoolsSize}"/>
+        <property name="minPoolSize" value="${lode.explorer.virtuoso.minPoolsSize}"/>
+        <property name="maxPoolSize" value="${lode.explorer.virtuoso.maxPoolsSize}"/>
     </bean>
 
      <!--For direct virtuoso JDBC connection, use this service-->

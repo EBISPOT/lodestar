@@ -317,7 +317,6 @@ public class SparqlServlet {
                 inference,
                 out,
                 request
-                out
             );
             out.close();
         }

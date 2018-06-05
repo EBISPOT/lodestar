@@ -161,19 +161,19 @@ public class JenaSparqlService implements SparqlService {
     public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output, HttpServletRequest request) throws LodeException {
         Collection<Element> elements = new HashSet<Element>();
         //From JenaSparqlQueryParser
-        Query squery=QueryFactory.create(query);
+        Query squery = QueryFactory.create(query);
         Element element = squery.getQueryPattern();
         elements = getAllElements(Collections.singleton(element));
-        String jenaLog=" JENA";
+        String jenaLog = " JENA";
 
         //getSelectedVariableCount
-        jenaLog+=" SelectedVariableCount: "+squery.getResultVars().size();
+        jenaLog += " SelectedVariableCount: " + squery.getResultVars().size();
 
         //getVariablesinQueryCount
-        jenaLog+=" VariablesInQueryCount: "+squery.getProjectVars().size();
+        jenaLog += " VariablesInQueryCount: " + squery.getProjectVars().size();
 
         //getQueryPathSize
-        int size=0;
+        int size = 0;
         for (Element e : elements) {
             if (e instanceof ElementTriplesBlock) {
                 ElementTriplesBlock tb = (ElementTriplesBlock) e;
@@ -181,67 +181,60 @@ public class JenaSparqlService implements SparqlService {
                 size += pattern.getList().size();
             }
             if (e instanceof ElementPathBlock) {
-                ElementPathBlock epb = (ElementPathBlock) e ;
+                ElementPathBlock epb = (ElementPathBlock) e;
 
                 PathBlock pb = epb.getPattern();
                 size += pb.getList().size();
             }
         }
-        jenaLog+=" QueryPathSize: "+size;
+        jenaLog += " QueryPathSize: " + size;
 
         //
-        jenaLog+=" namedPredicates: "+getNamedPredicates(elements);
+        jenaLog += " namedPredicates: " + getNamedPredicates(elements);
 
         //containsOptionalElement
-        jenaLog+=" optionalElement: "+containsOptionalElement(elements);
-        jenaLog+=" unionElement: "+containsUnionElement(elements);
-        jenaLog+=" subqueryElement: "+containsSubqueryElement(elements);
-        jenaLog+=" bindElement: "+containsBindElement(elements);
-        jenaLog+=" filterElement: "+containsFilterElement(elements);
-        jenaLog+=" serviceElement: "+containsServiceElement(elements);
+        jenaLog += " optionalElement: " + containsOptionalElement(elements);
+        jenaLog += " unionElement: " + containsUnionElement(elements);
+        jenaLog += " subqueryElement: " + containsSubqueryElement(elements);
+        jenaLog += " bindElement: " + containsBindElement(elements);
+        jenaLog += " filterElement: " + containsFilterElement(elements);
+        jenaLog += " serviceElement: " + containsServiceElement(elements);
 
         //Logging NamedGraph and Graph URI in one field
         List<String> list1 = squery.getGraphURIs();
-        List<String> list2=squery.getNamedGraphURIs();
+        List<String> list2 = squery.getNamedGraphURIs();
         list1.addAll(list2);
 
         Set<String> s = new LinkedHashSet<String>(list1);   //To get rid of duplicated entries
         list1.clear();  //
         list2.clear();  //Given
         list1.addAll(s);
-        jenaLog+=" usedGraphs: "+list1.toString();
+        jenaLog += " usedGraphs: " + list1.toString();
 
 
         String logInfo;
-        if (request!=null) {
-           // logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
+        if (request != null) {
+            // logInfo = " HOST: " + request.getHeader("host") + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
             //IF the query ends with the noLog tag, then do not write into logfile
-            if (!query.endsWith("#noLog"))
-            {
+            if (!query.endsWith("#noLog")) {
                 String address;
-                try{
-                    address=request.getHeader("X-Cluster-Client-Ip").toString();
-                }
-                catch(Exception e){
-                log.info("Could not find X-Cluster-Client-IP so I go with remote Addr");
-                address=request.getRemoteAddr();
+                try {
+                    address = request.getHeader("X-Cluster-Client-Ip").toString();
+                } catch (Exception e) {
+                    log.info("Could not find X-Cluster-Client-IP so I go with remote Addr");
+                    address = request.getRemoteAddr();
                 }
 
 
                 log.info(address);
 
                 logInfo = " HOST: " + address + " - USER-AGENT: " + request.getHeader("user-agent") + " - SESSION-ID: " + request.getSession().getId() + jenaLog;
+            } else {
+                logInfo = "Query followed by the noLog flag";
             }
-            else{
-                logInfo="Query followed by the noLog flag";
-            }
-        }
-        else
-        {
+        } else {
             logInfo = "There was no request class";
         }
-      
-    public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException {
 
         try {
 
