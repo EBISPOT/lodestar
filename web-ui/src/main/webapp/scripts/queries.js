@@ -592,7 +592,7 @@ var exampleQueries = [
 
             {
                 shortname: "EFO Query",
-                description: "Get all terms and labels from the Gene Ontology",
+                description: "Get the IRI and the label for all children and their parents in EFO",
                 query:
                 "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n"+
                 "SELECT ?child ?childLabel ?parent ?parentLabel\n"+
