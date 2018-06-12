@@ -454,7 +454,7 @@ function querySparql () {
     // get the query string and execute
     if (queryString.match(/query=/)) {
         querytext = this._betterUnescape(queryString.match(/query=([^&]*)/)[1]);
-        var query = _getPrefixes() + querytext;
+        var query = querytext;
     }
 
     if (queryString.match(/limit=/)) {
@@ -530,7 +530,17 @@ function querySparql () {
                 requestHeader = "application/sparql-results+json";
                 successFunc = function(json) {
                     hideBusyMessage();
-                    if (activateQueryHistory) {updateHistoryTab(query, json.results.bindings.length, json.head.vars);}
+                    if (activateQueryHistory){
+                        numOfrows = 0;
+                        head = ["None"];
+                        if (json.results) {
+                            numOfrows = json.results.bindings.length
+                        }
+                        if (json.head.vars) {
+                            head = json.head.vars
+                        }
+                        updateHistoryTab(query, numOfrows, head);
+                    }
                     renderSparqlResultJsonAsTable(json, tableid);
                 };
             }
