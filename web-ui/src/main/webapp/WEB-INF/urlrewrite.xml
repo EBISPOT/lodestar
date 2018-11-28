@@ -14,7 +14,7 @@
     <rule>
             <condition type="method" operator='equal'>POST</condition>
             <from>/sparql$</from>
-            <to last="true">/servlet/query$1</to>
+            <to last="true">/servlet/query</to>
     </rule>
 
 
