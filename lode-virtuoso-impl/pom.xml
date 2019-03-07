@@ -31,8 +31,8 @@
 
         <dependency>
             <groupId>openlinksw.com</groupId>
-            <artifactId>virt-jdbc</artifactId>
-            <version>4.0.1</version>
+            <artifactId>virt-jdbc4</artifactId>
+            <version>3.95</version>
         </dependency>
 
     </dependencies>
