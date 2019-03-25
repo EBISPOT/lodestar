@@ -6,6 +6,7 @@
         <org.springframework.version>4.3.3.RELEASE</org.springframework.version>
         <org.slf4j.version>1.7.12</org.slf4j.version>
         <log4j.version>1.2.17</log4j.version>
+        <jena.version>2.12.0</jena.version>
         <release.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-releases/</release.repo.url>
         <snapshot.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-snapshots/</snapshot.repo.url>
     </properties>
@@ -162,7 +163,7 @@
             <version>${org.slf4j.version}</version>
             <scope>test</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
