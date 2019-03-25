@@ -1,6 +1,6 @@
 package uk.ac.ebi.fgpt.lode.utils;
 
-import com.hp.hpl.jena.query.Query;
+import org.apache.jena.query.Query;
 
 /**
  * @author Simon Jupp

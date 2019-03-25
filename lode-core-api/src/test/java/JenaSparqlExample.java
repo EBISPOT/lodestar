@@ -1,6 +1,12 @@
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.rdf.model.impl.ResourceImpl;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 
 /**
  * @author Simon Jupp

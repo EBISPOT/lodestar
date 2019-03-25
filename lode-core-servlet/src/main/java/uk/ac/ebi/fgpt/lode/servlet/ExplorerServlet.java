@@ -55,6 +55,7 @@ public class ExplorerServlet {
     private ExploreService service;
     private SparqlService sparqlService;
 
+
     @Value("${lode.explorer.service.baseuri:}")
     private URI baseUri;
 
@@ -219,7 +220,7 @@ public class ExplorerServlet {
             @RequestParam(value = "format", required = false ) String format,
             HttpServletResponse response) throws IOException, LodeException {
         if (format == null) {
-            describeResourceAsNtriples(uri, response);
+            describeResourceAsNtriples(uri,response);
         } else if (format.toLowerCase().equals("rdf") ||
                    format.toLowerCase().equals("xml") ||
                    format.toLowerCase().equals("rdf/xml")) {

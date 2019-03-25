@@ -1,8 +1,9 @@
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
-import junit.framework.TestCase;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.junit.Ignore;
+
+import junit.framework.TestCase;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.impl.JenaHttpExecutorService;
 import uk.ac.ebi.fgpt.lode.impl.JenaSparqlService;
@@ -55,12 +56,13 @@ public class TestJeneRemoteRespoitoryQueries extends TestCase {
         JenaSparqlService service = new JenaSparqlService();
         service.setQueryExecutionService(new JenaHttpExecutorService(endpointURL));
         try {
-            service.query(describe1, "", 0, -1, false, System.out);
+            service.query(describe1, "", 0, -1, false,System.out);
         } catch (LodeException e) {
             assertEquals(e.getMessage(), "You must specify a SPARQL endpoint URL");
         }
 
         try {
+
             service.query(selectQuery1, "XML", false, System.out);
             service.query(selectQuery1, "JSON", false, System.out);
 
@@ -69,7 +71,7 @@ public class TestJeneRemoteRespoitoryQueries extends TestCase {
 
 
             service.query(describe1, "RDF/XML", false, System.out );
-            service.query(describe1, "TURTLE",false,  System.out );
+            service.query(describe1, "TURTLE",false, System.out );
             service.query(describe1, "N-TRIPLES", false, System.out );
 
 

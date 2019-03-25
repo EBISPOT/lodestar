@@ -1,0 +1,55 @@
+#example_queries {
+    background:#f7f7f7;
+    margin-left: 10px;
+    padding-left: 10px;
+}
+
+#lodestar-description{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#limit{
+    max-width: 30%;
+}
+
+.list_exampleQueries{
+    margin-left: 25px;
+}
+
+
+/************************************Just temporary css for the alert box *** */
+.alert {
+    padding: 20px;
+    background-color: #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+}
+/* The close button */
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+/* When moving the mouse over the close button */
+.closebtn:hover {
+    color: black;
+}
+/**************************************************************************** ** */
+
+
+/* These parts would adjust Next, Previous and "X results per page"
+
+a.next{
+ margin-right: 150px;
+}
+a.prev {
+    margin-left: 0px;
+}
+span.pagmes {}*/
+

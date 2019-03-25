@@ -12,18 +12,20 @@
 
 package uk.ac.ebi.fgpt.lode.impl;
 
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QuerySolutionMap;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
+import org.apache.jena.graph.Graph;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QuerySolutionMap;
 import org.springframework.beans.factory.annotation.Value;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.fgpt.lode.utils.DatasourceProvider;
 import virtuoso.jena.driver.VirtGraph;
 import virtuoso.jena.driver.VirtuosoQueryExecution;
-
-import javax.sql.DataSource;
-import java.sql.SQLException;
 
 /**
  * @author Simon Jupp
@@ -70,6 +72,7 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
 
     }
 
+    @Override
     public Graph getNamedGraph(String graphName) {
         virtuoso.jena.driver.VirtGraph set = null;
         DataSource source = null;
@@ -94,10 +97,12 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
         throw new RuntimeException("Can't create Virtuoso graph from datasource");
     }
 
+    @Override
     public Graph getDefaultGraph() {
         return getNamedGraph(null);
     }
 
+    @Override
     public VirtuosoQueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
 
         VirtGraph set = (VirtGraph) g;
@@ -118,6 +123,7 @@ public class JenaVirtuosoConnectionPoolService implements JenaQueryExecutionServ
 
     }
 
+    @Override
     public VirtuosoQueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
 
         virtuoso.jena.driver.VirtGraph set = (VirtGraph) g;

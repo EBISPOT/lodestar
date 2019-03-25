@@ -6,6 +6,8 @@ package uk.ac.ebi.fgpt.lode.exception;
  * Functional Genomics Group EMBL-EBI
  */
 public class LodeException extends Exception {
+    private static final long serialVersionUID = 1L;
+
     public LodeException() {
         super();
     }

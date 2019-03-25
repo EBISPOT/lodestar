@@ -1,9 +1,10 @@
 package uk.ac.ebi.fgpt.lode.service;
 
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QuerySolutionMap;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolutionMap;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 
 /**

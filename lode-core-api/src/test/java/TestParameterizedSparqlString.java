@@ -1,8 +1,9 @@
-import com.hp.hpl.jena.query.ParameterizedSparqlString;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolutionMap;
-import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
+import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.rdf.model.impl.ResourceImpl;
+
 import junit.framework.TestCase;
 
 /**

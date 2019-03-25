@@ -1,6 +1,6 @@
 package uk.ac.ebi.fgpt.lode.servlet;
 
-import com.hp.hpl.jena.query.QueryParseException;
+import org.apache.jena.query.QueryParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +58,10 @@ public class SparqlServlet {
             @RequestParam(value = "offset", required = false) Integer offset,
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "inference", required = false) boolean inference,
-
+            HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql xml");
-        query(query, "XML", offset, limit, inference, response);
+        query(query, "XML", offset, limit, inference, request, response);
     }
 
     @RequestMapping (produces="application/sparql-results+json")
@@ -71,10 +71,12 @@ public class SparqlServlet {
             @RequestParam(value = "offset", required = false) Integer offset,
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "inference", required = false) boolean inference,
-
+            HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+
         log.trace("querying for sparql json");
-        query(query, "JSON", offset, limit, inference, response);
+
+        query(query, "JSON", offset, limit, inference, request, response);
     }
 
     @RequestMapping (produces="text/csv")
@@ -84,10 +86,11 @@ public class SparqlServlet {
             @RequestParam(value = "offset", required = false) Integer offset,
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "inference", required = false) boolean inference,
-
+            HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql csv");
-        query(query, "CSV", offset, limit, inference, response);
+
+        query(query, "CSV", offset, limit, inference, request, response);
     }
 
     @RequestMapping (produces="text/tab-separated-values")
@@ -97,10 +100,10 @@ public class SparqlServlet {
             @RequestParam(value = "offset", required = false) Integer offset,
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "inference", required = false) boolean inference,
-
+            HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
         log.trace("querying for sparql tsv");
-        query(query, "TSV", offset, limit, inference, response);
+        query(query, "TSV", offset, limit, inference, request, response);
     }
 
     @RequestMapping (produces="application/rdf+xml")
@@ -213,6 +216,7 @@ public class SparqlServlet {
         }
     }
 
+    /*The Post methods had the HttpServletRequest request initally, I added it to all the other functions*/
     @RequestMapping ( method = RequestMethod.POST, produces="application/sparql-results+xml", consumes = "application/x-www-form-urlencoded")
     public void postRequest (
             @RequestParam(value = "query", required = false) String query,
@@ -222,17 +226,17 @@ public class SparqlServlet {
             HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, IOException, LodeException {
 
-        getSparqlXml (query, offset, limit, inference, response);
+        getSparqlXml (query, offset, limit, inference, request,response);
     }
 
-
+    /*The Post methods had the HttpServletRequest request initally, I added it to all the other functions*/
     @RequestMapping ( method = RequestMethod.POST, produces="application/sparql-results+xml", consumes = "application/sparql-query")
     public void directPostRequest (
             @RequestBody String query,
             HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, IOException, LodeException {
 
-        query (query, "XML", 0, null, false, response);
+        query (query, "XML", 0, null, false, request, response);
     }
 
     @RequestMapping
@@ -243,7 +247,14 @@ public class SparqlServlet {
             @RequestParam(value = "offset", required = false) Integer offset,
             @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "inference", required = false) boolean inference,
+            HttpServletRequest request,
             HttpServletResponse response) throws QueryParseException, LodeException, IOException {
+
+        log.info("What user information can we retrieve here");
+        log.info(request.getRemoteAddr());
+        log.info(request.getRequestedSessionId());
+        log.info((Long.toString(request.getSession().getCreationTime())));
+        log.info(request.getSession().getId());
 
         ServletOutputStream out = response.getOutputStream();
 
@@ -264,7 +275,12 @@ public class SparqlServlet {
             return;
         }
 
+
         log.info("Processing raw query:\n" + query + "\nEnd of query.");
+        //HERE WE COULD DO ADVANCED LOGGING TO FILE
+        // Adding HttpServletRequest request as parameter to this query method might enable us to ask for IP
+        // via request.getRemoteAddr() and similar methods, getting more information about the USER associated with a request
+
         // if no format, try and work out the query type
         String outputFormat = format;
         if (outputFormat == null) {
