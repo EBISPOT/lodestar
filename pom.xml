@@ -7,6 +7,8 @@
         <org.slf4j.version>1.7.12</org.slf4j.version>
         <log4j.version>1.2.17</log4j.version>
         <jena.version>2.12.0</jena.version>
+        <virt.jena.version>2.12.1</virt.jena.version>
+        <virt.jdbc4.version>3.95</virt.jdbc4.version>
         <release.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-releases/</release.repo.url>
         <snapshot.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-snapshots/</snapshot.repo.url>
     </properties>
