@@ -12,13 +12,21 @@
 
 package uk.ac.ebi.fgpt.lode.impl;
 
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
+import java.io.OutputStream;
 
+import org.apache.jena.graph.Graph;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QueryParseException;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.fgpt.lode.service.SparqlService;
@@ -26,8 +34,6 @@ import uk.ac.ebi.fgpt.lode.service.SparqlServiceDescription;
 import uk.ac.ebi.fgpt.lode.utils.GraphQueryFormats;
 import uk.ac.ebi.fgpt.lode.utils.QueryType;
 import uk.ac.ebi.fgpt.lode.utils.TupleQueryFormats;
-
-import java.io.OutputStream;
 
 /**
  * @author Simon Jupp
@@ -51,10 +57,12 @@ public class JenaSparqlService implements SparqlService {
         this.log = log;
     }
 
+    @Override
     public Integer getMaxQueryLimit() {
         return maxQueryLimit;
     }
 
+    @Override
     public void setMaxQueryLimit(Integer maxQueryLimit) {
         this.maxQueryLimit = maxQueryLimit;
     }
@@ -69,6 +77,7 @@ public class JenaSparqlService implements SparqlService {
         this.queryExecutionService = queryExecutionService;
     }
 
+    @Override
     public void query(String query, String format, Integer offset, Integer limit, boolean inference, OutputStream output) throws LodeException {
 
         try {
@@ -119,10 +128,12 @@ public class JenaSparqlService implements SparqlService {
 
     }
 
+    @Override
     public void query(String query, String format, boolean inference, OutputStream output) throws LodeException {
         query(query, format, 0, getMaxQueryLimit(), inference, output);
     }
 
+    @Override
     public void getServiceDescription(OutputStream outputStream, String format) {
 
         // todo implement this properly
@@ -157,6 +168,7 @@ public class JenaSparqlService implements SparqlService {
 
     }
 
+    @Override
     public QueryType getQueryType(String query) {
         // detect query type
         Query q1 = QueryFactory.create(query, Syntax.syntaxARQ);

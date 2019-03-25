@@ -1,8 +1,9 @@
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
-import junit.framework.TestCase;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 import org.junit.Ignore;
+
+import junit.framework.TestCase;
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.impl.JenaHttpExecutorService;
 import uk.ac.ebi.fgpt.lode.impl.JenaSparqlService;

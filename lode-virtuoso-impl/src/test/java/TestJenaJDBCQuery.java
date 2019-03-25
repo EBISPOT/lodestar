@@ -1,21 +1,16 @@
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.QuerySolutionMap;
-import com.hp.hpl.jena.query.ResultSet;
-import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
+import java.util.Iterator;
+
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.impl.ResourceImpl;
 import org.junit.Ignore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
-import uk.ac.ebi.fgpt.lode.impl.JenaExploreService;
 import uk.ac.ebi.fgpt.lode.impl.JenaVirtuosoExecutorService;
-
-
-import java.net.URI;
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * @author Simon Jupp

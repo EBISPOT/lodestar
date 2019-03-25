@@ -1,27 +1,39 @@
 package uk.ac.ebi.fgpt.lode.impl;
 
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.impl.ResourceImpl;
-import com.hp.hpl.jena.sparql.syntax.ElementTriplesBlock;
-import com.hp.hpl.jena.sparql.syntax.ElementUnion;
+import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.impl.ResourceImpl;
+import org.apache.jena.sparql.syntax.ElementTriplesBlock;
+import org.apache.jena.sparql.syntax.ElementUnion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
-import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.fgpt.lode.model.LabeledResource;
 import uk.ac.ebi.fgpt.lode.model.RelatedResourceDescription;
 import uk.ac.ebi.fgpt.lode.model.ShortResourceDescription;
 import uk.ac.ebi.fgpt.lode.service.ExploreService;
+import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import uk.ac.ebi.fgpt.lode.utils.SparqlQueryReader;
-
-import java.net.URI;
-import java.util.*;
 
 /**
  * @author Simon Jupp
@@ -105,11 +117,13 @@ public class JenaExploreService implements ExploreService {
         this.queryReader = queryReader;
     }
 
+    @Override
     public Collection<RelatedResourceDescription> getRelatedResourceByProperty(URI resourceUri, Set<URI> propertyUris, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("RELATEDTO.PROPERTIES.QUERY");
         return getRelatedResourceByProperty(resourceUri, query, propertyUris, excludeTypes, ignoreBnodes, false);
     }
 
+    @Override
     public Collection<RelatedResourceDescription> getRelatedToObjects(URI resourceUri, Set<URI> excludePropertyUris, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
         Set<URI> allRelatedProps = new HashSet<URI>();
@@ -123,6 +137,7 @@ public class JenaExploreService implements ExploreService {
 
     }
 
+    @Override
     public Collection<RelatedResourceDescription> getRelatedFromSubjects(URI resourceUri, Set<URI> excludePropertyUris, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
         Set<URI> allRelatedProps = new HashSet<URI>();
@@ -135,6 +150,7 @@ public class JenaExploreService implements ExploreService {
         return getRelatedResourceByProperty(resourceUri, query, allRelatedProps, excludeTypes, ignoreBnodes, false);
     }
 
+    @Override
     public Collection<RelatedResourceDescription> getTypes(URI resourceUri, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("TYPES.QUERY");
@@ -150,7 +166,7 @@ public class JenaExploreService implements ExploreService {
         try {
             ResultSet results = endpoint.execSelect();
             while (results.hasNext()) {
-                QuerySolution solution = (QuerySolution) results.next();
+                QuerySolution solution = results.next();
                 Resource res = solution.getResource("resource");
                 if (res.isAnon()) {
                     continue;
@@ -178,6 +194,7 @@ public class JenaExploreService implements ExploreService {
         return Collections.singleton(resources);
     }
 
+    @Override
     public Collection<RelatedResourceDescription> getAllTypes(URI resourceUri, Set<URI> excludeTypes, boolean ignoreBnodes) throws LodeException {
 
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("ALLTYPES.QUERY");
@@ -193,7 +210,7 @@ public class JenaExploreService implements ExploreService {
         try {
             ResultSet results = endpoint.execSelect();
             while (results.hasNext()) {
-                QuerySolution solution = (QuerySolution) results.next();
+                QuerySolution solution = results.next();
                 Resource res = solution.getResource("resource");
                 if (res.isAnon()) {
                     continue;
@@ -221,6 +238,7 @@ public class JenaExploreService implements ExploreService {
         return Collections.singleton(resources);
     }
 
+    @Override
     public ShortResourceDescription getShortResourceDescription(URI resourceUri, Set<URI> labelUris, Set<URI> descriptionUris) throws LodeException {
         Graph g = getQueryExecutionService().getDefaultGraph();
         ShortResourceDescription description1 = getShortResourceDescription(g, resourceUri, labelUris, descriptionUris);
@@ -251,13 +269,19 @@ public class JenaExploreService implements ExploreService {
         ElementUnion union = new ElementUnion();
         for (URI l : labelUris) {
             ElementTriplesBlock labelPattern = new ElementTriplesBlock();
-            labelPattern.addTriple(new Triple(resourceNode.asNode(), new ResourceImpl(l.toString()).asNode(), Node.createVariable("label")));
+            labelPattern.addTriple(new Triple(
+                    resourceNode.asNode(),
+                    new ResourceImpl(l.toString()).asNode(),
+                    NodeFactory.createVariable("label")));
             union.addElement(labelPattern);
         }
 
         for (URI d : descriptionUris) {
             ElementTriplesBlock descriptionPattern = new ElementTriplesBlock();
-            descriptionPattern.addTriple(new Triple(resourceNode.asNode(), new ResourceImpl(d.toString()).asNode(), Node.createVariable("description")));
+            descriptionPattern.addTriple(new Triple(
+                    resourceNode.asNode(),
+                    new ResourceImpl(d.toString()).asNode(),
+                    NodeFactory.createVariable("description")));
             union.addElement(descriptionPattern);
         }
 
@@ -270,7 +294,7 @@ public class JenaExploreService implements ExploreService {
             ResultSet results = endpoint.execSelect();
 
             while (results.hasNext()) {
-                QuerySolution solution = (QuerySolution) results.next();
+                QuerySolution solution = results.next();
 
                 Literal labelNode = solution.getLiteral("label");
                 if (label == null && labelNode !=null) {
@@ -295,6 +319,7 @@ public class JenaExploreService implements ExploreService {
         return new ShortResourceDescription(resourceUri.toString(), label, description, dataset);
     }
 
+    @Override
     public Collection<String> getResourceDepiction(URI subject, URI depictRelation) {
 
         String query = getQueryReader().getSparqlQuery("PREFIX") + "\n\n" + getQueryReader().getSparqlQuery("DEPICT.QUERY");
@@ -312,7 +337,7 @@ public class JenaExploreService implements ExploreService {
             ResultSet results = endpoint.execSelect();
 
             while (results.hasNext()) {
-                QuerySolution solution = (QuerySolution) results.next();
+                QuerySolution solution = results.next();
 
                 Resource propertyNode = solution.getResource("img");
                 if (propertyNode != null) {
@@ -350,7 +375,7 @@ public class JenaExploreService implements ExploreService {
             ResultSet results = endpoint.execSelect();
 
             while (results.hasNext()) {
-                QuerySolution solution = (QuerySolution) results.next();
+                QuerySolution solution = results.next();
 
                 Resource propertyNode = solution.getResource("property");
                 if (propertyNode != null) {
@@ -387,7 +412,7 @@ public class JenaExploreService implements ExploreService {
             ResultSet results = endpoint.execSelect();
 
             while (results.hasNext()) {
-                QuerySolution solution = (QuerySolution) results.next();
+                QuerySolution solution = results.next();
                 String resource = null;
                 String resourceLabel = null;
                 String resourceType = null;

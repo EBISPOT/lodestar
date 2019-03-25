@@ -1,10 +1,13 @@
 package uk.ac.ebi.fgpt.lode.impl;
 
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.*;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QuerySolutionMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+
 import uk.ac.ebi.fgpt.lode.exception.LodeException;
 import uk.ac.ebi.fgpt.lode.service.JenaQueryExecutionService;
 import virtuoso.jena.driver.VirtGraph;
@@ -72,6 +75,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
     }
 
 
+    @Override
     public QueryExecution getQueryExecution(Graph g, Query query, boolean withInference) throws LodeException {
         if (isNullOrEmpty(getEndpointURL())) {
             log.error("No sparql endpoint");
@@ -92,6 +96,7 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
         return VirtuosoQueryExecutionFactory.create(query, set);
     }
 
+    @Override
     public QueryExecution getQueryExecution(Graph g, String query, QuerySolutionMap initialBinding, boolean withInference) throws LodeException {
         if (isNullOrEmpty(getEndpointURL())) {
             log.error("No sparql endpoint");
@@ -114,10 +119,12 @@ public class JenaVirtuosoExecutorService implements JenaQueryExecutionService {
         return "".equals(o);
     }
 
+    @Override
     public Graph getDefaultGraph() {
         return new VirtGraph(getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
     }
 
+    @Override
     public Graph getNamedGraph(String graphName) {
         return new VirtGraph(graphName, getEndpointURL(), getVirtuosoUser() , getVirtuosoPassword());
     }

@@ -1,10 +1,9 @@
 package uk.ac.ebi.fgpt.lode.model;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 /**
  * @author Simon Jupp
