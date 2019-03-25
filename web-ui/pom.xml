@@ -2,7 +2,7 @@
     <parent>
         <artifactId>ebi-lode</artifactId>
         <groupId>ebi-lode</groupId>
-        <version>1.4.1</version>
+        <version>1.4.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>web-ui</artifactId>
@@ -21,18 +21,15 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- NOTE: Tomcat 7 is providing JSP API 3.0; be careful -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
@@ -40,7 +37,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- NOTE: Tomcat 7 is providing JSP API 2.2; be careful -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jsp-api</artifactId>
@@ -89,12 +85,11 @@
             </activation>
 
             <build>
-
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
-                        <version>2.1.1</version>
+                        <version>3.2.2</version>
                     </plugin>
                 </plugins>
 

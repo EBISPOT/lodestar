@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <properties>
-        <lodestar.version>1.4.1</lodestar.version>
+        <lodestar.version>1.4.2-SNAPSHOT</lodestar.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>4.3.3.RELEASE</org.springframework.version>
+        <org.springframework.version>4.3.22.RELEASE</org.springframework.version>
         <org.slf4j.version>1.7.12</org.slf4j.version>
         <java.version>1.8</java.version>
         <log4j.version>1.2.17</log4j.version>
@@ -11,6 +11,8 @@
         <junit.version>4.12</junit.version>
         <virt.jena.version>3.10.0</virt.jena.version>
         <virt.jdbc4.version>4.2.0</virt.jdbc4.version>
+        <jackson.version>2.9.8</jackson.version>
+        <jackson-asl.version>1.9.13</jackson-asl.version>
         <release.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-releases/</release.repo.url>
         <snapshot.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-snapshots/</snapshot.repo.url>
     </properties>
@@ -19,7 +21,7 @@
     <groupId>ebi-lode</groupId>
     <artifactId>ebi-lode</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.1</version>
+    <version>1.4.2-SNAPSHOT</version>
     <modules>
         <module>lode-core-api</module>
         <module>lode-virtuoso-impl</module>
@@ -178,6 +180,30 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>${org.springframework.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+    
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson-asl.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>${jackson-asl.version}</version>
             </dependency>
 
             <!-- test scope dependencies -->
