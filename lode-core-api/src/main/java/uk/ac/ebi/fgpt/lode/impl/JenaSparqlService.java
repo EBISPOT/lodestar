@@ -76,6 +76,7 @@ public class JenaSparqlService implements SparqlService {
             Query q1 = QueryFactory.create(query, Syntax.syntaxARQ);
             QueryType qtype = getQueryType(query);
 
+
             // detect format
 
             if (qtype.equals(QueryType.TUPLEQUERY)) {
@@ -88,7 +89,7 @@ public class JenaSparqlService implements SparqlService {
                 if (isNullOrEmpty(format)) {
                     format = GraphQueryFormats.RDFXML.toString();
                 }
-                executeDescribeQuery(q1, format, output);
+                executeDescribeQuery(q1, format,  output);
             }
             else if (qtype.equals(QueryType.CONSTRUCTQUERY)) {
                 if (isNullOrEmpty(format)) {
@@ -176,7 +177,7 @@ public class JenaSparqlService implements SparqlService {
         log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
+        Graph g=getQueryExecutionService().getDefaultGraph();
 
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
@@ -259,9 +260,9 @@ public class JenaSparqlService implements SparqlService {
         log.info("preparing to execute tuple query: " + startTime + "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
-        try {
+        Graph g=getQueryExecutionService().getDefaultGraph();
 
+        try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, inference);
             ResultSet results = endpoint.execSelect();
             long endTime = System.currentTimeMillis();
@@ -301,7 +302,7 @@ public class JenaSparqlService implements SparqlService {
         log.info("preparing to execute describe query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
+        Graph g=getQueryExecutionService().getDefaultGraph();
 
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
@@ -333,7 +334,7 @@ public class JenaSparqlService implements SparqlService {
         log.info("preparing to execute ASK query: " + startTime+ "\n" + q1.serialize());
 
         QueryExecution endpoint = null;
-        Graph g = getQueryExecutionService().getDefaultGraph();
+        Graph g=getQueryExecutionService().getDefaultGraph();
 
         try {
             endpoint = getQueryExecutionService().getQueryExecution(g, q1, false);
