@@ -3,9 +3,9 @@
     <properties>
         <lodestar.version>1.4-SNAPSHOT</lodestar.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework.version>4.3.3.RELEASE</org.springframework.version>
-        <org.slf4j.version>1.7.12</org.slf4j.version>
-        <log4j.version>1.2.17</log4j.version>
+        <org.springframework.version>4.3.30.RELEASE</org.springframework.version>
+        <org.slf4j.version>1.7.32</org.slf4j.version>
+        <logback.version>1.2.8</logback.version>
         <release.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-releases/</release.repo.url>
         <snapshot.repo.url>https://www.ebi.ac.uk/spot/nexus/repository/maven-snapshots/</snapshot.repo.url>
     </properties>
@@ -14,7 +14,7 @@
     <groupId>ebi-lode</groupId>
     <artifactId>ebi-lode</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.1</version>
+    <version>1.4.2-SNAPSHOT</version>
     <modules>
         <module>lode-core-api</module>
         <module>web-ui</module>
@@ -142,16 +142,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${org.slf4j.version}</version>
-            <scope>test</scope>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -170,18 +169,21 @@
             <!-- test scope dependencies -->
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
+                <artifactId>slf4j-api</artifactId>
                 <version>${org.slf4j.version}</version>
-                <scope>test</scope>
-                <!-- override test scope if required for CLI, webapp modules -->
             </dependency>
-
+    
             <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+    
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
                 <scope>test</scope>
-                <!-- override test scope if required for CLI, webapp modules -->
             </dependency>
 
         </dependencies>
