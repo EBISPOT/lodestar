@@ -9,7 +9,7 @@ RUN mkdir $BUILD_DIR && \
 WORKDIR $BUILD_DIR/lodestar/
 
 ADD ./config-docker/lode.properties web-ui/src/main/resources/lode.properties
-ADD ./config-docker/logback.xml web-ui/src/main/resoures/logback.xml
+ADD ./config-docker/log4j.xml web-ui/src/main/resoures/log4j.xml
 
 RUN mvn clean package && \
   cp web-ui/target/lodestar.war $CATALINA_HOME/webapps/ && \
