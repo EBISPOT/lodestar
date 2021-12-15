@@ -6,7 +6,7 @@
         <org.slf4j.version>1.7.32</org.slf4j.version>
         <java.version>1.8</java.version>
         <log4j.version>1.2.17</log4j.version>
-        <jena.version>3.10.0</jena.version>
+        <jena.version>3.17.0</jena.version>
         <junit.version>4.12</junit.version>
         <virt.jena.version>3.10.0</virt.jena.version>
         <virt.jdbc4.version>4.2.0</virt.jdbc4.version>

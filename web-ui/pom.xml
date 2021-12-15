@@ -65,6 +65,23 @@
     </dependencies>
     <build>
         <finalName>lodestar</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <configuration>
+                    <cveValidForHours>96</cveValidForHours>
+                    <suppressionFile>${basedir}/suppressions.xml</suppressionFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>
